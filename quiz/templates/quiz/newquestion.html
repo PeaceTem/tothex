@@ -1,0 +1,47 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+
+{% block quizTitle %}
+Create A New Question
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+{% endblock quizCss %}
+
+
+{% load crispy_forms_tags %}
+
+{% include 'messages.html' %}
+
+
+
+<section>
+    <div class="head">Step 3 of 3</div>
+   
+<div class="contentBx">
+    <div class="formBx">
+        <h2>Create Question</h2>
+
+<a href="{% url 'quiz:trueOrFalseQuestion' quiz.id %}">Create A True Or False Question</a>
+
+<a href="{% url 'quiz:fourChoicesQuestion' quiz.id %}">Create A Four Choices Question</a>
+
+
+    <div class="inputBx">
+        <p>
+            Finished? <a href="{% url 'quiz:quiz-detail' quiz.id profile.code %} ">finish</a>
+        </p>
+    </div>
+</div>
+</div>
+</section>
+
+<script>
+
+</script>
+
+
+{% endblock content %}

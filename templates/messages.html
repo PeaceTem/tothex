@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+{% if messages %}
+    <div class="messages">
+    {% for message in messages %}
+        <div {% if message.tags == 'error' %} 
+            class='alert alert-danger'
+            {%else %}
+            class='alert alert-{{message.tags}}'
+            {% endif %} role="alert">
+            {{message}}
+    </div>
+    {% endfor %}
+    </div>
+{% endif %}
+
+<script src="{% static 'js/jquery.js' %}" ></script>
+<script>
+
+let sec = 5
+const interval = setInterval(()=>{
+        sec -= 1;
+        if (sec == 0){
+            $('.messages').hide(500)
+
+        }
+        if (sec <= -1){
+        StopFunction();
+        }
+
+    }, 1000)
+
+
+
+function StopFunction() {
+  clearInterval(interval);
+    }
+
+</script>
+{% endblock content %}
+
+
+
+

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/search.css">
+{% endblock css %}
+
+{% block content %}
+<form action="" method="get">
+
+    <div class="search">
+        <div class="input">
+            <input  id="mysearch" type="text" placeholder='search' name='search-area' value='{{search_input}}'>
+        </div>
+        <div class="clear" onclick="document.getElementById('mysearch').value = ''">×</div>
+        <div class="submit">
+            <input type="submit" value="search">
+
+        </div>
+
+    </div>
+</form>
+
+{% endblock content %}
+
+

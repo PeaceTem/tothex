@@ -1,0 +1,77 @@
+
+
+section .contentBx{
+    margin: 30px 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-top: 3px solid var(--link-button-background-color);
+    background: #fff;
+    box-shadow: 3px 3px 3px rgb(156, 163, 226);
+    border-radius: 4px;
+    width: 500px;
+    max-width: 95vw;
+    padding: 20px;
+    flex-direction: column;
+
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    margin: 10px 4px;
+}
+/* section .contentBx  form > div{
+    margin: 5px 2px 5px 2px;
+    
+} */
+
+
+section .contentBx form .field-name{
+    color: var(--link-button-background-color);
+    font-weight: bold;
+    font-size: 18px;
+    font-family: sans-serif;
+}
+
+
+section .contentBx form .linkBx{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+
+}
+section .contentBx form .linkBx > inputBx{
+    margin: 10px 4px;
+
+
+}
+
+.inputBx input[type="submit"]{
+    background: var(--link-button-background-color);
+    color: var(--white-theme);
+    outline: none;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 10px;
+    }
+
+a.link:hover, a.link:focus, input:focus{
+    background: var(--link-button-background-color);
+    color: var(--white-theme);
+    box-shadow: 3px 3px 3px rgb(156, 163, 226);
+
+}
+
+@media(max-width:700px){
+    section{
+        flex-direction: column;
+        position: relative;
+
+    }   
+}
+
+
+

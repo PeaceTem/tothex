@@ -1,0 +1,372 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load social_share %}
+{% block quizTitle %}
+Profile
+{% endblock quizTitle %}
+
+{% block content %}
+
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'core/css/profile.css' %}">
+{% endblock quizCss %}
+{% include 'navbar.html' %}
+<input type="hidden" id="navActive" value="{{nav}}" name="nav">
+{% include 'messages.html' %}
+<div style="display:none;">
+    <div class="menu-icon">
+
+        <span>ready</span>
+        <a href="{% url 'menu' %}">
+            <div ><i class="fa fa-bars" aria-hidden="true">menu</i></div>
+        </a>
+    </div>
+</div>
+<div class="profile-box">
+    <div class="imgBx">
+        <img src="/static/images/tothex_500.png">
+    </div>
+
+<div class="name">
+    <div class="userBx">
+        {{profile.first_name}}
+    </div>
+    <div class="userBx">
+        {{profile.last_name}}
+    </div>
+
+</div>
+    
+
+    <div class="username">
+       @{{profile.user.username}}
+    </div>
+    <div class="obvious">
+        <div class="following childBx">
+            <div class="heading">Followings</div>
+            <div>
+                <b style="font-size: 16px;">
+                    {{followingsCount}}
+                </b>
+            </div>
+         </div>
+        <div class="followers childBx">
+            <div class="heading">Followers</div>
+            <div>
+                <b id="followers" style="font-size: 16px;">
+                    {{followersCount}}
+                </b>
+            </div>
+         </div>
+         <div class="likes childBx">
+            <div class="heading">Likes</div>
+            <div class="content">
+                <b style="font-size: 16px;">
+                    {{profile.likes}}
+                </b>
+            </div> 
+        </div>
+    </div>
+    
+     {% if request.user != profile.user %}
+        {% if request.user in follower.followers.all %}
+
+        <form id='followForm' action="{% url 'unfollow' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="following" value="{{follower.user.id}}" readonly>
+            <input type="hidden" name="following_user" value="{{profile.user}}" readonly>
+            <input type="hidden" name="following_username" value="{{profile.user.username}}" readonly>
+
+            <button type='submit' class="btn profile-edit-btn">
+                UnFollow
+            </button>
+        </form>
+        {% else %}
+
+
+        <form id='followForm' action="{% url 'follower' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="following" value="{{follower.user.id}}" readonly>
+            <input type="hidden" name="following_user" value="{{profile.user}}" readonly>
+            <input type="hidden" name="following_username" value="{{profile.user.username}}" readonly>
+
+            <button type='submit' class="btn profile-edit-btn">
+                Follow
+            </button>
+        </form>
+
+        {% endif %}
+     {% endif %}
+    <div class="urlLink">
+     {% if link.link and link.name and link.description %}
+
+        <span>Link below: </span>
+        <div class="link-container">
+        <a onclick="clickFunction()" data-url="{% url 'link-click' link.id %}" class="profile-link" href="{{link.link}}" target="_blank" rel="noopener noreferrer">{{link.name}}</a>
+        </div>
+        <div style="font-size: 12px; color: #777;">
+            {{link.description}}
+        </div>
+    {% endif %}
+        {% if request.user == profile.user %}
+        <div>
+            <span>Clicks: {{link.clicks}}</span>
+            
+        </div>
+        <div>
+            <a class="profile change"  href="{% url 'edit-link' %}">Change Link</a>
+        </div>
+        {% endif %}
+    </div>
+<div class="otherInfo">
+    <div class="userInfo">
+        <div class="heading">Bio</div>
+        <div class="content"> {{profile.bio}}</div>
+
+    </div>
+    <div class="userInfo">
+        <div class="heading">Gender</div>
+        <div class="content"> {{profile.gender}} </div>
+
+    </div>
+
+    <div class="userInfo">
+        <div class="heading">State Of Residence</div>
+        <div class="content"> {{profile.state_of_residence}} </div>
+
+    </div>
+
+    <div class="userInfo">
+        <div class="heading">State Of Origin</div>
+        <div class="content"> {{profile.state_of_origin}} </div>
+
+
+    </div>
+
+    <div class="userInfo">
+        <div class="heading">Nationality</div>
+        <div class="content"> {{profile.nationality}} </div>
+    </div>
+    
+    <div class="userInfo">
+        <div class="heading">Wallet</div>
+        <div class="content">$0.00</div> 
+        <i style="font-size: 11px; color:#999;">Efforts are being made for users to generate revenue from this app</i>
+    </div>
+
+    <div class="userInfo">
+        <div class="heading">Streak's Length</div>
+        <div class="content"> {{profile.streak.length}}</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Streak's Status</div>
+        <div class="content">
+            {% if profile.streak.active %}
+            Active
+            {% else %}
+            InActive
+            {% endif %}
+        </div> 
+    </div>
+
+
+    <div class="userInfo">
+        <div class="heading">Today's Correct Answers</div>
+        <div class="content"> {{profile.streak.question}}</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Refers</div>
+        <div class="content"> {{profile.refercount}}</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Views</div>
+        <div class="content"> {{profile.views}}</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Coins</div>
+        <div class="content"> {{profile.coins}}</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Quiz Average Score</div>
+        <div class="content"> {{profile.quizAvgScore}}%</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Question Average Score</div>
+        <div class="content">{{profile.questionAvgScore}}%</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Quiz Attempts</div>
+        <div class="content">{{profile.quizAttempts}}</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Question Attempts</div>
+        <div class="content">{{profile.questionAttempts}}</div> 
+    </div>
+    <div class="userInfo">
+        <div class="heading">Quizzes Created</div>
+        <div class="content">{{profile.quizzes}}</div> 
+    </div>
+    {% if profile.user == request.user %}
+    <div>
+        <form id="interestForm" action="{%  url 'interest' %}" method="post">
+            {% csrf_token %}
+            {{form|crispy}}
+            <input type="submit" value="submit">
+        </form>
+    </div>
+    
+    <div class="copy-link-container">
+        <div class="label">
+            Copy Your Referral link
+        </div>
+        <div class="copy-text">
+            <input id="copy-link" type="text" class="text">
+            <button onclick="copyFunction()">Copy</button>
+        </div>
+    </div>
+    <div class="share-profile">
+        <div>Share Your Face</div>
+        {% if profile.user.middle_name %}
+        <div>
+        {% post_to_facebook  object_or_url 'Facebook' %}
+        {% post_to_twitter "View {{profile.user.middle_name}}'s profile on ToTheX." object_or_url "Twitter" %}
+        {% post_to_linkedin  object_or_url "Post to Linkedin" %}
+        {% send_email "{{profile.user.username|capfirst}}: ToTheX User Proflle" "View {{profile.user.middle_name}}'s profile on ToTheX." object_or_url "Email" %}
+        {% post_to_reddit "View {{profile.user.middle_name}}'s profile on ToTheX." object_or_url %}
+        {% post_to_telegram "View {{profile.user.middle_name}}'s profile on ToTheX." object_or_url %}
+        {% post_to_whatsapp object_or_url "WhatsApp" %}
+        {% save_to_pinterest object_or_url %}
+        </div>
+        {% elif profile.user.first_name %}
+        {% post_to_facebook  object_or_url 'Facebook' %}
+        {% post_to_twitter "View {{profile.user.first_name}}'s profile on ToTheX." object_or_url "Twitter" %}
+        {% post_to_linkedin  object_or_url "Post to Linkedin" %}
+        {% send_email "{{profile.user.username|capfirst}}: ToTheX User Proflle" "View {{profile.user.first_name}}'s profile on ToTheX." object_or_url "Email" %}
+        {% post_to_reddit "View {{profile.user.first_name}}'s profile on ToTheX." object_or_url %}
+        {% post_to_telegram "View {{profile.user.first_name}}'s profile on ToTheX." object_or_url %}
+        {% post_to_whatsapp object_or_url "WhatsApp" %}
+        {% save_to_pinterest object_or_url %}
+
+
+        {% elif profile.user.username %}
+
+        {% post_to_facebook  object_or_url 'Facebook' %}
+        {% post_to_twitter "View {{profile.user.username}}'s profile on ToTheX." object_or_url "Twitter" %}
+        {% post_to_linkedin  object_or_url "Post to Linkedin" %}
+        {% send_email "{{profile.user.username|capfirst}}: ToTheX User Proflle" "View {{profile.user.username}}'s profile on ToTheX." object_or_url "Email" %}
+        {% post_to_reddit "View {{profile.user.username}}'s profile on ToTheX." object_or_url %}
+        {% post_to_telegram "View {{profile.user.username}}'s profile on ToTheX." object_or_url %}
+        {% post_to_whatsapp object_or_url "WhatsApp" %}
+        {% save_to_pinterest object_or_url %}
+
+        {% endif %}
+    </div>
+    <a class="profile"  href="{% url 'edit_profile' %}">
+        <div class="edit link userInfo">
+            Edit Face
+        </div>
+    </a>
+
+   
+    {% endif %}
+</div>
+</div>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'core/js/profile.js' %}">
+</script>
+{% if request.user == profile.user %}
+<script>
+
+
+    const website = window.location.hostname
+    document.querySelector('#copy-link').value = `${website}/core/referral/{{profile.code}}`;
+    function copyFunction(){
+    let copyText = document.getElementById('copy-link');
+    copyText.select();
+    copyText.setSelectionRange(0,99999);
+    // document.execCommand("copy")
+    navigator.clipboard.writeText(copyText.value)
+
+        // Add the ajax for the link click
+    }
+</script>
+{% endif %}
+<script>
+
+
+$('#interestForm').submit(function(e){
+        e.preventDefault();
+        alert('Working!')
+        const serializedData = $(this).serialize();
+        alert(serializedData);
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: serializedData,
+            success: function(response){
+                console.log(response)
+                alert('Successful!')
+            },
+            error: function(response){
+                console.log(response)
+                alert('Failed!')
+
+            }
+        })
+    })
+
+
+
+    function clickFunction(){
+        
+        $.ajax({
+            // change this to post
+            type: 'GET', 
+            url : $('a.profile-link').data('url'),
+            data : {
+            },
+            success : function(response){
+                alert('link clicked!')
+                
+
+            },
+            error : function(){
+                alert('It falis silently!')
+            }
+
+        });
+
+    }
+
+
+$('#followForm').submit(function(e){
+e.preventDefault();
+const serializeData = $(this).serialize()
+const objectBx = $(this)
+$.ajax({
+    type: 'POST',
+    url : $(this).attr('action'),
+    data : serializeData,
+    success : function(response){
+        document.getElementById('followForm').style.visibility = 'hidden';
+        button = document.getElementById('followers')
+        if(response == 'follow'){
+            button.innerText = parseInt(button.innerText) + 1
+        } else if(response == 'unfollow'){
+            button.innerText = parseInt(button.innerText) - 1
+
+        }
+    },
+    error : function(){
+        alert('It falis silently!')
+    }
+});
+})
+
+</script>
+{% endblock content %}
+
+
+

@@ -1,0 +1,28 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+
+
+{% block quizTitle %} 
+Quizzes
+{% endblock quizTitle %}
+
+
+
+{% block quizCss %} 
+{% endblock quizCss %}
+
+
+{% block quizContent %}
+
+
+{% include 'quiz/quiz.html' %}
+
+
+
+<div class="create-quiz">
+
+    <a  class="link" href="{% url 'quiz:quiz-create' %}">+</a>
+</div>
+
+<script src="{% static 'js/navbar.js' %}"></script>
+{% endblock quizContent %}

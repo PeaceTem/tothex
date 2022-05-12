@@ -1,0 +1,64 @@
+
+{% extends 'quiz/base.html' %}
+{% load static %}
+
+{% block quizTitle %}
+Create Quiz Link
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+<style>
+*{
+    box-sizing: border-box;
+    font-family: sans-serif;
+    padding: 0;
+    margin: 0;
+}
+section{
+    width: 500px;
+    max-width: 95%;
+}
+textarea{
+    width: 250px;
+    background: #fff;
+}
+input{
+    background: #fff;
+
+}
+input[type="text"]{
+    background: #fff;
+
+}
+
+</style>
+{% endblock quizCss %}
+
+
+
+{% load crispy_forms_tags %}
+
+<section>
+    {% include 'messages.html' %}
+
+    <h1>Quiz Link</h1>
+    <a href=" {% url 'quiz:quizzes' %} ">Go Back</a>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{form|crispy}}
+        <input type="submit" value="submit">
+    </form>
+    
+    <div>
+        
+        <a href="{% url 'quiz:new-question' quiz.id %}">
+            <button>Add more Questions</button>
+        </a>
+        
+    </div>
+</section>
+
+{% endblock content %}

@@ -1,0 +1,54 @@
+
+    {% extends 'quiz/base.html' %}
+
+{% load static %}
+
+{% block quizTitle %}
+Streak
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'leaderboard/css/streak.css' %}">
+{% endblock quizCss %}
+
+<div class="container">
+    <div style="text-align:left;" class="top-link">
+        <a style="text-align:left;" href="{% url 'leaderboard:leaderboard' %}">Go back</a>
+    </div>
+    <div style="font-size: 10px;" class="top-info">
+        Answer 20 questions correctly to earn a streak <br>
+        20 correct answers - 20 coins; <br>
+        50 correct answers - 80 coins; <br>
+        100 correct answers - 200 coins; <br>
+    </div>
+    {% include 'messages.html' %}
+<ol>
+    {% for leader in leaders %}
+    <li>
+
+        <div class="element">
+            <div class="line">
+        <a href="{% url 'profile:profile' leader.profile  %}">
+
+                    <div class="name">@{{leader.profile}}</div>
+                    <div class="length">{{leader.length}}</div>
+                    <div class="active">
+                        {% if leader.active %}
+                            Active
+                        {% else %}
+                            Inactive
+                        {% endif %}
+                    </div>
+                </a>
+
+                </div>
+        </div>
+
+    </li>
+
+    {% endfor %}
+</ol>
+    
+{% endblock content %}

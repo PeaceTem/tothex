@@ -1,0 +1,85 @@
+*{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-family: sans-serif;
+
+}
+
+a{
+    text-decoration: none;
+    color: #751515;
+    font-size: 15px;
+    font-weight: 900;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+a div{
+    height: 100%;
+    width: 100%;
+
+}
+
+.question-card-container{
+    display: block;
+    position: relative;
+    margin:auto;
+    width: 500px;
+    max-width: 95%;
+    margin-top: 10px;
+}
+
+
+.question-card-container > div{
+    margin-bottom: 10px;
+    border-top: 4px solid #f11919;
+    border-radius: 4px;
+    min-height: 50px;
+    padding-top: 10px;
+    margin: 4px;
+    box-shadow: 0 1px 4px #666;
+
+}
+li div{
+    text-align: left;
+    margin: 4px;
+
+}
+img{
+    width: 100%;
+    max-width:500px;
+}
+
+
+ol.answers li{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+input[type="submit"]{
+    background: rgba(241, 25, 25, .05);
+    color: #fff;
+    border: 1px solid #f11919;
+}
+
+
+.answerGreen div{
+    border: 2px solid rgb(0, 255, 55);
+    background: rgba(0, 255, 55, 0.1);
+    border-radius: 4px;
+    padding: 2px 4px;
+
+}
+
+.answerRed div{
+    border: 1px solid rgba(248, 13, 13);
+    background: rgba(248, 13, 13, 0.1);
+    border-radius: 4px;
+    padding: 2px 4px;
+}

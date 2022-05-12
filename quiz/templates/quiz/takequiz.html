@@ -1,0 +1,168 @@
+
+{% extends 'quiz/base.html' %}
+
+{% load static %}
+
+{% block quizTitle %}
+Take Quiz
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'quiz/css/takequiz.css' %}">
+{% endblock quizCss %}
+
+
+
+<div class="container">
+<div>Number Of Registered Users : {{number_of_registered_users}}</div>
+
+{% include 'messages.html'%}
+    <div class="minuteBx">
+        <div style="display:none;" id="minute">{{quiz.duration}}</div>
+        <div>
+            {{quiz.get_quiz_duration}}
+        </div> 
+    </div>
+    <div id="countdownbox"></div>
+</div>
+
+
+<div class="question-card-container">
+    {% if request.user.is_authenticated %}
+    <form action="{% url 'quiz:submit-quiz' quiz.id profile.code %}" method="post" enctype="multipart/form-data" id="quizForm">
+    {% else %}
+    <form action="{% url 'quiz:submit-quiz' quiz.id None %}" method="post" enctype="multipart/form-data" id="quizForm">
+        {% endif %}
+    {% csrf_token %}
+        <ol>
+        {% for question in questions %}
+        <div class="question-box">        
+            {% if question.form == 'fourChoicesQuestion' %}
+            <li class="question">
+                <input type="hidden" name="points" value="{{question.points}}">
+                <div class="questionBx">
+                    <div>
+                        {{question.question|escape}} <br>
+                        <div class="points">
+                            {% if question.points < 2 %}
+                            {{question.points}} point
+                        {% else %}
+                            {{question.points}} points
+                        {% endif %}
+                        </div>
+                </div>
+                <!-- Add the logic for if question.shuffleAnswers -->
+                {% for answer in question.shuffle_answers %}
+                {% if answer == 1 %}
+                    <div class="answer">
+                        <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
+                        <label for="id_answer1">{{question.answer1}}</label>
+                    </div>
+                {% elif answer == 2 %}
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
+                        <label for="id_answer2">{{question.answer2}}</label>
+                    </div>
+                {% elif answer == 3 %}
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
+                        <label for="id_answer3">{{question.answer3}}</label>
+                    </div>
+                {% elif answer == 4 %}
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
+                        <label for="id_answer4">{{question.answer4}}</label>
+                    </div>
+                {% endif %}
+                {% endfor %}
+            </li>
+            {% elif question.form == 'trueOrFalseQuestion' %}
+            <li class="question">
+                <input type="hidden" name="points" value="{{question.points}}">
+                <div class="questionBx">
+                    <div>
+                        {{question.question|escape}} <br>
+                        <div class="points">
+                            {% if question.points < 2 %}
+                            {{question.points}} point
+                        {% else %}
+                            {{question.points}} points
+                        {% endif %}
+                    </div>
+                    
+                </div>
+                    <div class="answer">
+                        <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
+                        <label for="id_answer1">True</label>
+                    </div>
+                    
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
+                        <label for="id_answer2">False</label>
+                    </div>
+            </li>            
+            {% endif %}
+            </div>
+        {% endfor %}
+    </ol>
+    <input id ='timeTaken' type="hidden" name="timeTaken">
+        <input id="submitButton" type="submit" value="Submit">
+    </form>
+</div>
+
+<script>
+
+    function validateAnswer(option, target){
+        let answers = document.getElementsByClassName(option);
+
+        for(var i = 0; i < answers.length; i++){
+        if (answers[i].checked == 1){
+            answers[i].checked = 0;
+        };  
+
+        }
+        document.getElementById(target).checked = true;
+        
+    }
+
+    const minutes = document.getElementById('minute').textContent;
+
+    const countdownbox = document.getElementById('countdownbox');
+    let seconds = minutes ;
+    const duration = minutes;
+    const quiz = document.getElementById('quizForm');
+    let timeTaken = document.getElementById('timeTaken');
+    timeTaken.value = seconds;
+    const myInterval = setInterval(()=>{
+        seconds -= 1;
+        let minutesLeft = Math.floor(seconds/60);
+        let secondsLeft = seconds%60;
+
+        timeTaken.value = parseInt(duration - seconds);
+        if (seconds == 0){
+            print(seconds);
+            const finished =  document.getElementById('submitButton');
+            finished.click();
+
+        }
+
+
+        if(seconds <= -1){
+            myStopFunction();
+        }
+    countdownbox.innerHTML = `<b>${minutesLeft}min:${secondsLeft}sec left</b>`;
+
+    }, 1000)
+
+
+
+function myStopFunction(){
+    clearInterval(myInterval);
+}
+
+</script>
+
+
+{% endblock content %}

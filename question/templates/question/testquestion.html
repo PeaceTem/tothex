@@ -1,0 +1,151 @@
+{% extends 'quiz/base.html' %}
+
+{% load static %}
+
+{% block quizTitle %}
+Old Town Road
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'question/css/takequestion.css' %}">
+{% endblock quizCss %}
+{% include 'messages.html' %}
+
+<div id="div">
+
+</div>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+
+<script>
+    
+    let questions = '{{questions}}'
+    questions = JSON.parse(questions.replace(/&#x27;/g, '"'))
+    let homeURL = `{% url 'question:questions' %}`
+    for(let q of questions){
+    //     document.querySelector('#div').innerHTML += `<div>
+    //         ${question.question} <br>
+    //         ${question.answer1} <br>
+    //         ${question.answer2} <br>
+
+    //         ${question.solution} <br>
+    //         attempts : ${question.attempts} <br>
+    //         average score : ${question.avgScore} <br>
+    //         Duration : ${question.duration_in_seconds} <br>
+    //         <br>
+    //         <br>
+    //         <br>
+    //         <br>
+    //         <br>
+            
+    //         </div>`
+    let question = {}
+
+    question.id = q.id
+    question.form = q.form
+    question.question = q.question
+    question.answer1 = q.answer1
+    question.answer2 = q.answer2
+    question.solution = q.solution
+    question.duration_in_seconds = q.duration_in_seconds
+    question.attempts = q.attempts
+    question.avgScore = q.avgScore
+
+
+    if(q.form == 'fourChoicesQuestion'){
+    question.answer3 = q.answer3
+    question.answer4 = q.answer4
+    }
+console.log(question)
+
+let question_text = `${question.question}`
+console.log(question_text)
+
+container = document.querySelector('#div')
+container.innerHTML =
+`
+
+<a href=${homeURL}>Go Back</a>
+<div class="container">
+    <div class="top">
+        <div class="title">Old Town Road</div>
+    </div>
+    
+    <div class="inline">
+    
+        <div class="average">
+            {{question.avgScore}}%
+        </div>
+        <div id="seconds" class="duration">
+            {{question.duration_in_seconds}}
+        </div>
+        <div class="secondsName">
+            seconds            
+        </div>
+    
+    </div>
+    
+    
+    <div id="countdownbox"></div>
+    <div class="question-card-container">
+        <div style='color:#f11919'>ToTheX</div>
+        <form class="question-form-box" method="post"  id="questionForm">
+            {% csrf_token %}
+                {% if question.form == 'fourChoicesQuestion' %}
+                <div>
+                    <div class="questionBx">
+                        ${question.question}
+
+                    </div>
+                    <div class="answer">
+                        <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                        <label for="id_answer1">{{question.answer1}}</label>
+                    </div>
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                        <label for="id_answer2">{{question.answer2}}</label>
+                    </div>
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
+                        <label for="id_answer3">{{question.answer3}}</label>
+                    </div>
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
+                        <label for="id_answer4">{{question.answer4}}</label>
+                    </div>
+            {% elif question.form == 'trueOrFalseQuestion' %}
+            <div class="questionBx">
+                {{question.question}}
+
+            </div>
+                    <div class="answer">
+                        <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                        <label for="id_answer1">True</label>
+                    </div>
+                    
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                        <label for="id_answer2">False</label>
+                    </div>
+                        
+                {% endif %}
+                <div style="text-align:right;">
+                    <div style='color:#f11919; text-align:right; margin-right: 3px;'>ToTheX</div>
+                </div>
+            <input type="submit"  id="submitButton"  value="Submit">
+        </form>
+    </div>
+
+<div  style="display:none;" class='result'>
+      
+</div>
+
+
+`
+}
+</script>
+<script src="{% static 'question/js/insert.js' %}"></script>
+
+{% endblock content %}

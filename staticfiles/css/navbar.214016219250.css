@@ -1,0 +1,120 @@
+:root{
+    --div-background-color: #f1f1f1;
+    --background-color: #dfdfdf;
+    --bold-text-color: #252525;
+    --link-button-background-color: #333edb;
+    --white-theme: #fff;
+    --dark-theme: #666;
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    transition: all 0.5s ease-in-out;
+}
+
+body{
+    width: 100vw;
+    /* height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgb(223, 228, 231);
+    /* background-size: cover; */
+}
+
+header{
+    margin-top: 3vh;
+}
+
+header .top-navigation{
+    background: #fff;
+    padding: .01rem;
+    border-radius: 0.75rem;
+    width: 800px;
+    max-width: 95vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 3px solid var(--link-button-background-color);
+    box-shadow: 0 15px 15px rgba(190, 201, 218, 0.2);
+    position: relative;
+}
+
+header .top-navigation a{
+    padding: 1rem 0.5rem;
+    display: inline-block;
+    text-decoration: none;
+    color: #a1a1a1;
+    width: 80px;
+    text-align: center;
+    border: none;
+}
+
+header .top-navigation a.active{
+    background: var(--link-button-background-color);
+    color: var(--white-theme);
+    font-weight: bold;
+    border-radius: 10px;
+    height: 100%;
+    position: relative;
+    border-top: 1px solid var(--white-theme);
+}
+
+header .top-navigation a:hover{
+    background: var(--link-button-background-color);
+    color: var(--white-theme);
+    border-bottom: 1px solid var(--link-button-background-color);
+
+}
+
+/* header .top-navigation .active-link{
+    content:'';
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 80px;
+    height: 5px;
+    background: #252525;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+
+} */
+
+/* link style  */
+
+a.link{
+    background: #fff;
+    color: var(--link-button-background-color);
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 10px;
+    border: 2px solid var(--link-button-background-color);
+    margin: 10px 4px 10px 4px;
+    text-align: center;
+
+}
+
+.create-quiz{
+    position: fixed;
+    bottom: 50px;
+    right: 30px;
+    box-shadow: 0 0 10px var(--white-theme);
+}
+
+@media(max-width: 700px){
+    body{
+        font-size: 16px;
+    }
+    header .top-navigation a{
+        height: 100%;
+        padding: 0rem 0rem;
+        width: 10rem;
+    }
+}
+
+

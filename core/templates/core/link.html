@@ -1,0 +1,12 @@
+{% load static %}
+
+{% load crispy_forms_tags %}
+<h3>Change Link</h3>
+<p>
+    Add an external link
+</p>
+<form action="" method="post">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input type="submit" value="Change" style="background: #f11919; color: #fff;  width: 500px; max-width: 90vw;">
+</form>

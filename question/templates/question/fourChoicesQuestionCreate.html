@@ -1,0 +1,33 @@
+
+{% extends 'quiz/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block quizTitle %}
+Create Four Choices QUestion
+{% endblock quizTitle %}
+
+{% block content %}
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'question/css/fourChoices.css' %}">
+{% endblock quizCss %}
+{% include 'messages.html' %}
+
+
+<div class="question">
+<div class="head">Step 1 of 2</div>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{fourChoicesForm|crispy}}
+        <input type="submit" value="Create">
+    </form>
+    
+</div>
+
+
+{% endblock content %}
+
+
+

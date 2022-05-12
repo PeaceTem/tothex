@@ -1,0 +1,13 @@
+server {
+	listen 80;
+	server_name tothex.org www.tothex.org;
+	
+	location /static/ {
+		alias /opt/tothex/static/;
+	}
+
+	location / {
+		#root /opt/tothex/;
+		proxy_pass http://localhost:8000;
+	}
+}

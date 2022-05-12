@@ -1,0 +1,176 @@
+
+
+{% extends 'quiz/base.html' %}
+
+{% load static %}
+
+{% block quizTitle %}
+Old Town Road
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'quiz/css/takequiz.css' %}">
+{% endblock quizCss %}
+
+
+
+
+<div class="container">
+    {% include 'messages.html'%}
+        <div class="minuteBx">
+            <span>duration ~  </span>
+            <div id="timeDisplay"></div>
+            <div style="display:none;" id="minutes">{{duration}}</div>
+        </div>
+        <div id="countdownbox"></div>
+ </div>
+    
+    
+
+
+
+ <div class="question-card-container">
+{% if request.user.is_authenticated %}
+<form class="question-form-box" action="{% url 'question:quiz-submit' request.user.profile.code  %}" method="post"  id="quizForm">
+{% else %}
+<form class="question-form-box" action="{% url 'question:quiz-submit' None %}" method="post"  id="quizForm">
+
+{% endif %}
+    {% csrf_token %}
+    <ol>
+
+{% for index, question in questions %}
+<div class="question-box">
+    {% if question.form == 'fourChoicesQuestion' %}
+    <li class="question">
+
+        <div>
+            <div class="questionBx">
+                {{question.question}}
+
+            </div>
+            {% for ans in question.shuffle_answers %}
+            {% if ans == 1 %}
+            <div class="answer">
+                <input class="option{{index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer1" value="fourChoices-{{question.id}}-answer1">
+                <label for="id_answer1">{{question.answer1}}</label>
+            </div>
+            {% elif ans == 2 %}
+            
+            <div class="answer">
+                <input class="option{{index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer2" value="fourChoices-{{question.id}}-answer2">
+                <label for="id_answer2">{{question.answer2}}</label>
+            </div>
+            {% elif ans == 3 %}
+
+            <div class="answer">
+                <input class="option{{index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer3" value="fourChoices-{{question.id}}-answer3">
+                <label for="id_answer3">{{question.answer3}}</label>
+            </div>
+            {% elif ans == 4 %}
+
+            <div class="answer">
+                <input class="option{{index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer4" value="fourChoices-{{question.id}}-answer4">
+                <label for="id_answer4">{{question.answer4}}</label>
+            </div>
+            {% endif %}    
+            {% endfor %}
+    </li>
+
+    {% elif question.form == 'trueOrFalseQuestion' %}
+    <li class="question">
+
+    <div class="questionBx">
+        {{question.question}}
+
+    </div>
+            <div class="answer">
+                <input class="option{{index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer1" value="trueOrFalse-{{question.id}}-answer1">
+                <label for="id_answer1">True</label>
+            </div>
+            
+            <div class="answer">
+                <input class="option{{index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer2" value="trueOrFalse-{{question.id}}-answer2">
+                <label for="id_answer2">False</label>
+            </div>
+        </li>
+                
+        {% endif %}
+    
+</div>
+        
+        <div style="text-align:right;">
+            <div style='color:#f11919; text-align:right; margin-right: 3px;'>ToTheX</div>
+        </div>
+{% endfor %}
+</ol>
+<input type="hidden" name="reAttempt" value="{{reAttempt}}">
+<input type="hidden" name="questionLength" value="{{questionLength}}">
+<input type="hidden" name="type" value="{{type}}">
+
+
+<input type="submit"  id="submitButton"  value="Submit">
+
+
+</form>
+</div>
+
+<script>
+
+
+
+    function validateAnswer(option, target){
+        let answers = document.getElementsByClassName(option);
+
+        for(var i = 0; i < answers.length; i++){
+        if (answers[i].checked == 1){
+            answers[i].checked = 0;
+        };  
+
+        }
+        document.getElementById(target).checked = true;
+        
+    }
+
+    const minutes = document.getElementById('minutes').textContent;
+    let number_of_minutes = Math.floor(parseInt(minutes) / 60)
+    let number_of_seconds = parseInt(minutes) % 60
+    let timeDisplay = document.getElementById("timeDisplay")
+    timeDisplay.innerHTML = `~ ${number_of_minutes}min : ${number_of_seconds}sec`
+
+    const countdownbox = document.getElementById('countdownbox');
+    let seconds = minutes;
+    const quiz = document.getElementById('quizForm');
+    
+    const myInterval = setInterval(()=>{
+        seconds -= 1;
+        let minutesLeft = Math.floor(seconds/60);
+        let secondsLeft = seconds%60;
+
+ 
+        if (seconds == 0){
+            print(seconds);
+            const finished =  document.getElementById('submitButton');
+            finished.click();
+
+        }
+        if (seconds <= -1){
+        myStopFunction();
+        }
+        countdownbox.innerHTML = `<b>${minutesLeft}min:${secondsLeft}sec left</b>`;
+
+
+    }, 1000)
+
+
+    function myStopFunction() {
+  clearInterval(myInterval);
+    }
+
+
+
+</script>
+
+{% endblock content %}

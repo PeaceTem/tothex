@@ -1,0 +1,398 @@
+
+
+{% extends 'quiz/base.html' %}
+
+{% load static %}
+{% load social_share %}
+{% block quizTitle %}
+Quiz Generator Submit
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'quiz/css/submitQuiz.css' %}">
+{% endblock quizCss %}
+
+
+
+
+{% include 'messages.html'%}
+
+<div class="question-card-container">
+    <div>
+        <a href="{% url 'question:quiz-generator' %}">Go back home</a>
+
+    </div>
+    
+    <div>
+        {{attempt_report}}
+        <br>
+        You scored: {{user_score}}/{{total_score}}
+        <br>
+        Your Average Score: {{user_avg_score}}%
+    </div>
+</div>
+
+
+<div class="question-card-container download-quiz">
+
+    <ol>
+        
+        {% for question, answer in questionsList %}
+        <div class="question-box">
+            <div class="indicator"></div>
+            {% if question.form == 'fourChoicesQuestion' %}
+        <li class="question">
+
+
+            <div>
+                    {{question.question}} <br>
+                    <div class="points">
+                        {% if question.points < 2 %}
+                        {{question.points}} point
+                    {% else %}
+                        {{question.points}} points
+                    {% endif %}
+                    </div>
+                    <ol class="answers">
+                        {% if question.correct == 'answer1' %}
+                        <li class="answerGreen">
+                            <div class="answer">
+                                {{question.answer1}}
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
+                        </li>
+                        {% elif answer == question.answer1 %}
+                        
+                        <li class="answerRed">
+                            <div class="answer">
+                                {{question.answer1}}
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
+                        </li>
+
+                        {% else %}
+
+                        <li class="answerWhite">
+                            <div class="answer">
+                                {{question.answer1}} 
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
+                        </li>
+
+                        {% endif %}
+
+
+
+
+
+
+                        {% if question.correct == 'answer2' %}
+                        <li class="answerGreen">
+                            <div class="answer">
+                                {{question.answer2}} 
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
+                        </li>
+                        {% elif answer == question.answer2 %}
+                        
+                        <li class="answerRed">
+                            <div class="answer">
+                                {{question.answer2}} 
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
+                        </li>
+
+                        {% else %}
+
+                        <li class="answerWhite">
+                            <div class="answer">
+                                {{question.answer2}} 
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
+                        </li>
+
+                        {% endif %}
+
+
+
+
+
+
+                        {% if question.correct == 'answer3' %}
+                        <li class="answerGreen">
+                            <div class="answer">
+                                {{question.answer3}}
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
+                        </li>
+                        {% elif answer == question.answer3 %}
+                        
+                        <li class="answerRed">
+                            <div class="answer">
+                                {{question.answer3}} 
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
+                        </li>
+
+                        {% else %}
+
+                        <li class="answerWhite">
+                            <div class="answer">
+                                {{question.answer3}} 
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
+                        </li>
+
+                        {% endif %}
+
+
+
+
+
+
+                        {% if question.correct == 'answer4' %}
+                        <li class="answerGreen">
+                            <div class="answer">
+                                {{question.answer4}}
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
+                        </li>
+                        {% elif answer == question.answer4 %}
+                        
+                        <li class="answerRed">
+                            <div class="answer">
+                                {{question.answer4}}
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
+                        </li>
+
+                        {% else %}
+
+                        <li class="answerWhite">
+                            <div class="answer">
+                                {{question.answer4}}
+                            </div>
+                            <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
+                        </li>
+
+                        {% endif %}
+
+                        
+                        
+                    </ol>
+                    <div class="solution">
+                        Solution: {{question.solution}}
+                    </div>
+               
+            </div>
+        </li>
+            {% elif question.form == 'trueOrFalseQuestion' %}
+            <li class="question">
+
+
+                <div>
+                        {{question.question}} <br>
+                        <div class="points">
+                            {% if question.points < 2 %}
+                            {{question.points}} point
+                        {% else %}
+                            {{question.points}} points
+                        {% endif %}
+                        </div>
+                        <ol class="answers">
+                            {% if question.correct == 'True' %}
+                            <li class="answerGreen">
+                                <div class="answer">
+                                    {{question.answer1}} 
+                                </div>
+                                <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
+                            </li>
+                            {% elif answer == question.answer1 %}
+                            
+                            <li class="answerRed">
+                                <div class="answer">
+                                    {{question.answer1}}
+                                </div>
+                                <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
+                            </li>
+    
+                            {% else %}
+    
+                            <li class="answerWhite">
+                                <div class="answer">
+                                    {{question.answer1}}
+                                </div>
+                                <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
+                            </li>
+    
+                            {% endif %}
+    
+    
+    
+    
+    
+    
+                            {% if question.correct == 'False' %}
+                            <li class="answerGreen">
+                                <div class="answer">
+                                    {{question.answer2}} 
+                                </div>
+                                <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
+                            </li>
+                            {% elif answer == question.answer2 %}
+                            
+                            <li class="answerRed">
+                                <div class="answer">
+                                    {{question.answer2}}
+                                </div>
+                                <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
+                            </li>
+    
+                            {% else %}
+    
+                            <li class="answerWhite">
+                                <div class="answer">
+                                    {{question.answer2}} 
+                                </div>
+                                <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
+                            </li>
+    
+                            {% endif %}
+    
+                         
+                        
+                        </ol>
+                        <div class="solution">
+                            Solution: {{question.solution}}
+                        </div>
+                   
+                </div>
+            </li>
+            {% endif %}
+        </div>
+
+        {% endfor %}
+</div>
+</ol>
+
+<div class="question-card-container">
+    
+    <!-- <div style="display:none; max-width: 500px;" class="result">
+    
+    </div>
+    <div>
+        <a href=""  class="a">Download the Image</a>
+    </div> -->
+
+{% if type == 'reAttempt' %}
+    <div>
+        Re-take the Quiz
+        <form action="{% url 'question:retake-quiz' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="reAttempt" value="{{reAttempt}}">
+            <input type="submit" value="Yes">
+            
+        </form>
+    </div>
+    {% elif type == 'pastQuestions' %}
+    <div>
+        <a href="{% url 'question:past-questions' %}">Answer More</a>
+        
+    </div>
+{% endif %}
+<div>
+    <img src="{{postAd.picture.url}}">
+</div>
+
+<div>
+    {{postAd.description}}
+</div>
+
+<div>
+    <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'submit' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
+</div>
+
+
+<div class="social-share">
+    <i style="font-size:11px;">
+        Refer To Earn More Coins (20 coins per click)
+
+    </i>
+{% post_to_facebook  object_or_url 'Post to Facebook' %}
+{% post_to_twitter "Take A Quiz: " object_or_url "Post to Twitter" %}
+{% post_to_linkedin  object_or_url "Post to" %}
+{% send_email "ToTheX Quiz" "Take A Quiz: " object_or_url "Share via email" %}
+{% post_to_reddit "Take A Quiz: " object_or_url %}
+{% post_to_telegram "Take A Quiz: " object_or_url %}
+{% post_to_whatsapp object_or_url "Share via WhatsApp" %}
+{% save_to_pinterest object_or_url %}
+</div>
+
+</div>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script>
+
+
+    function clickFunction(){
+        
+        $.ajax({
+            // change this to post
+            type: 'GET', 
+            url : $('a.postAd').data('url'),
+            data : {
+            },
+            success : function(response){
+                alert('link clicked!')
+                
+
+            },
+            error : function(){
+                alert('It falis silently!')
+            }
+
+        });
+
+    }
+
+    const yourAnswer = document.getElementsByClassName('yourAnswer')
+    const correctAnswer = document.getElementsByClassName('correctAnswer')
+    const indicators = document.getElementsByClassName('indicator')
+    for(let i = 0; i < yourAnswer.length; i++){
+        console.log(yourAnswer[i].innerText)
+        console.log(correctAnswer[i].innerText)
+        if(yourAnswer[i].innerText  == correctAnswer[i].innerText){
+            indicators[i].style.backgroundColor =  'green';
+            console.log('correct!');
+        }else{
+            indicators[i].style.backgroundColor =  'red';
+            console.log('wrong!');
+        }
+    }
+
+
+</script>
+
+{% endblock content %}
+
+
+
+
+<script src="{% static 'question/html2canvas.js' %}"></script>
+<script>
+
+let elm = document.querySelector('.download-quiz');
+    elm.prepend("");
+    html2canvas(elm).then(function(canvas){
+        document.querySelector('.result').append(canvas);
+        let cvs = document.querySelector('canvas');
+        let a = document.querySelector('.a');
+        a.href = cvs.toDataURL();
+        a.download = 'tothex-{{quiz.quiz.title}}.png'
+    })
+
+
+
+</script>

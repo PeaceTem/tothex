@@ -1,0 +1,84 @@
+
+
+.card-container{
+    display: block;
+    margin-top: 4px;
+    margin: 0 auto;
+    width: 900px;
+    max-width:95vw;
+
+}
+
+.card{
+    margin-top: 10px;
+    display: block;
+    position: relative;
+    border-top: 3px solid var(--theme-color);
+    background: #fff;
+    box-shadow: 3px 3px 7px #999, -3px -3px 7px #999;
+    border-radius: 4px;
+}
+
+
+.card .contentBx{
+    display: flex;
+    width: 100%;
+    align-items:center;
+    justify-content:center;
+    flex-direction: column;
+    position: relative;
+}
+
+.card .contentBx > div{
+    margin: 5px 2px 5px 2px;
+}
+
+.card .contentBx div.title-block{
+    border-bottom:1px solid#999;
+    width: 100%;  
+}
+.card .contentBx .title{
+    color: var(--theme-color);
+    position: relative;
+    font-weight: bold;
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    
+}
+
+.card .contentBx .creator{
+    display: inline-flex;
+    /* position: absolute; */
+    align-items: center;
+    justify-content:space-between;
+    
+}
+
+
+.card .contentBx .linkBx, .card .contentBx .inline{
+    display: flex;
+
+}
+
+.card .contentBx .linkBx > a:hover, .card .contentBx .linkBx > a:focus{
+    background: var(--link-button-background-color);
+    color: var(--white-theme);
+    box-shadow: 3px 3px 3px rgb(156, 163, 226);
+
+}
+
+@media(max-width:700px){
+    .card{
+        flex-direction: column;
+        position: relative;
+
+    }   
+    .card .contentBx .title{
+        font-weight: 800;
+        font-size: 18px;
+    }
+}
+
+
+

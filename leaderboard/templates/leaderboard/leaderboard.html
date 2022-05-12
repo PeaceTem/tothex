@@ -1,0 +1,47 @@
+
+{% extends 'quiz/base.html' %}
+{% load static %}
+
+{% block quizTitle %}
+Leaderboard
+{% endblock quizTitle %}
+
+{% block content %}
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'leaderboard/css/leaderboard.css' %}">
+{% endblock quizCss %}
+{% include 'navbar.html' %}
+{% include 'messages.html' %}
+
+<div class="container">
+    <p id="info">Each leaderboard will be reset every 24 hours +0 GMT</p>
+    <input type="hidden" id="navActive" name="nav" value="{{nav}}">
+
+    <div>
+        <a class="leaderboard" href="{% url 'leaderboard:wealth' %}">
+            Earner
+        </a>
+    </div>
+    
+    <div>
+        <a class="leaderboard" href="{% url 'leaderboard:creator' %}">
+            Creator
+        </a>
+    </div>
+    
+
+
+    <div>
+        <a class="leaderboard" href="{% url 'leaderboard:streak' %}">
+            Streak
+        </a>
+    </div>  
+    <div>
+        <a class="leaderboard" href="{% url 'leaderboard:referral' %}">
+            Referral
+        </a>
+    </div>    
+</div>
+<script src="{% static 'leaderboard/js/leaderboard.js' %}"></script>
+
+{% endblock content %}

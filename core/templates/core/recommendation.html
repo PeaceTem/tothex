@@ -1,0 +1,10 @@
+{% if my_recs %}
+    <h1>Recommedations</h1>
+    <ul>
+        {% for profile in my_recs %}
+            <li>{{profile.user}}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h3>You haven't recommended anyone yet!</h3>
+{% endif %}

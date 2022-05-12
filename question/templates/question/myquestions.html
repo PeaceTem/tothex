@@ -1,0 +1,159 @@
+{% extends 'quiz/base.html' %}
+
+{% load static %}
+
+{% block quizTitle %}
+My Questions
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'question/css/myquestions.css' %}">
+{% endblock quizCss %}
+<div style="text-align:left;" class="top-link">
+    <a style="text-align:left;" href="{% url 'question:questions' %}">Go back</a>
+</div>
+<div id="messageContainerTop">
+    <div class="messageContainer">
+        <div class="messageText">deleted!</div>
+    </div>
+</div>
+{% include 'messages.html' %}
+
+<div class="container infinite-container" onchange="changed()">
+
+        {% for date_created, question in page_obj %}
+    <div class="questions  infinite-item">
+
+        {% if question.form == 'trueOrFalseQuestion' %}
+            <div class="quizItem">
+                {{question.question|truncatechars:80}}
+            </div>
+            <div class="inline">
+    
+                <div class="attempt">
+                    {% if question.attempts < 2 %}
+                        {{question.attempts}} attempt
+                    {% else %}
+                        {{question.attempts}} attempts
+                    {% endif %}
+                </div>
+                <div class="average">
+                    {{question.avgScore}}%
+                </div>
+                <span id="seconds" class="duration">
+                    {{question.duration_in_seconds}}
+                </span>
+                <span class="secondsName">
+                    seconds            
+                </span>
+            
+            </div>
+            {% if question.index is not None %}
+            <div class="linkTab">
+                <div class="private-links">
+                    <a href="{% url 'question:edit-trueOrFalseQuestion' question.id %}">Update</a>
+                </div>
+                <div class="private-links">
+                    <form class="DeleteForm" action="{% url 'question:delete-question' 'trueOrFalse' question.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete">
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+    {% elif question.form == 'fourChoicesQuestion' %}
+    
+            <div class="quizItem">
+                {{question.question|truncatechars:80}}
+            </div>
+            <div class="inline">
+    
+                <div class="attempt">
+                    {% if question.attempts < 2 %}
+                        {{question.attempts}} attempt
+                    {% else %}
+                        {{question.attempts}} attempts
+                    {% endif %}
+                </div>
+                <div class="average">
+                    {{question.avgScore}}%
+                </div>
+                <span id="seconds" class="duration">
+                    {{question.duration_in_seconds}}
+                </span>
+                <span class="secondsName">
+                    seconds            
+                </span>
+            
+            </div>
+            {% if question.index is not None %}
+            <div class="linkTab">
+                <div class="private-links">
+                    <a href="{% url 'question:edit-fourChoicesQuestion' question.id %}">Update</a>
+                </div>
+                <div class="private-links">
+                    <form class="DeleteForm" action="{% url 'question:delete-question' 'fourChoices' question.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete">
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+    {% endif %}
+</div>
+
+{% endfor %}
+    
+
+</div>
+
+
+<div class="d-flex position-fixed" style="color:white;bottom:2vh;left:46vw">
+    <button class="btn btn-danger loading">
+        <span style="color:white;" class="spinner-border spinner-border-sm"></span>
+    </button>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        {% if page_obj.has_next %}
+        <a onclick="changed()" class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+        </span>
+    </div>
+</div>
+
+
+<script src="{% static 'js/jquery.js' %}"></script>
+
+<script src="{% static 'question/js/myquestions.js' %}"></script>
+
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script>
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+
+        offset: 'bottom-in-view',
+
+        onBeforePageLoad: function () {
+            $('.loading').show();
+
+        },
+        onAfterPageLoad: function () {
+            $('.loading').hide();
+            function reload_js(src) {
+            $('script[src="' + src + '"]').remove();
+            $('<script>').attr('src', src).appendTo('head');
+            }
+            reload_js("{% static 'question/js/myquestions.js' %}");
+
+        }
+        
+    
+    });
+</script>
+
+{% endblock content %}

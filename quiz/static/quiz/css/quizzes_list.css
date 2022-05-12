@@ -1,0 +1,236 @@
+*{
+    font-family: sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a{
+    text-decoration: none;
+}
+
+div.contains{
+    position: ralative;
+    top: -20px;
+    left: 0;
+}
+
+.head-link{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.head-link a{
+    margin-right: 5px;
+    text-align: center;
+    padding: 3px 3px;
+
+}
+div.fixed{
+    position: fixed;
+    top: 0;
+    left: 0;
+
+}
+
+.active{
+    border-bottom: 3px solid var(--theme-color);
+}
+
+
+
+.card-container{
+    display: block;
+    margin-top: 4px;
+    margin: 0 auto;
+    width: 900px;
+    max-width: 100%;
+
+}
+
+.card{
+    display: block;
+    position: relative;
+    border-top: 3px solid var(--theme-color);
+    background: #fff;
+    box-shadow: 3px 3px 3px #ccc, -3px -3px 3px #ccc;
+    border-radius: 4px;
+    max-width: 95%;
+    margin: auto;
+    margin-top: 10px;
+    
+    
+}
+.username{
+    position: absolute;
+    top: 6px;
+    left: 3px;
+}
+
+.categories{
+    position: relative;
+    top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.category{
+    background: rgba(241, 25, 25, .1);
+    border-radius: 4px;
+    padding: 2px 3px;
+    margin: 4px 4px;
+    
+}
+#outputDate{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+
+}
+
+
+.card .contentBx{
+    display: flex;
+    width: 100%;
+    align-items:center;
+    justify-content:center;
+    flex-direction: column;
+    position: relative;
+}
+
+.card .contentBx > div{
+    margin: 2px 2px;
+    overflow-x: hidden;
+}
+
+
+.link img{
+    width: 100%;
+    margin-top: 30px;
+}
+
+.card .contentBx div.title-block{
+    border-bottom:1px solid#ccc;
+    width: 100%;  
+
+}
+.card .contentBx .title{
+    color: #666;
+    min-height: 30px;
+    width: 100%;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-family: Roboto;
+    text-align: center;
+    
+}
+
+.card .contentBx .desc{
+    text-align: center;
+}
+.card .contentBx .creator{
+    display: inline-flex;
+    /* position: absolute; */
+    align-items: center;
+    justify-content:space-between;
+    
+}
+
+.card .contentBx .inline{
+    display: flex;
+    flex-wrap: wrap;
+    width : 100%;
+    height: 100%;
+    justify-content: center;
+    align-items:flex-start ;
+}
+
+.card .contentBx .inline > div{
+    margin: 0px 5px;
+    text-align:left;
+}
+.card .contentBx .linkBx{
+    display: flex;
+    flex-wrap: wrap;
+    width : 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center ;
+    /* max-width: 500px; */
+
+}
+
+.card .contentBx .linkBx > a:hover, .card .contentBx .linkBx > a:focus{
+    background: var(--theme-color);
+    color: var(--white-theme);
+
+}
+
+button{
+    background: #f11919;
+    color:white;
+    border: none;
+    outline: none;
+    padding: 5px 5px;
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+}
+
+.card .contentBx .linkBx > div{
+    width: 50%;
+    border:1px solid #ccc;
+    border-bottom: none;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+
+}
+
+.card .contentBx .linkBx #likes{
+    border-left: none;
+    border-right: .5px solid #ccc;
+}
+
+.card .contentBx .linkBx #take-quiz{
+    border-right: none;
+    border-left: .5px solid #ccc;
+
+}
+
+
+
+span.random{
+    background: rgb(43, 226, 19);
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+@media(max-width:700px){
+    *{
+        font-size: 12px;
+    }
+    .card{
+        flex-direction: column;
+        position: relative;
+
+    }   
+    .card .contentBx .title{
+        font-weight: 800;
+        font-size: 18px;
+    }
+}
+
+
+

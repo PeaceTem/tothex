@@ -1,0 +1,1 @@
+web: gunicorn tothex.wsgi --log-file -

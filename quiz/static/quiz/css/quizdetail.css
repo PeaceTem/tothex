@@ -1,0 +1,130 @@
+*{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-family: sans-serif;
+    text-overflow: clip;
+    overflow-x: hidden;
+}
+a{
+    text-decoration: none;
+    font-size: 15px;
+    font-style:italic;
+    cursor: pointer;
+    padding: 3px 3px;
+    border-radius: 4px;
+    border: 1px solid #f11919;
+    background: #f11919;
+    color: #fff;
+
+}
+
+a:hover, a:focus{
+    background: #f11919;
+    color: #fff;
+    border: none;
+    transition: all 0.5s ease 0s;
+}
+
+
+
+
+div.social-share > div{
+    background: rgba(241, 25, 25, .05);
+    border: .5px solid #f11919;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px;
+
+}
+
+
+.detail{
+    display: block;
+    position: relative;
+    margin:auto;
+    width: 500px;
+    max-width: 100%;
+}
+.detail > div{
+    border-top: 4px solid #f11919;
+    border-radius: 4px;
+    min-height: 50px;
+    padding-top: 10px;
+    box-shadow: 1px 3px 2px #ccc;
+    max-width: 95%;
+    margin:auto;
+    margin-bottom: 10px;
+
+
+}
+
+img{
+    width: 100%;
+    max-width:500px;
+}
+
+button, input[type="submit"]{
+    background: #f11919;
+    color:white;
+    border: none;
+    outline: none;
+    padding: 5px 5px;
+    border-radius: 4px;
+    width: 95%;
+    height: 100%;
+}
+
+
+.categories{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.category{
+    background: #ddd;
+    border-radius: 3px;
+    padding: 2px 3px;
+    margin-left: 10px;
+    height:fit-content;
+}
+
+.private-links{
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+}
+
+.social-share{
+    display: flex;
+    flex-direction: column;
+
+}
+
+social-share>*{
+    margin: 10px 4px;
+}
+
+
+
+ol.scores{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: space-between;
+    width: 80%;
+}
+
+@media (max-width:700px) {
+    *{
+        font-size: 16px;
+    }
+}

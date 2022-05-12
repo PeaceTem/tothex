@@ -1,0 +1,37 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+{% block quizTitle %}
+Create Question
+{% endblock quizTitle %}
+
+{% block content %}
+
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'question/css/newquestion.css' %}">
+{% endblock quizCss %}
+{% include 'messages.html' %}
+
+<section>
+   
+<div class="contentBx">
+    <div class="formBx">
+        <h2>Create Question</h2>
+        <div class="question-info">You'll earn 0.1 coin per successful attempt</div>
+
+<a class="create" href="{% url 'question:trueOrFalseQuestion' %}">Create A True Or False Question</a>
+
+<a class="create" href="{% url 'question:fourChoicesQuestion' %}">Create A Four Choices Question</a>
+
+
+</div>
+<a href="{% url 'question:questions' %}">Go Back</a>
+</div>
+</section>
+
+<script>
+
+</script>
+
+
+{% endblock content %}

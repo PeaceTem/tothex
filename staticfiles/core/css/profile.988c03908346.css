@@ -1,0 +1,213 @@
+*{
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    color: #333;
+    text-align: center;
+}
+
+a.profile{
+    text-decoration: none;
+    color: #751515;
+    font-size: 15px;
+    font-weight: 900;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+a div{
+    height: 100%;
+    width: 100%;
+
+}
+
+.otherInfo{
+    display: block;
+    position: relative;
+    margin:auto;
+    width: 500px;
+    max-width: 100%;
+    margin-top: 20px;
+}
+
+
+.otherInfo > div{
+    margin-bottom: 10px;
+    border-top: 4px solid #f11919;
+    border-radius: 4px;
+    min-height: 50px;
+    padding-top: 10px;
+}
+
+img{
+    width: 100%;
+    max-width:500px;
+}
+
+
+.profile-box{
+    margin-top: 50px;
+}
+.profile-box .imgBx{
+    display : flex;
+    border-radius : 50%;
+    align-items: center;
+    justify-content:center;
+    margin-top: 20px;
+}
+
+.profile-box .imgBx img{
+    background-size: cover;
+    position : relative;
+    width : 300px;
+    max-width : 50vw;
+
+}
+
+.name{
+    font-size: 24px;
+    font-weight: 700;
+    display : flex; 
+    justify-content: center;
+    align-items : center;
+
+}
+
+.name > .userBx{
+    display: inline;
+    margin: 3px 5px;
+}
+
+.username{
+    font-size: 12px;
+    font-weight: 500;
+    display : flex; 
+    justify-content: center;
+    align-items : center;
+}
+
+.obvious{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.obvious .childBx{
+    display: block;
+    font-size: 12px;
+    margin: 0 7px;
+    padding: 3px 4px;
+    /* border: 1px solid #f11919; */
+    border-radius: 4px;
+    /* box-shadow: 1px 1px 4px #f11919, -1px -1px 4px #f11919 ; */
+    background-color: #fff;
+    
+}
+.obvious .childBx > div{
+    color: #666;
+}
+
+.urlLink{
+    margin:30px 0 10px 0;
+}
+.urlLink >*{
+    margin: 20px 0;
+}
+a.profile-link{
+    text-decoration: none;
+    background: #751515;
+    font-size: 15px;
+    /* font-weight: 900; */
+    font-family: sans-serif;
+    cursor: pointer;
+    color: white;
+    padding: 7px 7px;
+    border-radius: 4px;
+}
+
+.urlLink div .change{
+    margin-top: 20px;
+}
+a.profile.change{
+    font-size: 12px;
+    padding-top: 20px;
+}
+
+
+button{
+    background: #f11919;
+    color:white;
+    border: none;
+    outline: none;
+    padding: 5px 5px;
+    border-radius: 4px;
+}
+/* 
+
+.otherInfo{
+    display: block;
+    text-align: center;
+    margin: auto;
+    color: #333;
+
+
+}
+
+
+.userInfo{  
+    background : #eee;
+    border-radius : 10px;
+    display : block;
+    margin: auto;
+    margin-top: 10px;
+    width : 500px;
+    max-width : 95vw;
+}
+
+.userInfo .heading, .userInfo .content{
+    display : flex;
+    flex-grow: space-between;
+    justify-content : center;
+    align-items : center;
+    color: #333;
+    padding: 10px 2px;
+}
+
+.userInfo .heading{
+    border-bottom : 1px solid #333;
+    display: block;
+    width: 100%;
+
+}
+
+
+.menu-icon{
+    position: sticky;
+    top: 0px;
+    right: 0px;
+    background: #fff;
+    display: block;
+    width: 100%;
+    padding: 4px;
+    text-align: right;
+
+    color: #333;
+
+
+}
+
+
+.link.edit{
+    padding: 4px 10px;
+    background: #f00;
+    margin: 10px;
+    border-radius: 10px;
+    text-align: center;
+    letter-spacing: 3px;
+}
+
+.link.edit a{
+    color: #fff;
+} */
+

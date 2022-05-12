@@ -1,0 +1,258 @@
+
+
+{% extends 'quiz/base.html' %}
+
+{% block quizTitle %}
+Quiz Submit
+{% endblock quizTitle %}
+
+{% block content %}
+
+
+
+
+<head>
+<style>
+
+*{
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-family: sans-serif;
+
+}
+
+a{
+    text-decoration: none;
+    color: #751515;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+a div{
+    height: 100%;
+    width: 100%;
+
+}
+
+.question-box,  .container{
+    display: block;
+    position: relative;
+    margin:auto;
+    width: 500px;
+    max-width: 95%;
+    margin-top: 10px;
+}
+
+
+.question-box > li, .container > div{
+    border-top: 4px solid #f11919;
+    border-radius: 4px;
+    min-height: 50px;
+    padding-top: 10px;
+    box-shadow: 1px 3px 4px #ccc;
+    margin: auto;
+    margin-bottom: 10px;
+
+}
+li div{
+
+    text-align: left;
+    margin-left: 3px;
+}
+
+.container .minuteBx{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+}
+img{
+    width: 100%;
+    max-width:500px;
+}
+
+
+.questionBx{
+    text-align: left;
+}
+
+
+
+input[type="submit"]{
+    margin: auto;
+    background: #f11919;
+    color: #fff;
+    width: 95vw;
+    max-width: 200px;
+    border: none;
+    padding: 3px 5px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    outline: none;
+    border-radius: 4px;
+}
+
+
+.points{
+    text-align: left;
+    font-size: 12px;
+    color: #666;
+    border: none;
+}
+
+.answer{
+    border: none;
+    margin: 0 0;
+}
+</style>
+    
+</head>
+
+<div style="color:#f11919; text-align: center;">
+    ToTheX
+</div>
+
+<div class="container">
+<div class="username">@{{quiz.user.username}}</div>
+<div>Number Of Registered Users : {{number_of_registered_users}}</div>
+        <div class="minuteBx">
+            <div>
+                {{quiz.get_quiz_duration}}
+            </div> 
+        </div>
+</div>
+
+
+
+<div class="question-card-container">
+    <form id="quizForm">
+        {% csrf_token %}
+        <ol>
+        {% for question in questions %}
+        <div class="question-box">
+            
+            {% if question.form == 'fourChoicesQuestion' %}
+
+            <li class="question">
+            <div>
+               
+                <input type="hidden" name="points" value="{{question.points}}">
+                <div class="questionBx">
+                    <div>
+                        Q. {{question.question}} <br>
+                        <div class="points">
+                            {% if question.points < 2 %}
+                            {{question.points}} point
+                        {% else %}
+                            {{question.points}} points
+                        {% endif %}
+                        </div>
+                </div>    
+                
+                    <div class="answer">
+                        <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
+                        <label for="id_answer1">
+                            <pre>   A. {{question.answer1}} </pre>
+                        </label>
+                    </div>
+                    
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
+                        <label for="id_answer2">
+                            <pre>   B. {{question.answer2}} </pre>
+                        </label>
+                    </div>
+
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
+                        <label for="id_answer3">
+                            <pre>   C. {{question.answer3}} </pre>
+                        </label>
+                    </div>
+
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
+                        <label for="id_answer4">
+                            <pre>   D. {{question.answer4}} </pre>
+                        </label>
+                    </div>
+            </div>
+            </li>
+            <br>
+            {% elif question.form == 'trueOrFalseQuestion' %}
+            <li class="question">
+            <div>
+            
+                <input type="hidden" name="points" value="{{question.points}}">
+                <div class="questionBx">
+                    <div>
+                        Q. {{question.question}} <br>
+                        <div class="points">
+                            {% if question.points < 2 %}
+                            {{question.points}} point
+                        {% else %}
+                            {{question.points}} points
+                        {% endif %}
+                        </div>
+                </div>   
+                    <div class="answer">
+                        <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
+                        <label for="id_answer1">
+                            <pre>   A. True </pre>
+                        </label>
+                    </div>
+                    
+                    <div class="answer">
+                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
+                        <label for="id_answer2">
+                            <pre>   B. False </pre>
+                        </label>
+                    </div>
+            </div>
+            </li>         
+            <br>   
+            {% endif %}
+        {% endfor %}
+    </ol>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<script>
+    function validateAnswer(option, target){
+        let answers = document.getElementsByClassName(option);
+
+        for(var i = 0; i < answers.length; i++){
+        if (answers[i].checked == 1){
+            answers[i].checked = 0;
+        };  
+
+        }
+        document.getElementById(target).checked = true;
+        
+    }
+
+    const minutes = document.getElementById('minute').textContent;
+
+    const countdownbox = document.getElementById('countdownbox');
+    let seconds = minutes * 60;
+    const quiz = document.getElementById('quizForm');
+    
+    setInterval(()=>{
+        seconds -= 1;
+        let minutesLeft = Math.floor(seconds/60);
+        let secondsLeft = seconds%60;
+
+        countdownbox.innerHTML = `<b>${minutesLeft}.${secondsLeft}</b>`;
+        if (seconds == 0){
+            print(seconds);
+            document.getElementById('quizForm').submit();
+        }
+    }, 1000)
+
+</script>
+
+
+{% endblock content %}

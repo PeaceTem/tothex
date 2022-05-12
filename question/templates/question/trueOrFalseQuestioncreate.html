@@ -1,0 +1,37 @@
+
+{% extends 'quiz/base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block quizTitle %}
+Create A True Or False Question
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'question/css/fourChoices.css' %}">
+
+{% endblock quizCss %}
+
+
+{% include 'messages.html'%}
+
+
+
+
+
+
+
+<div class="question">
+<div class="head">Step 1 of 2</div>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{trueOrFalseForm|crispy}}
+        <input type="submit" value="Create" style="margin: 5px 0 5px 4px;background: #f11919; color: #fff;  width: 200px; max-width: 90vw; padding: 4px 4px;border-radius: 4px; border: none;">
+    </form>
+</div>
+
+{% endblock content %}

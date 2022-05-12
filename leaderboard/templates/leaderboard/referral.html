@@ -1,0 +1,30 @@
+{% extends 'quiz/base.html' %}
+
+{% load static %}
+
+{% block quizTitle %}
+Referral
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'leaderboard/css/wealth.css' %}">
+{% endblock quizCss %}
+<div class="container">
+    {% include 'messages.html' %}
+
+
+    <a href="{% url 'leaderboard:leaderboard' %}">Go Back</a>
+    {% for leader in leaders %}
+        <div class="line">
+            <div class="name">@{{leader}}</div>
+            <div class="length">refers: {{leader.refers}}</div>
+            <div>
+                <a href="{% url 'profile:profile' leader  %}">See Face</a>
+            </div>
+        </div>
+    {% endfor %}
+
+
+{% endblock content %}

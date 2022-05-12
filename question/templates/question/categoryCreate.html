@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+    <div class="head">Step 2 of 2</div>
+{% include 'messages.html' %}
+<h3>Add Categories</h3>
+<div class="top-info">You can add up to 5 categories <br>Categories: {{questionCategories.count}}</div>
+<div class="category-create" >
+    <form action="" id="category-form" method="get">
+        <input type="text" name="newCategory" id="newCategory">
+        <input type="submit" value="Create Category">
+    </form>    
+
+</div>
+
+
+<form action="" id="added-category-form" method="get">
+    <div id="categoryBucket">
+
+        {% for category in questionCategories %}
+        <input type='text' id="{{category.title}}"  class="addedCategories" onclick="removeCategory(this.id)" name="addedCategories" value={{category.title}} readonly>
+    {% endfor %}
+    </div>
+
+    <input type="submit" value="Add Categories">
+</form>
+
+
+<!-- Add infinite scroll to the category with ajax -->
+<div>Click to add categories to above bucket</div>
+{% for category in page_obj %}
+<input type="button" onclick="addClassCategory(this.value)" value="{{category.title}}">
+{% endfor %}
+
+
+
+<div>
+    
+<a href="{% url 'question:new-question' %}">
+    Add more Questions
+</a>
+
+</div>
+
+<script type="text/javascript">
+
+function addClassCategory(obj_name){
+        var bucket = document.getElementById('categoryBucket');
+
+        bucket.innerHTML += `
+                                <input type="text" class = "addedCategories" name="addedCategories" value=${obj_name} readonly>
+                            `;
+
+    }
+
+    function removeCategory(index){
+        var elem = document.getElementById(index);
+        elem.parentNode.removeChild(elem);
+    }
+
+
+
+    // $(document).on('submit', '#category-form', function(e){
+    //     console.log('JQuery is working!')
+    //     e.preventDefault();
+        
+    //     $.ajax({
+    //         type: 'GET',
+    //         url : '/quiz/create_category/'+$('#quiz').val(),
+    //         data : {
+    //             newCategory : $('#newCategory').val(),
+    //         },
+    //         success : function(response){
+    //             alert('It works');
+    //             console.log(response)
+
+    //         },
+    //         error : function(){
+    //             alert('It falis silently!')
+    //         }
+
+    //     });
+    //     document.getElementById('newCategory').value = ''
+    // });
+
+
+
+
+
+    // $(document).on('submit', '#added-category-form', function(e){
+    //     console.log('JQuery is working for the two!')
+    //     e.preventDefault();
+        
+    // var categoryList = [];
+    // $(".addedCategories").each(function(){
+    //      categoryList.push($(this).val());
+    // });
+
+    
+    // console.log(categoryList)
+    //     $.ajax({
+    //         type: 'GET',
+    //         url : '/quiz/create_category/'+$('#quiz').val(),
+    //         data : {
+    //             addedCategories : categoryList[0],
+    //         },
+    //         success : function(){
+    //             alert('It works');
+    //         }
+    //     });
+    // });
+
+
+
+</script>
+<script>
+ 
+</script>
+   
+</body>
+</html>

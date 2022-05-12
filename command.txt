@@ -1,0 +1,42 @@
+<script type="text/javascript">
+    window.onbeforeunload = function() {
+        return "Dude, are you sure you want to leave? Think of the kittens!";
+    }
+</script>
+
+the above block of code is to prevent page refresh with javascript
+
+
+class YourAppConfig(AppConfig):
+    def ready(self):
+        # avoid double execution by checking 'autoreload' variable
+
+        if environ.get('RUN_MAIN', None) == 'true':
+            return
+
+        from .scheduler import Scheduler
+
+        # scheduler will execute task every 10 seconds
+        thread = Thread(
+            daemon=True,
+            target=Scheduler(10).run
+        )
+
+        thread.start()
+
+
+
+
+        And scheduler.py, uses sched from the standard library:
+
+from sched import scheduler
+
+class Scheduler:
+    def __init__(self, delay: int):
+        self.delay = delay
+        self.scheduler = scheduler()
+
+    def run(self) -> None:
+        while True:
+            self.scheduler.enter(self.delay, 1, <some function>)
+            self.scheduler.run()

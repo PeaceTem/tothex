@@ -1,0 +1,145 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+{% load social_share %}
+
+{% block quizTitle %}
+Categories
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+{% endblock quizCss %}
+<section>
+<div class="head">Step 2 of 3</div>
+
+<h3>Add Categories</h3>
+
+<div class="top-info">You can add up to 5 categories <br>Categories: {{quizCategories.count}}</div>
+<input type="hidden" name="quiz" id="quiz" value="{{quiz.id}}">
+
+{% include 'messages.html' %}
+<div class="category-create" >
+    <form action="" id="category-form" method="get">
+        <input class="search" type="text" name="newCategory" id="newCategory" placeholder="add title">
+        <input type="submit" value="create">
+    </form>
+</div>
+
+
+<form action="" id="added-category-form" method="get">
+    click on a category in this bucket to remove it<br>
+    <fieldset>
+        <legend>Bucket</legend>
+        <div id="categoryBucket">
+
+            {% for category in quizCategories %}
+            <input type='text' id="{{category.title}}"  class="addedCategories" onclick="removeCategory(this.id)" name="addedCategories" value={{category.title}} readonly>
+        {% endfor %}
+        </div>
+    </fieldset>
+    
+
+    <input type="submit" value="add categories">
+</form>
+
+
+<!-- Add infinite scroll to the category with ajax -->
+<div>
+    Click on any of the categories below to add it to the bucket above<br>
+{% for category in page_obj %}
+<input type="button" onclick="addClassCategory(this.value)" value="{{category.title}}">
+{% endfor %}
+</div>
+
+
+<div>
+    
+<a href="{% url 'quiz:new-question' quiz.id %}">
+    <button>Add more Questions</button>
+</a>
+
+</div>
+</section>
+<script type="text/javascript">
+
+function addClassCategory(obj_name){
+        var bucket = document.getElementById('categoryBucket');
+
+        bucket.innerHTML += `
+                                <input type="text" class = "addedCategories" name="addedCategories" value=${obj_name} readonly>
+                            `;
+
+    }
+
+    function removeCategory(index){
+        var elem = document.getElementById(index);
+        elem.parentNode.removeChild(elem);
+    }
+
+
+
+    // $(document).on('submit', '#category-form', function(e){
+    //     console.log('JQuery is working!')
+    //     e.preventDefault();
+        
+    //     $.ajax({
+    //         type: 'GET',
+    //         url : '/quiz/create_category/'+$('#quiz').val(),
+    //         data : {
+    //             newCategory : $('#newCategory').val(),
+    //         },
+    //         success : function(response){
+    //             alert('It works');
+    //             console.log(response)
+
+    //         },
+    //         error : function(){
+    //             alert('It falis silently!')
+    //         }
+
+    //     });
+    //     document.getElementById('newCategory').value = ''
+    // });
+
+
+
+
+
+    // $(document).on('submit', '#added-category-form', function(e){
+    //     console.log('JQuery is working for the two!')
+    //     e.preventDefault();
+        
+    // var categoryList = [];
+    // $(".addedCategories").each(function(){
+    //      categoryList.push($(this).val());
+    // });
+
+    
+    // console.log(categoryList)
+    //     $.ajax({
+    //         type: 'GET',
+    //         url : '/quiz/create_category/'+$('#quiz').val(),
+    //         data : {
+    //             addedCategories : categoryList[0],
+    //         },
+    //         success : function(){
+    //             alert('It works');
+    //         }
+    //     });
+    // });
+
+
+
+</script>
+<script>
+ 
+</script>
+   
+</body>
+</html>
+
+
+
+{% endblock content %}

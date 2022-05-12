@@ -1,0 +1,33 @@
+<!-- Add the copy button to all the form templates and add a display to show that the text has been copied. -->
+
+{% extends 'quiz/base.html' %}
+{% load static %}
+
+{% block quizTitle %}
+Create True Or False Question
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+
+{% endblock quizCss %}
+
+
+{% load crispy_forms_tags %}
+
+{% include 'messages.html' %}
+
+
+
+<div class="containerBx">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{trueOrFalseForm|crispy}}
+        <input type="submit" value="Create"  style="margin: 5px 0 5px 4px;background: #f11919; color: #fff;  width: 200px; max-width: 90vw; padding: 4px 4px;border-radius: 4px; border: none;">
+    </form>
+</div>
+
+
+{% endblock content %}

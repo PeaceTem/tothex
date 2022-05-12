@@ -1,0 +1,87 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+{% block quizTitle %}
+Ads
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'ads/css/postAd.css' %}">
+{% endblock quizCss %}
+<div class="container">
+
+    <div id="countdownbox"></div>
+
+    <div>
+        <img src="{{postAd.picture.url}}">
+    </div>
+
+    <div>
+        {{postAd.description}}
+    </div>
+    <div>
+    <div class="link-container">
+        <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'banner' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
+    </div>
+    </div>
+{% if nextpage == 'oldtownroad' %}
+<a id="nextButton" href="{% url 'question:answer-question' %}">Next</a>
+{% elif nextpage == 'following' %}
+<a id="nextButton" href="{% url 'question:following-questions' %}">Next</a>
+{% endif %}
+</div>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script>
+    let seconds = 10;
+    const next = document.getElementById('nextButton');
+    console.log(next)
+    next.style.display = 'none'
+const countdownbox = document.getElementById('countdownbox');
+
+const myInterval = setInterval(()=>{
+    seconds -= 1;
+
+    if (seconds == 0){
+        next.click();
+    }
+
+
+    if (seconds <= -1){
+        myStopFunction();
+    }
+
+
+    countdownbox.innerHTML = `<b>${seconds}sec left</b>`;
+
+}, 1000)
+
+
+function myStopFunction() {
+  clearInterval(myInterval);
+}
+
+function clickFunction(){
+        
+        $.ajax({
+            // change this to post
+            type: 'GET', 
+            url : $('a.postAd').data('url'),
+            data : {
+            },
+            success : function(response){
+                alert('link clicked!')
+                
+
+            },
+            error : function(){
+                alert('It falis silently!')
+            }
+
+        });
+
+    }
+
+
+</script>
+{% endblock content %}

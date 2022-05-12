@@ -1,0 +1,204 @@
+{% extends 'quiz/base.html' %}
+
+{% load static %}
+
+{% block quizTitle %}
+Old Town Road
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'question/css/takequestion.css' %}">
+{% endblock quizCss %}
+
+{% include 'messages.html' %}
+<a href="{% url 'question:questions' %}">Go Back</a>
+<div class="container">
+    <div class="top">
+        <div class="title">Old Town Road</div>
+    </div>
+    
+    <div class="inline">
+    
+        <div class="attempt">
+            {% if question.attempts < 2 %}
+                {{question.attempts}} attempt
+            {% else %}
+                {{question.attempts}} attempts
+            {% endif %}
+        </div>
+        <div class="average">
+            {{question.avgScore}}%
+        </div>
+        <div id="seconds" class="duration">{{question.duration_in_seconds}}</div>
+        <div class="secondsName">
+            seconds            
+        </div>
+    
+    </div>
+    
+    
+    <div id="countdownbox"></div>
+        <form class="question-form-box" action="{% url 'question:submit-question' %}" method="post"  id="questionForm">
+            {% csrf_token %}
+                {% if question.form == 'fourChoicesQuestion' %}
+                    <div class="questionBx">
+                <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
+
+                        <div>
+                            {{question.question}}
+
+                        </div>
+
+
+
+                        <div class="answer">
+                            <label for="id_answer1">
+                            <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                            {{question.answer1}}
+                        </label>
+                        </div>
+                        <div class="answer">
+
+                            <label for="id_answer2">
+                            <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                            {{question.answer2}}
+                        </label>
+                        </div>
+                        <div class="answer">
+                            <label for="id_answer3">
+                            <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
+                            {{question.answer3}}
+                        </label>
+                        </div>
+                        <div class="answer">
+                            <label for="id_answer4">
+                            <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
+                            {{question.answer4}}
+                        </label>
+                        </div>
+                        <div>
+                            <input type="submit"  id="submitButton"  value="Submit">
+        
+                        </div>
+                        <div style='text-align:right; color:#f11919; text-align:right; margin-right: 3px; font-size:20;'>ToTheX</div>
+        
+                    </div>
+                    
+            {% elif question.form == 'trueOrFalseQuestion' %}
+            <div class="questionBx">
+                <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
+
+                <div>
+                    {{question.question}}
+
+                </div>
+
+
+
+
+
+
+                <div class="answer">
+                    <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                    <label for="id_answer1">True</label>
+                </div>
+                
+                <div class="answer">
+                    <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                    <label for="id_answer2">False</label>
+                </div>
+                <div>
+                    <input type="submit"  id="submitButton"  value="Submit">
+
+                </div>
+                <div style='text-align:right; color:#f11919; text-align:right; margin-right: 3px; font-size:20;'>ToTheX</div>
+
+            </div>
+                    
+                        
+                {% endif %}
+        </form>
+    
+    <!-- disable the submit button if the question has not been answered -->
+    <div>
+        <form action="{% url 'question:answer-question' %}" method="get">
+            <input id="skipButton" type="submit" value="Skip">
+        </form>
+        <a href=""  class="a">Download</a>
+    </div>
+    
+</div>
+
+<div  style="display:none;" class='result'>
+      
+</div>
+
+<script src="{% static 'question/html2canvas.js' %}"></script>
+
+<script>
+
+    let elm = document.querySelector('.questionBx');
+    elm.prepend("");
+    html2canvas(elm).then(function(canvas){
+        document.querySelector('.result').append(canvas);
+        let cvs = document.querySelector('canvas');
+        let a = document.querySelector('.a');
+        a.href = cvs.toDataURL();
+        a.download = 'tothex-{{question.question}}.png'
+    })
+
+
+
+
+    function validateAnswer(option, target){
+        let answers = document.getElementsByClassName(option);
+
+        for(var i = 0; i < answers.length; i++){
+        if (answers[i].checked == 1){
+            answers[i].checked = 0;
+        };  
+
+        }
+        document.getElementById(target).checked = true;
+        
+    }
+
+
+    let seconds = document.getElementById('seconds').textContent;
+
+    const countdownbox = document.getElementById('countdownbox');
+    const skip = document.getElementById('skipButton');
+    console.log(seconds);
+    console.log(skip);
+    
+
+    const myInterval = setInterval(()=>{
+        seconds -= 1;
+        let minutesLeft = Math.floor(seconds/60);
+        let secondsLeft = seconds%60;
+
+        
+        
+        if (seconds == 0){
+            let skip = document.getElementById('skipButton');
+            skip.click();
+        }
+        if (seconds <= -1){
+            myStopFunction();
+        }
+        countdownbox.innerHTML = `<b>${minutesLeft}min:${secondsLeft}sec left</b>`;
+
+        console.log('Finished!')
+        console.log(seconds)
+    }, 1000)
+
+function myStopFunction(){
+    clearInterval(myInterval);
+}
+
+    
+</script>
+
+{% endblock content %}
