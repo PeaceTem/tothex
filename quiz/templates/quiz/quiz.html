@@ -58,7 +58,11 @@
                     
                 
                 </div>
-                <div class="desc">{{quiz.description|truncatewords:50|safe}}</div>
+                <div class="desc">
+                    <pre>
+                        {{quiz.description|truncatewords:50|safe}}
+                    </pre>
+                </div>
                 <div class="creator">
                 <div class="create" style="display:none;">{{quiz.user|capfirst}}</div>
                 <div class="date"  style="display:none;">{{quiz.date|date:"Y-M-d"}} {{quiz.date|time:"H:i"}}</div> 
@@ -102,8 +106,8 @@
 
 
 <div class="d-flex d-none position-fixed" style="color:white;bottom:2vh;left:46vw">
-    <button class="btn btn-danger loading">
-        <span style="color:white;" class="spinner-border spinner-border-sm"></span>
+    <button style="display:none;" class="btn btn-danger loading">
+        <span style="color:white; display:none" class="spinner-border spinner-border-sm"></span>
     </button>
 </div>
 

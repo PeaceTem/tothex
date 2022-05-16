@@ -44,7 +44,7 @@ Take Quiz
                 <input type="hidden" name="points" value="{{question.points}}">
                 <div class="questionBx">
                     <div>
-                        {{question.question|escape}} <br>
+                        {{question.question|safe}} <br>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -58,22 +58,22 @@ Take Quiz
                 {% if answer == 1 %}
                     <div class="answer">
                         <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
-                        <label for="id_answer1">{{question.answer1}}</label>
+                        <label for="id_answer1">{{question.answer1|safe}}</label>
                     </div>
                 {% elif answer == 2 %}
                     <div class="answer">
                         <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
-                        <label for="id_answer2">{{question.answer2}}</label>
+                        <label for="id_answer2">{{question.answer2|safe}}</label>
                     </div>
                 {% elif answer == 3 %}
                     <div class="answer">
                         <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
-                        <label for="id_answer3">{{question.answer3}}</label>
+                        <label for="id_answer3">{{question.answer3|safe}}</label>
                     </div>
                 {% elif answer == 4 %}
                     <div class="answer">
                         <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
-                        <label for="id_answer4">{{question.answer4}}</label>
+                        <label for="id_answer4">{{question.answer4|safe}}</label>
                     </div>
                 {% endif %}
                 {% endfor %}

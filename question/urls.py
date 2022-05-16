@@ -13,6 +13,8 @@ urlpatterns = [
     path('new-question/', views.QuestionCreate, name='new-question'),
     path('', views.Question, name='questions'),
     path('my-questions/', views.MyQuestionList, name='my-questions'),
+    path('visitor-questions/<int:owner_id>/', views.VisitorView, name='visitor'),
+
     path('following-questions/', views.FollowingQuestion, name='following-questions'),
 
 

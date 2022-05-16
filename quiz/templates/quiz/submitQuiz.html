@@ -75,7 +75,7 @@ Quiz Submit
                         {% if question.correct == 'answer1' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer1}}
+                                {{question.answer1|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -83,7 +83,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer1}}
+                                {{question.answer1|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -92,7 +92,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer1}}  
+                                {{question.answer1|safe}}}  
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -107,7 +107,7 @@ Quiz Submit
                         {% if question.correct == 'answer2' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer2}}
+                                {{question.answer2|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -115,7 +115,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer2}} 
+                                {{question.answer2|safe}}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -124,7 +124,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer2}} 
+                                {{question.answer2|safe}}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -139,7 +139,7 @@ Quiz Submit
                         {% if question.correct == 'answer3' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer3}}
+                                {{question.answer3|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -147,7 +147,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer3}} 
+                                {{question.answer3|safe}}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -156,7 +156,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer3}}
+                                {{question.answer3|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -171,7 +171,7 @@ Quiz Submit
                         {% if question.correct == 'answer4' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer4}}
+                                {{question.answer4|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -179,7 +179,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer4}}
+                                {{question.answer4|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -188,7 +188,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer4}}
+                                {{question.answer4|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -205,7 +205,7 @@ Quiz Submit
                         <div style="display:none;">
                             Your Answer:
                             <span class="yourAnswer">
-                                {{answer}}
+                                {{answer|safe}}}
                             </span>
                         </div>
                        
@@ -215,13 +215,13 @@ Quiz Submit
                         <span class="correctAnswer">
 
                         {% if question.correct == 'answer1' %}
-                            {{question.answer1}}
+                            {{question.answer1|safe}}}
                         {% elif question.correct == 'answer2' %}
-                            {{question.answer2}}
+                            {{question.answer2|safe}}}
                         {% elif question.correct == 'answer3' %}
-                            {{question.answer3}}
+                            {{question.answer3|safe}}}
                         {% elif question.correct == 'answer4' %}
-                            {{question.answer4}}
+                            {{question.answer4|safe}}}
                         {% endif %}
                         </span>
 
@@ -229,7 +229,7 @@ Quiz Submit
                         
                     </ol>
                     <div class="solution">
-                        Solution: {{question.solution}}
+                        Solution: {{question.solution|safe}}}
                     </div>
                
             </div>
@@ -240,7 +240,7 @@ Quiz Submit
 
 
                 <div>
-                        {{question.question|escape}} <br>
+                        {{question.question|safe}}} <br>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -252,7 +252,7 @@ Quiz Submit
                             {% if question.correct == 'True' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer1}} 
+                                {{question.answer1|safe}}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -260,7 +260,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer1}}
+                                {{question.answer1|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -269,7 +269,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer1}}
+                                {{question.answer1|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -284,7 +284,7 @@ Quiz Submit
                         {% if question.correct == 'False' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer2}}
+                                {{question.answer2|safe}}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -292,7 +292,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer2}} 
+                                {{question.answer2|safe}}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -301,7 +301,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer2}} 
+                                {{question.answer2|safe}}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -312,7 +312,7 @@ Quiz Submit
                             <div style="display:none;">
                                 Your Answer:
                                 <span class="yourAnswer">
-                                {{answer}}
+                                {{answer|safe}}}
                             </span>
                             </div>
                            
@@ -330,7 +330,7 @@ Quiz Submit
                         
                         </ol>
                         <div class="solution">
-                            Solution: {{question.solution}}
+                            Solution: {{question.solution|safe}}}
                         </div>
                    
                 </div>
@@ -348,14 +348,17 @@ Quiz Submit
     Highest scores
     <ol class="scores">
     {% for attempter in attempters %}
-    <li>
-        <span>@{{attempter.user}}</span>
-        <span>{{attempter.score}}</span>
-        <span>{{attempter.get_percentage}}</span>
-        <div style="font-size: 11px; color: #999; font-style: italic; ">
-            {{attempter.get_timeTaken}}
-        </div>
-    </li>
+    <div>
+        <li>
+            <span>@{{attempter.user}}</span>
+            <span>{{attempter.score}}</span>
+            <span>{{attempter.get_percentage}}</span>
+            <div style="font-size: 11px; color: #999; font-style: italic; ">
+                {{attempter.get_timetaken}}
+            </div>
+        </li>
+    </div>
+   
     {% endfor %}
     </ol>
     {% endif %}

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from category.models import Category
 
 from random import shuffle
-
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from datetime import date, datetime, time
@@ -98,7 +98,8 @@ class FourChoicesQuestion(models.Model):
         dt = (self.date_created)
         dt_updated = (self.date_updated)
         if dt and dt_updated and self.solution:
-            rel = (len(self.solution) * 3) + self.attempts + (self.solution_quality * 100) - (round(self.avgScore * 100) + (timezone.now() - dt).days + (timezone.now() - dt_updated).days) + ((self.age_to - self.age_from) * 1000)
+            rel = (len(self.solution) * 3) + (len(self.question) * 5) + self.attempts + (self.solution_quality * 250) - (round(self.avgScore * 10) + ((self.age_to - self.age_from) * 10))
+            
             self.relevance = rel
 
 
@@ -267,6 +268,7 @@ class TrueOrFalseQuestion(models.Model):
                 raise ValidationError(_("The margin between the maximum and minimum age should not be more than 4 years"))
         
         self.question = stringCleaningService(self.question)
+        
         self.solution = stringCleaningService(self.solution)
 
         super().clean()
@@ -280,7 +282,7 @@ class TrueOrFalseQuestion(models.Model):
         dt = (self.date_created)
         dt_updated = (self.date_updated)
         if dt and dt_updated and self.solution:
-            rel = (len(self.solution) * 3) + self.attempts + (self.solution_quality * 100) - (round(self.avgScore * 100) + (timezone.now() - dt).days + (timezone.now() - dt_updated).days) + ((self.age_to - self.age_from) * 1000)
+            rel = (len(self.solution) * 3) + (len(self.question) * 5) + self.attempts + (self.solution_quality * 250) - (round(self.avgScore * 10) + (timezone.now() - dt).days + (timezone.now() - dt_updated).days) - ((self.age_to - self.age_from) * 10)
             self.relevance = rel
 
 

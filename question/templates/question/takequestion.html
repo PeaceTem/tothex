@@ -47,7 +47,7 @@ Old Town Road
                 <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
 
                         <div>
-                            {{question.question}}
+                            {{question.question|safe}}
 
                         </div>
 
@@ -56,26 +56,26 @@ Old Town Road
                         <div class="answer">
                             <label for="id_answer1">
                             <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
-                            {{question.answer1}}
+                            {{question.answer1|safe}}
                         </label>
                         </div>
                         <div class="answer">
 
                             <label for="id_answer2">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
-                            {{question.answer2}}
+                            {{question.answer2|safe}}
                         </label>
                         </div>
                         <div class="answer">
                             <label for="id_answer3">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
-                            {{question.answer3}}
+                            {{question.answer3|safe}}
                         </label>
                         </div>
                         <div class="answer">
                             <label for="id_answer4">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
-                            {{question.answer4}}
+                            {{question.answer4|safe}}
                         </label>
                         </div>
                         <div>
@@ -91,7 +91,7 @@ Old Town Road
                 <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
 
                 <div>
-                    {{question.question}}
+                    {{question.question|safe}}
 
                 </div>
 

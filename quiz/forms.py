@@ -15,7 +15,7 @@ class NewFourChoicesQuestionForm(forms.ModelForm):
     class Meta:
         model = FourChoicesQuestion
         fields = '__all__'
-        exclude = ('user',  'index', 'form', 'attempts', 'avgScore', 'answer1NumberOfTimesTaken', 'answer2NumberOfTimesTaken', 'categories', 'solution_quality', 'solution_validators' , 'answer3NumberOfTimesTaken', 'answer4NumberOfTimesTaken', 'relevance',)
+        exclude = ('user',  'index', 'form', 'attempts', 'avgScore', 'answer1NumberOfTimesTaken', 'answer2NumberOfTimesTaken', 'categories', 'solution_quality', 'solution_validators' , 'answer3NumberOfTimesTaken', 'answer4NumberOfTimesTaken', 'relevance',"age_from", "age_to")
 
 
 
@@ -24,7 +24,7 @@ class NewTrueOrFalseQuestionForm(forms.ModelForm):
     class Meta:
         model = TrueOrFalseQuestion
         fields = '__all__'
-        exclude = ('user', 'index', 'form','answer1', 'answer2', 'attempts',  'avgScore', 'answer1NumberOfTimesTaken', 'answer2NumberOfTimesTaken', 'solution_quality', 'categories', 'solution_validators', 'relevance',)
+        exclude = ('user', 'index', 'form','answer1', 'answer2', 'attempts',  'avgScore', 'answer1NumberOfTimesTaken', 'answer2NumberOfTimesTaken', 'solution_quality', 'categories', 'solution_validators', 'relevance',"age_from", "age_to")
 
 
 class NewQuizLinkForm(forms.ModelForm):

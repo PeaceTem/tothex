@@ -206,7 +206,7 @@ class Streak(models.Model):
 # add description
 class Link(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30, null=True, blank=True)
+    name = models.CharField(max_length=20, null=True, blank=True)
     link = models.URLField(null=True, blank=True)
     description = models.TextField(max_length=200,blank=True, null=True)
     clicks = models.PositiveIntegerField(default=0)

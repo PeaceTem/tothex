@@ -11,7 +11,7 @@ from django.db.models import Q, F, Count, Avg, Min, Max
 from .forms import NewFourChoicesQuestionForm, NewTrueOrFalseQuestionForm, QuizGeneratorForm
 from category.forms import NewCategoryForm
 # the models to be used to create the quiz app
-
+from django.contrib.auth.models import User
 from core.models import Streak, Profile, Follower
 from category.models import Category
 from ads.models import PostAd
@@ -87,16 +87,48 @@ def MyQuestionList(request):
     # add reverse later
     print(questions)
 
-    p = Paginator(questions, 2)
+    p = Paginator(questions, 10)
     page = request.GET.get('page')
     questions = p.get_page(page)
 
     context={
         'nav': 'my-questions',
         'page_obj': questions,
+        "viewer": "owner",
     }
 
     return render(request, 'question/myquestions.html', context)
+
+
+
+
+def VisitorView(request, owner_id):
+    owner = User.objects.get(id=owner_id)
+    preQuestions = []
+    preQuestions += FourChoicesQuestion.objects.filter(user=owner, standalone=True)
+    preQuestions += TrueOrFalseQuestion.objects.filter(user=owner, standalone=True)
+    questions = []
+    for question in preQuestions:
+        questions.append(tuple((question.date_created, question)))
+
+
+    questions.sort(key=sortKey, reverse=True)
+    # add reverse later
+    print(questions)
+
+    p = Paginator(questions, 20)
+    page = request.GET.get('page')
+    questions = p.get_page(page)
+
+    context={
+        'nav': 'my-questions',
+        'page_obj': questions,
+        "viewer": "visitor",
+    }
+
+    return render(request, 'question/myquestions.html', context)
+
+
 
 
 

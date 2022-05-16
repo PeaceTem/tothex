@@ -103,7 +103,7 @@ Profile
      {% if link.link and link.name and link.description %}
 
         <span>Link below: </span>
-        <div class="link-container">
+        <div class="link-container face-link">
         <a onclick="clickFunction()" data-url="{% url 'link-click' link.id %}" class="profile-link" href="{{link.link}}" target="_blank" rel="noopener noreferrer">{{link.name}}</a>
         </div>
         <div style="font-size: 12px; color: #777;">
@@ -181,10 +181,6 @@ Profile
         <div class="content"> {{profile.refercount}}</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Views</div>
-        <div class="content"> {{profile.views}}</div> 
-    </div>
-    <div class="userInfo">
         <div class="heading">Coins</div>
         <div class="content"> {{profile.coins}}</div> 
     </div>
@@ -207,8 +203,19 @@ Profile
     <div class="userInfo">
         <div class="heading">Quizzes Created</div>
         <div class="content">{{profile.quizzes}}</div> 
+        <div>
+            <a href="{% url 'question:visitor' profile.user.id %}">View Questions</a>
+        </div>
+        <div>
+            <a href="{% url 'quiz:visitor' profile.user.id %}">View Quizzes</a>
+        </div>
     </div>
-    {% if profile.user == request.user %}
+
+    {% if profile.user == request.user %}   
+    <div class="userInfo">
+        <div class="heading">Profile Views</div>
+        <div class="content"> {{profile.views}}</div> 
+    </div>
     <div>
         <form id="interestForm" action="{%  url 'interest' %}" method="post">
             {% csrf_token %}

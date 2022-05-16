@@ -90,7 +90,9 @@ class Quiz(models.Model):
         dt = (self.date)
         dt_updated = (self.date_updated)
         if dt and dt_updated:
-            rel = (self.questionLength * 100) + self.attempts + self.duration + (self.solution_quality * 100)  - (round(self.average_score * 10) + (timezone.now() - dt).days + (timezone.now() - dt_updated).days)
+            # add the length of solution for questions
+            rel = (self.questionLength * 100) - (self.attempts * 4) + (self.duration * 20) + (self.solution_quality * 100)  - (round(self.average_score * 10) + (timezone.now() - dt).days + (timezone.now() - dt_updated).days) - (100*(self.age_to - self.age_from))
+            
             self.relevance = rel
 
 
@@ -237,7 +239,7 @@ class Attempter(models.Model):
         minutesTaken = int(TimeTaken) // 60
         secondsTaken = int(TimeTaken) % 60
 
-        timeTaken = f"Finished test in {minutesTaken} min, {secondsTaken} sec."
+        timeTaken = f"{minutesTaken}min : {secondsTaken}sec."
         return timeTaken
 
 

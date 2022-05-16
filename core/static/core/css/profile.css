@@ -7,7 +7,7 @@
 }
 
 textarea{
-    width: 250px;
+    width: 200px;
     height: 60px;
     border-radius: 10px;
     color: #f11919;
@@ -70,6 +70,12 @@ img{
     max-width : 50vw;
 
 }
+
+
+.heading{
+    font-weight:700;
+}
+
 
 .name{
     font-size: 24px;
@@ -146,6 +152,8 @@ a.profile.change{
 }
 
 
+
+
 button, input[type="submit"]{
     background: #f11919;
     color:white;
@@ -176,5 +184,7 @@ a.profile{
     font-family: sans-serif;
 }
 
-
+.face-link{
+    width: 200px;
+}
 

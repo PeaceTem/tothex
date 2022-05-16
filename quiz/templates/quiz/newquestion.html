@@ -24,10 +24,12 @@ Create A New Question
 <div class="contentBx">
     <div class="formBx">
         <h2>Create Question</h2>
-
-<a href="{% url 'quiz:trueOrFalseQuestion' quiz.id %}">Create A True Or False Question</a>
-
-<a href="{% url 'quiz:fourChoicesQuestion' quiz.id %}">Create A Four Choices Question</a>
+<div>
+    <a href="{% url 'quiz:trueOrFalseQuestion' quiz.id %}">Create A True Or False Question</a>
+</div>
+<div>
+    <a href="{% url 'quiz:fourChoicesQuestion' quiz.id %}">Create A Four Choices Question</a>
+</div>
 
 
     <div class="inputBx">

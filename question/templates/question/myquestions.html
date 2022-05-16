@@ -28,7 +28,7 @@ My Questions
 
         {% if question.form == 'trueOrFalseQuestion' %}
             <div class="quizItem">
-                {{question.question|truncatechars:80}}
+                {{question.question|truncatechars:80|safe}}
             </div>
             <div class="inline">
     
@@ -50,7 +50,7 @@ My Questions
                 </span>
             
             </div>
-            {% if question.index is not None %}
+            {% if question.index is not None and request.user == question.user %}
             <div class="linkTab">
                 <div class="private-links">
                     <a href="{% url 'question:edit-trueOrFalseQuestion' question.id %}">Update</a>
@@ -63,10 +63,11 @@ My Questions
                 </div>
             </div>
             {% endif %}
+            
     {% elif question.form == 'fourChoicesQuestion' %}
     
             <div class="quizItem">
-                {{question.question|truncatechars:80}}
+                {{question.question|truncatechars:80|safe}}
             </div>
             <div class="inline">
     

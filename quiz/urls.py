@@ -13,6 +13,8 @@ urlpatterns = [
     path('', views.QuizList, name='quizzes'),
     path('following-quizzes/', views.FollowerQuizList, name='following-quizzes'),
     path('my-quizzes/', views.MyQuizList, name='my-quizzes'),
+    path('visitor-quizzes/<int:owner_id>/', views.VisitorView, name='visitor'),
+
     path('quizzes-taken/', views.QuizTakenList, name='quizTaken'),
     path('favorites/', views.FavoriteQuizList, name='favorites'),
 

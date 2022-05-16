@@ -35,7 +35,7 @@ Quiz Detail
                 {% endfor %}
         </div>
         <div >Title: {{quiz.title|capfirst}}</div>
-        <div id="description">{{quiz.description | safe}}</div> 
+        <div id="description">{{quiz.description|safe}}</div> 
         <div >created by {{quiz.user|capfirst}}</div>
         <div >It was created on {{quiz.date|date:"Y-M-d"}} {{quiz.date|time:"H:i"}}</div> 
         <div > Attempts: {{quiz.attempts}}
@@ -162,14 +162,17 @@ Quiz Detail
     <ol class="answers">
         <p>Highest Scores</p>
     {% for attempter in attempters %}
-    <li>
-        <span>@{{attempter.user}}</span>
-        <span>{{attempter.score}}</span>
-        <span>{{attempter.get_percentage}}</span>
-        <div style="font-size: 11px; color: #999; font-style: italic; ">
-            {{attempter.get_timeTaken}}
-        </div>
-    </li>
+    <div>
+        <li>
+            <span>@{{attempter.user}}</span>
+            <span>{{attempter.score}}</span>
+            <span>{{attempter.get_percentage}}</span>
+            <div style="font-size: 11px; color: #999; font-style: italic; ">
+                {{attempter.get_timetaken}}
+            </div>
+        </li>
+    </div>
+    
     {% endfor %}
     </ol>
 </div>
@@ -196,7 +199,7 @@ Quiz Detail
     {% elif question.form == 'trueOrFalseQuestion' %}
     <div class="questions">
         <div class="quizItem">
-            {{question.question|truncatechars:80}}
+            {{question.question|truncatechars:80|safe}}
         </div>
         {% if quiz.user == user %}
         <div class="private-links">

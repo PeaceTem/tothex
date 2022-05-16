@@ -91,7 +91,7 @@ PWA_APP_DESCRIPTION = "ToTheX Lite"
 PWA_APP_THEME_COLOR = '#f11919'
 PWA_APP_BACKGROUND_COLOR = '#ffffff'
 PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = '/'
+PWA_APP_SCOPE = '/quiz/' # change it to / if it gives an error
 PWA_APP_ORIENTATION = 'portrait'
 PWA_APP_START_URL = '/quiz/'
 PWA_APP_STATUS_BAR_COLOR = 'default'
@@ -255,7 +255,7 @@ django_heroku.settings(locals())
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'olumidejonathan10@gmail.com'
