@@ -37,7 +37,7 @@ a div{
 }
 .question-box > li, .container > div,  .question-card-container > div{
     margin-bottom: 10px;
-    border-top: 4px solid #f11919;
+    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
@@ -186,6 +186,6 @@ ol.scores{
 
 @media (max-width:700px) {
     *{
-        font-size: 12px;
+        font-size: 16px;
     }
 }

@@ -36,7 +36,7 @@ class FourChoicesQuestion(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     form = models.CharField(max_length=30, default='fourChoicesQuestion')
-    index = models.PositiveSmallIntegerField(null=True, blank=True)
+    index = models.PositiveSmallIntegerField(default=0)
     question = models.TextField(max_length=1000, verbose_name=_('Question'))
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -220,7 +220,7 @@ class TrueOrFalseQuestion(models.Model):
     SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     form = models.CharField(max_length=20, default='trueOrFalseQuestion')
-    index = models.PositiveSmallIntegerField(null=True, blank=True)
+    index = models.PositiveSmallIntegerField(default=0)
     question = models.TextField(max_length=1000, verbose_name=_('Question'))
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)

@@ -177,7 +177,9 @@ def AnswerQuestion(request):
                 category = randomChoice(categories)
                 categories.remove(category)
 
-            lookup = Q(categories__title=categories[0].title) & Q(solution_quality__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
+            # change the recommendation algorithm to bucket based
+
+            lookup =  Q(solution_quality__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
             questions += FourChoicesQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "answer3", "answer4", "solution", "duration_in_seconds", "attempts", "avgScore").filter(lookup)[:5]
 
             questions += TrueOrFalseQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore").filter(lookup)[:5]

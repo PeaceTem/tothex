@@ -22,7 +22,7 @@ a{
     position: relative;
     margin:auto;
     width: 500px;
-    max-width: 95%;
+    max-width: 95vw;
     margin-top: 20px;
 
 
@@ -30,12 +30,11 @@ a{
 
 .questionBx{
     margin: 10px 4px;
-    border-top: 4px solid #f11919;
+    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
-    min-height: 50px;
-    padding-top: 10px;
-    box-shadow: 0 1px 4px #666;
-    max-width: 95%; 
+    min-height: 150px;
+    padding-top: 4px;
+    box-shadow: 0 1px 4px #ccc;
 
 }
 .questionBx > *{
@@ -44,12 +43,11 @@ a{
 }
 .container > div{
     margin-bottom: 10px;
-    border-top: 4px solid #f11919;
+    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 0 1px 4px #666;
-    max-width: 95%;
+    box-shadow: 0 1px 4px #ccc;
     
 }
 
@@ -81,19 +79,19 @@ form.question-form-box >*{
     top: 0;
     left: 0;
     margin-bottom: 10px;
-    border-top: 4px solid #f11919;
+    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
-    min-height: 50px;
-    padding-top: 10px;
+    min-height: 150px;
+    padding-top: 4px;
 }
 
 input[type="submit"]{
     margin: auto;
     background: #f11919;
     color: #fff;
-    width: 95vw;
-    height: 30px;
-    max-width: 200px;
+    width: 150px;
+    height: 50px;
+    /* max-width: 200px; */
     border: none;
     margin-top: 4px;
     margin-bottom: 2px;
@@ -127,8 +125,20 @@ input[type="submit"]{
     padding-top: 10px;
 }
 
+.a div{
+    height: 30px;
+    width: 150px;
+    border: 1px solid #f11919;
+
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    /* display: */
+}
+
 @media (max-width:700px) {
     *{
-        font-size: 14px;
+        font-size: 16px;
     }
 }

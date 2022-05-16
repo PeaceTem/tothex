@@ -50,7 +50,7 @@ My Questions
                 </span>
             
             </div>
-            {% if question.index is not None and request.user == question.user %}
+            {% if question.index is 0 and request.user == question.user %}
             <div class="linkTab">
                 <div class="private-links">
                     <a href="{% url 'question:edit-trueOrFalseQuestion' question.id %}">Update</a>
@@ -89,7 +89,7 @@ My Questions
                 </span>
             
             </div>
-            {% if question.index is not None %}
+            {% if question.index is 0 and request.user == question.user %}
             <div class="linkTab">
                 <div class="private-links">
                     <a href="{% url 'question:edit-fourChoicesQuestion' question.id %}">Update</a>

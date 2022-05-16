@@ -88,7 +88,7 @@ PWA_SERVICE_WORKER_PATH = BASE_DIR / 'static/js' / 'serviceworker.js'
 
 PWA_APP_NAME = 'ToTheX Lite'
 PWA_APP_DESCRIPTION = "ToTheX Lite"
-PWA_APP_THEME_COLOR = '#f11919'
+PWA_APP_THEME_COLOR = '#ffffff'
 PWA_APP_BACKGROUND_COLOR = '#ffffff'
 PWA_APP_DISPLAY = 'standalone'
 PWA_APP_SCOPE = '/quiz/' # change it to / if it gives an error
@@ -210,18 +210,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'static/' 
+STATIC_URL = '/static/' 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
     BASE_DIR / 'quiz' / 'static',
-    BASE_DIR / 'diary'/ 'static',
-    BASE_DIR / 'todo' / 'static',
+    BASE_DIR / 'question' / 'static',
     BASE_DIR / 'core' / 'static',
     BASE_DIR / 'ads' / 'static',
 ]
 
 # media files configuration
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
