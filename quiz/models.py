@@ -56,6 +56,7 @@ class Quiz(models.Model):
     description = models.TextField(max_length=1000, verbose_name=_('Description'))
     date = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
+    when = models.CharField(max_length=200,default='')
     fourChoicesQuestions = models.ManyToManyField(FourChoicesQuestion, related_name='fourChoicesQuestions',
         related_query_name='fourChoicesQuestions' , blank=True)
     trueOrFalseQuestions = models.ManyToManyField(TrueOrFalseQuestion, related_name='trueOrFalseQuestions',
@@ -71,6 +72,7 @@ class Quiz(models.Model):
     categories = models.ManyToManyField(Category, blank=True,
         related_name='categories', related_query_name='categories')
     duration = models.PositiveSmallIntegerField(default=30)
+    get_duration = models.CharField(max_length=200,default='')
     solution_quality = models.IntegerField(default=0)
     likes = models.ManyToManyField(User, default=None, blank=True, related_name='likes')
     likeCount = models.PositiveIntegerField(default=0)
@@ -91,11 +93,12 @@ class Quiz(models.Model):
         dt_updated = (self.date_updated)
         if dt and dt_updated:
             # add the length of solution for questions
-            rel = (self.questionLength * 100) - (self.attempts * 4) + (self.duration * 20) + (self.solution_quality * 100)  - (round(self.average_score * 10) + (timezone.now() - dt).days + (timezone.now() - dt_updated).days) - (100*(self.age_to - self.age_from))
+            rel = (self.questionLength * 5) + (self.attempts * 2) + (self.solution_quality * 10)
             
             self.relevance = rel
 
-
+        self.get_duration = self.get_quiz_duration
+        self.when = self.when_created
         super().save(*args, **kwargs)
 
 
@@ -144,12 +147,8 @@ class Quiz(models.Model):
     @property
     def when_created(self):
         days_length = timezone.now() - self.date
-        print(timezone.now())
         days = days_length.days
         seconds = days_length.seconds
-        print(f"{days} days, {seconds} seconds")
-        # days_length = date.today() - self.date.date()
-        # print(days_length)
         if days > 0:
             try:
                 days_length_shrink = int(days)
@@ -157,21 +156,21 @@ class Quiz(models.Model):
                 if days_length_shrink > 364:
                     days_length_shrink = days_length_shrink // 365
                     if days_length_shrink < 2:
-                        return f"{str(days_length_shrink)} year"
-                    return f"{str(days_length_shrink)} years"
+                        return f"{days_length_shrink} year"
+                    return f"{days_length_shrink} years"
                 elif days_length_shrink > 29:
                     days_length_shrink = days_length_shrink // 30
                     if days_length_shrink < 2:
-                        return f"{str(days_length_shrink)} month"
-                    return f"{str(days_length_shrink)} months"
+                        return f"{days_length_shrink} month"
+                    return f"{days_length_shrink} months"
                 elif days_length_shrink > 6:
                     days_length_shrink = days_length_shrink // 7
                     if days_length_shrink < 2:
-                        return f"{str(days_length_shrink)} week"
-                    return f"{str(days_length_shrink)} weeks"
+                        return f"{days_length_shrink} week"
+                    return f"{days_length_shrink} weeks"
                 if days_length_shrink < 2:
-                        return f"{str(days_length_shrink)} day"
-                return f"{str(days_length_shrink)} days"
+                        return f"{days_length_shrink} day"
+                return f"{days_length_shrink} days"
             except:
                 return f"0 days"
         elif seconds > 0:

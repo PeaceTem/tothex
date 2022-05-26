@@ -30,12 +30,18 @@ def Leaderboard(request):
 
 @login_required(redirect_field_name='next', login_url='account_login')
 def StreakLeaderBoard(request):
-    leaders = Streak.objects.all().order_by('-length', '-question')[0:1000]
+    user = request.user
+    profile = user.profile
+    instance = Streak.objects.get(profile=profile)
+    leaders = Streak.objects.all().order_by('-length', '-question')[0:100]
+    index = (*leaders,).index(instance) + 1 or "1000+"
     # add the get absolute url function to the profile
     # add pagination and waypoint or ajax I think Ajax will be more controllable
-
+    # index = 1
     context = {
         'leaders': leaders,
+        'index': index,
+        'instance' : instance,
     }
 
     return render(request, 'leaderboard/streak.html', context)
@@ -47,9 +53,14 @@ def StreakLeaderBoard(request):
 
 @login_required(redirect_field_name='next', login_url='account_login')
 def WealthLeaderBoard(request,*args, **kwargs):
-    leaders = CoinsEarnerLeaderBoard.objects.all().order_by('-coins')[0:1000]
+    user = request.user
+    instance = CoinsEarnerLeaderBoard.objects.get(leader=user)
+    leaders = CoinsEarnerLeaderBoard.objects.all().order_by('-coins')[0:100]
+    index = (*leaders,).index(instance) + 1 or "1000+"
     context = {
         'leaders' : leaders,
+        'index': index,
+        'instance' : instance,
     }
 
     return render(request, 'leaderboard/wealth.html', context)
@@ -59,9 +70,15 @@ def WealthLeaderBoard(request,*args, **kwargs):
 
 @login_required(redirect_field_name='next', login_url='account_login')
 def CreatorsLeaderBoard(request,*args, **kwargs):
-    leaders = CreatorLeaderBoard.objects.all().order_by('-coins')[0:1000]
+    user = request.user
+    instance = CreatorLeaderBoard.objects.get(leader=user)
+    leaders = CreatorLeaderBoard.objects.all().order_by('-coins')[0:100]
+    index = (*leaders,).index(instance) + 1 or "1000+"
+
     context = {
         'leaders' : leaders,
+        'index': index,
+        'instance' : instance,
     }
 
     return render(request, 'leaderboard/wealth.html', context)
@@ -71,9 +88,16 @@ def CreatorsLeaderBoard(request,*args, **kwargs):
 
 @login_required(redirect_field_name='next', login_url='account_login')
 def ReferralLeaderBoard(request,*args, **kwargs):
-    leaders = ReferralLeaderBoard.objects.all().order_by('-refers')
+    user = request.user
+    leaders = ReferralLeaderBoard.objects.all().order_by('-refers')[0:100]
+    instance = ReferralLeaderBoard.objects.get(leader=user)
+
+    index = (*leaders,).index(instance) + 1 or "1000+"
+
     context = {
         'leaders' : leaders,
+        'index': index,
+        'instance' : instance,
     }
 
     return render(request, 'leaderboard/referral.html', context)

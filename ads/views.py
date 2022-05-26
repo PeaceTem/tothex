@@ -10,8 +10,6 @@ from quiz.utils import randomChoice
 def PostAdView(request,nextpage):
     postAd = PostAd.objects.all()
     postAd = randomChoice(postAd)
-    print(postAd)
-    # change the shuffle to random
     postAd.views += 1
     postAd.bannerpageviews += 1
     postAd.save()
@@ -31,7 +29,7 @@ def PostAdClick(request, post_id, location):
     # link_id = request.GET.get('link_id')
     user = request.user
     print(location)
-    postAd = PostAd.objects.get(id=post_id)
+    postAd = PostAd.objects.prefetch_related("clickers").get(id=post_id)
 
     postAd.clicks += 1
     postAd.clickers.add(user)

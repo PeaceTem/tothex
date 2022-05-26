@@ -6,7 +6,7 @@ class ProfileQuerySet(models.QuerySet):
     def get_quizzes_taken_by_the_profile(self, profile):
         return self.get(id=profile.id).quizTaken.all()
 
-    def get_selected_and_prefetched_data(self, user, *args, **kwargs):
+    def get_selected_and_prefetched_data(self, user, **kwargs):
         selected = None
         prefetched = None
         try:
@@ -41,5 +41,5 @@ class ProfileManager(models.Manager):
     def get_quizzes_taken_by_the_profile(self, profile):
         return self.get_queryset().get_quizzes_taken_by_the_profile(profile)
 
-    def get_selected_and_prefetched_data(self, user, *args, **kwargs):
+    def get_selected_and_prefetched_data(self, user, **kwargs):
         return self.get_queryset().get_selected_and_prefetched_data(user, *args, **kwargs)

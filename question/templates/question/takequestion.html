@@ -18,7 +18,7 @@ Old Town Road
     <div class="top">
         <div class="title">Old Town Road</div>
     </div>
-    
+
     <div class="inline">
     
         <div class="attempt">
@@ -47,37 +47,46 @@ Old Town Road
                 <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
 
                         <div>
-                            {{question.question|safe}}
+                            {{question.question|linebreaksbr}}
 
                         </div>
 
 
-
+                        {% for a in ans %}
+                        {% if a == 1 %}
                         <div class="answer">
                             <label for="id_answer1">
                             <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
-                            {{question.answer1|safe}}
+                            {{question.answer1|linebreaksbr}}
                         </label>
                         </div>
+                        {% elif a == 2 %}
                         <div class="answer">
 
                             <label for="id_answer2">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
-                            {{question.answer2|safe}}
+                            {{question.answer2|linebreaksbr}}
                         </label>
+
                         </div>
+                        {% elif a == 3 %}
+
                         <div class="answer">
                             <label for="id_answer3">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
-                            {{question.answer3|safe}}
+                            {{question.answer3|linebreaksbr}}
                         </label>
                         </div>
+                        {% elif a == 4 %}
+
                         <div class="answer">
                             <label for="id_answer4">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
-                            {{question.answer4|safe}}
+                            {{question.answer4|linebreaksbr}}
                         </label>
                         </div>
+                        {% endif %}
+                        {% endfor %}
                         <div>
                             <input type="submit"  id="submitButton"  value="Submit">
         
@@ -91,7 +100,7 @@ Old Town Road
                 <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
 
                 <div>
-                    {{question.question|safe}}
+                    {{question.question|linebreaksbr}}
 
                 </div>
 
@@ -102,12 +111,16 @@ Old Town Road
 
                 <div class="answer">
                     <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
-                    <label for="id_answer1">True</label>
+                    <label for="id_answer1"> 
+                            {{question.answer1|linebreaksbr}}
+                    </label>
                 </div>
                 
                 <div class="answer">
                     <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
-                    <label for="id_answer2">False</label>
+                    <label for="id_answer2"> 
+                            {{question.answer2|linebreaksbr}}
+                    </label>
                 </div>
                 <div>
                     <input type="submit"  id="submitButton"  value="Submit">
@@ -148,7 +161,7 @@ Old Town Road
         let cvs = document.querySelector('canvas');
         let a = document.querySelector('.a');
         a.href = cvs.toDataURL();
-        a.download = 'tothex-{{question.question}}.png'
+        a.download = 'ToTheX-{{question.question}}.png'
     })
 
 

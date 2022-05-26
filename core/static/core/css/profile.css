@@ -43,7 +43,7 @@ a div{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 0 1px 4px #666;
+    box-shadow: 0 1px 4px #ddd;
 }
 
 img{
@@ -187,4 +187,12 @@ a.profile{
 .face-link{
     width: 200px;
 }
+
+
+.profile-edit-btn{
+border: 1px solid #f11919;
+border-radius: 4px;
+}
+
+
 

@@ -28,22 +28,6 @@ Save the state of the streak leader board at the end of each week for future ana
 """
 Add the signals for the leaderboard
 """
-#new instance will be created every week
-class StreakLeaderBoard(models.Model):
-    leader = models.ManyToManyField(Streak, related_name='leaders')
-    date = models.DateField(auto_now_add=True)
-    week = models.PositiveSmallIntegerField(default=0)
-
-    # add a property or a function that will get the id of the lastest instance of this model
-
-    @property
-    def lastestModel(self):
-        return self.id
-
-    def __str__(self):
-        return f"{self.leader}"
-
-
 
 
 class CoinsEarnerLeaderBoard(models.Model):
@@ -80,7 +64,6 @@ class ReferralLeaderBoard(models.Model):
     refers = models.PositiveIntegerField(default=0)
     # The order_by will be used in the views to get the highest coins earners
     # add the leaderboard for the all time highest coins owner
-
 
 
     def __str__(self):

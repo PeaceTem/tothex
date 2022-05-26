@@ -47,7 +47,7 @@ Quiz Generator Submit
 
 
             <div>
-                    {{question.question|safe}} <br>
+                    {{question.question|linebreaksbr}} <br>
                     <div class="points">
                         {% if question.points < 2 %}
                         {{question.points}} point
@@ -59,7 +59,7 @@ Quiz Generator Submit
                         {% if question.correct == 'answer1' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer1|safe}}
+                                {{question.answer1|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -67,7 +67,7 @@ Quiz Generator Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer1|safe}}
+                                {{question.answer1|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -76,7 +76,7 @@ Quiz Generator Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer1|safe}} 
+                                {{question.answer1|linebreaksbr}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -91,7 +91,7 @@ Quiz Generator Submit
                         {% if question.correct == 'answer2' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer2|safe}} 
+                                {{question.answer2|linebreaksbr}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -99,7 +99,7 @@ Quiz Generator Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer2|safe}} 
+                                {{question.answer2|linebreaksbr}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -108,7 +108,7 @@ Quiz Generator Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer2|safe}} 
+                                {{question.answer2|linebreaksbr}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -123,7 +123,7 @@ Quiz Generator Submit
                         {% if question.correct == 'answer3' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer3|safe}}
+                                {{question.answer3|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -131,7 +131,7 @@ Quiz Generator Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer3|safe}} 
+                                {{question.answer3|linebreaksbr}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -140,7 +140,7 @@ Quiz Generator Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer3|safe}} 
+                                {{question.answer3|linebreaksbr}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -155,7 +155,7 @@ Quiz Generator Submit
                         {% if question.correct == 'answer4' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer4|safe}}
+                                {{question.answer4|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -163,7 +163,7 @@ Quiz Generator Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer4|safe}}
+                                {{question.answer4|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -172,7 +172,7 @@ Quiz Generator Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer4|safe}}
+                                {{question.answer4|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -183,7 +183,7 @@ Quiz Generator Submit
                         
                     </ol>
                     <div class="solution">
-                        Solution: {{question.solution|safe}}
+                        Solution: {{question.solution|linebreaksbr}}
                     </div>
                
             </div>
@@ -193,7 +193,7 @@ Quiz Generator Submit
 
 
                 <div>
-                        {{question.question|safe}} <br>
+                        {{question.question|linebreaksbr}} <br>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -205,7 +205,7 @@ Quiz Generator Submit
                             {% if question.correct == 'True' %}
                             <li class="answerGreen">
                                 <div class="answer">
-                                    {{question.answer1|safe}} 
+                                    {{question.answer1|linebreaksbr}} 
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                             </li>
@@ -213,7 +213,7 @@ Quiz Generator Submit
                             
                             <li class="answerRed">
                                 <div class="answer">
-                                    {{question.answer1|safe}}
+                                    {{question.answer1|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                             </li>
@@ -222,7 +222,7 @@ Quiz Generator Submit
     
                             <li class="answerWhite">
                                 <div class="answer">
-                                    {{question.answer1|safe}}
+                                    {{question.answer1|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                             </li>
@@ -237,7 +237,7 @@ Quiz Generator Submit
                             {% if question.correct == 'False' %}
                             <li class="answerGreen">
                                 <div class="answer">
-                                    {{question.answer2|safe}} 
+                                    {{question.answer2|linebreaksbr}} 
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                             </li>
@@ -245,7 +245,7 @@ Quiz Generator Submit
                             
                             <li class="answerRed">
                                 <div class="answer">
-                                    {{question.answer2|safe}}
+                                    {{question.answer2|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                             </li>
@@ -254,7 +254,7 @@ Quiz Generator Submit
     
                             <li class="answerWhite">
                                 <div class="answer">
-                                    {{question.answer2|safe}} 
+                                    {{question.answer2|linebreaksbr}} 
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                             </li>
@@ -265,7 +265,7 @@ Quiz Generator Submit
                         
                         </ol>
                         <div class="solution">
-                            Solution: {{question.solution|safe}}
+                            Solution: {{question.solution|linebreaksbr}}
                         </div>
                    
                 </div>
@@ -307,7 +307,7 @@ Quiz Generator Submit
 </div>
 
 <div>
-    {{postAd.description}}
+    {{postAd.description|linebreaksbr}}
 </div>
 
 <div>
@@ -390,7 +390,7 @@ let elm = document.querySelector('.download-quiz');
         let cvs = document.querySelector('canvas');
         let a = document.querySelector('.a');
         a.href = cvs.toDataURL();
-        a.download = 'tothex-{{quiz.quiz.title}}.png'
+        a.download = 'ToTheX-{{quiz.quiz.title}}.png'
     })
 
 

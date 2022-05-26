@@ -98,7 +98,7 @@ class FourChoicesQuestion(models.Model):
         dt = (self.date_created)
         dt_updated = (self.date_updated)
         if dt and dt_updated and self.solution:
-            rel = (len(self.solution) * 3) + (len(self.question) * 5) + self.attempts + (self.solution_quality * 250) - (round(self.avgScore * 10) + ((self.age_to - self.age_from) * 10))
+            rel = (len(self.solution.split()) * 2) + (len(self.question.split()) * 3) + (self.attempts * 5) + (self.solution_quality * 100)
             
             self.relevance = rel
 
@@ -211,8 +211,8 @@ class FourChoicesQuestion(models.Model):
 
 class TrueOrFalseQuestion(models.Model):
     ANSWER_CHOICES = (
-        ('True', 'True'),
-        ('False', 'False'),
+        (_('True'), _('True')),
+        (_('False'), _('False')),
     )
 
 
@@ -282,7 +282,7 @@ class TrueOrFalseQuestion(models.Model):
         dt = (self.date_created)
         dt_updated = (self.date_updated)
         if dt and dt_updated and self.solution:
-            rel = (len(self.solution) * 3) + (len(self.question) * 5) + self.attempts + (self.solution_quality * 250) - (round(self.avgScore * 10) + (timezone.now() - dt).days + (timezone.now() - dt_updated).days) - ((self.age_to - self.age_from) * 10)
+            rel = (len(self.solution.split()) * 2) + (len(self.question.split()) * 3) + (self.attempts * 5) + (self.solution_quality * 100)
             self.relevance = rel
 
 
@@ -361,4 +361,9 @@ class TrueOrFalseQuestion(models.Model):
 
     def __str__(self):
         return f"{self.question}"
+
+
+
+
+
 

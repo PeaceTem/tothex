@@ -35,7 +35,7 @@ Quiz Detail
                 {% endfor %}
         </div>
         <div >Title: {{quiz.title|capfirst}}</div>
-        <div id="description">{{quiz.description|safe}}</div> 
+        <div id="description">{{quiz.description|linebreaksbr|safe}}</div> 
         <div >created by {{quiz.user|capfirst}}</div>
         <div >It was created on {{quiz.date|date:"Y-M-d"}} {{quiz.date|time:"H:i"}}</div> 
         <div > Attempts: {{quiz.attempts}}
@@ -127,7 +127,7 @@ Quiz Detail
 </div>
 
 <div>
-    {{postAd.description}}
+    {{postAd.description|linebreaks}}
 </div>
 
 
@@ -243,7 +243,9 @@ function copyFunction(){
     copyText.select();
     copyText.setSelectionRange(0,99999);
     // document.execCommand("copy")
-    navigator.clipboard.writeText(copyText.value)
+    navigator.clipboard.writeText(copyText.value);
+    alert("Copied the text: " + copyText.value);
+
 }
 
 

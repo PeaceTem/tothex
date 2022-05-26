@@ -1,16 +1,23 @@
 
 
 
-from .models import Profile
+from .models import Profile, Device
 from .tasks import ReferralTask
 
 
 
 
-
-def ReferralService(code):
+# try using get_or_create
+def ReferralService(device, code):
     try:
-        print("Starting the referral service!")
+        device = device
+        try:
+            device = Device.objects.get(name=device)
+            return
+        except:
+            pass
+
+        Device.objects.create(name=device)
         profile = Profile.objects.select_related('user').get(code=code)
         profile.coins += 20
         profile.refercount += 1

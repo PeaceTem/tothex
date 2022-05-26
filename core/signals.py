@@ -2,7 +2,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Profile, Streak, Follower, Link
-from leaderboard.models import CoinsEarnerLeaderBoard, ReferralLeaderBoard
+from leaderboard.models import CoinsEarnerLeaderBoard, ReferralLeaderBoard, CreatorLeaderBoard
 from category.models import Category
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
@@ -24,11 +24,12 @@ def create_profile(sender, instance, created, *args, **kwargs):
         questionCategories = Category.objects.all().order_by('-question_number_of_times_taken')[:5]
         for category in quizCategories:
             profile.categories.add(category)
-
+            profile.save()
         for category in questionCategories:
             profile.categories.add(category)
             profile.save()
         CoinsEarnerLeaderBoard.objects.create(leader=instance)
+        CreatorLeaderBoard.objects.create(leader=instance)
         ReferralLeaderBoard.objects.create(leader=instance)
         Follower.objects.create(user=instance)
 

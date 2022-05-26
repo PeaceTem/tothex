@@ -154,7 +154,6 @@ class Follower(models.Model):
 class Streak(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, blank=True)
     active = models.BooleanField(default=False)
-    currentDate = models.DateField(auto_now=True, null=True, blank=True)
     # change this to default
     length = models.PositiveIntegerField(default=0)
     question = models.PositiveIntegerField(default=0)
@@ -162,7 +161,7 @@ class Streak(models.Model):
 
 
     def __str__(self):
-        return f"{self.profile.user.username} | {self.length} | {str(self.active)}"
+        return f"{self.profile}"
 
 # alert users whenever they earn a streak
 
@@ -194,12 +193,6 @@ class Streak(models.Model):
 
         # return self.length
 
-
-    def save(self, *args, **kwargs):
-        # self.date = datetime.combine(datetime.now.(), datetime.min.time(), tzinfo=pytz.UTC)
-        self.currentDate = date.today()
-        print('local date demo', self.currentDate)
-        super().save(*args, **kwargs)
 
 
 
@@ -258,3 +251,12 @@ class Interest(models.Model):
 
     def __str__(self):
         return f"{self.user}"
+
+
+
+"""
+Delete the instances of this model every month.
+"""
+class Device(models.Model):
+    name = models.CharField(max_length=1000)
+    date = models.DateTimeField(auto_now_add=True)

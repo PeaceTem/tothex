@@ -126,3 +126,59 @@ django_social_share/templatetags/post_to_whatsapp.html.
 django_social_share/templatetags/save_to_pinterest.html.
 django_social_share/templatetags/pinterest_script.html.
 You can override them to suit your mileage.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+facebook
+
+name : ToTheX-Facebook-SSO
+
+client_id : 380603700571100
+
+secret_key : ef60fdbc986012365877ae9794c646d6
+
+
+
+GitHub
+name : ToTheX-GitHub-SSO
+
+client_id : b6b7b85c3993c8933ff3
+
+secret_key : 2f77b5429138f35d334dfee3103194ce5bb81c28
+
+
+
+Google
+
+name : ToTheX-Google-SSO
+
+client_id : 543635591763-npkhv13tmpk7dli98rfdsaal008g5bns.apps.googleusercontent.com
+
+secret_key : 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

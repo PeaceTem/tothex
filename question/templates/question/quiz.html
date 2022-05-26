@@ -48,32 +48,32 @@ Old Town Road
 
         <div>
             <div class="questionBx">
-                {{question.question|safe}}
+                {{question.question|linebreaksbr}}
 
             </div>
             {% for ans in question.shuffle_answers %}
             {% if ans == 1 %}
             <div class="answer">
                 <input class="option{{index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer1" value="fourChoices-{{question.id}}-answer1">
-                <label for="id_answer1">{{question.answer1|safe}}</label>
+                <label for="id_answer1">{{question.answer1|linebreaksbr}}</label>
             </div>
             {% elif ans == 2 %}
             
             <div class="answer">
                 <input class="option{{index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer2" value="fourChoices-{{question.id}}-answer2">
-                <label for="id_answer2">{{question.answer2|safe}}</label>
+                <label for="id_answer2">{{question.answer2|linebreaksbr}}</label>
             </div>
             {% elif ans == 3 %}
 
             <div class="answer">
                 <input class="option{{index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer3" value="fourChoices-{{question.id}}-answer3">
-                <label for="id_answer3">{{question.answer3|safe}}</label>
+                <label for="id_answer3">{{question.answer3|linebreaksbr}}</label>
             </div>
             {% elif ans == 4 %}
 
             <div class="answer">
                 <input class="option{{index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{index}}_answer4" value="fourChoices-{{question.id}}-answer4">
-                <label for="id_answer4">{{question.answer4|safe}}</label>
+                <label for="id_answer4">{{question.answer4|linebreaksbr}}</label>
             </div>
             {% endif %}    
             {% endfor %}
@@ -83,7 +83,7 @@ Old Town Road
     <li class="question">
 
     <div class="questionBx">
-        {{question.question|safe}}
+        {{question.question|linebreaksbr}}
 
     </div>
             <div class="answer">

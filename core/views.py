@@ -56,7 +56,8 @@ def main_view(request, *args, **kwargs):
     user = request.user
     if not user.is_authenticated:
         code = str(kwargs.get('ref_code'))
-        ReferralService(code)
+        device = request.META["HTTP_USER_AGENT"]
+        ReferralService(device, code)
     return redirect('question:answer-question')
 
 
@@ -148,7 +149,7 @@ def ProfilePage(request):
         return redirect('login')
 
 
-    profile = get_object_or_404(Profile, user=user)
+    profile = Profile.objects.select_related("user","streak").get(user=user)
     follower = Follower.objects.prefetch_related('followers','following').get(user=user)
     followersCount = follower.followers.all().count()
     followingsCount = follower.following.all().count()
@@ -157,6 +158,7 @@ def ProfilePage(request):
     form = NewInterestReportForm()
 
     context={
+        'user': user,
         'profile': profile,
         'follower' : follower,
         'link':link,
@@ -176,17 +178,15 @@ def ProfileCreationPage(request):
         messages.warning(self.request, "Login to continue")
         return redirect('login')
 
-    profile = get_object_or_404(Profile, user=user)
+    profile = Profile.objects.get(user=user)
 
     form = ProfileCreationForm(instance=profile)
-    print(form)
 
     if request.method == 'POST':
         form = ProfileCreationForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             messages.success(request, f"{user.username}, you have successfully edited your profile.")
-            messages.info(request, f"{user.username}, did you know that the brain neurons die one after the other if they are idle?")
             return redirect('profile')
 
     context = {
@@ -224,9 +224,9 @@ def FollowerView(request):
         following_username = request.POST.get('following_username') or None
         if user.id is not following:
             if following:
-                following = Follower.objects.get(user=following)
+                following = Follower.objects.prefetch_related("followers").get(user=following)
                 following_user = User.objects.get(username=following_user)#new
-                follower = Follower.objects.get(user=user)#new
+                follower = Follower.objects.prefetch_related("following").get(user=user)#new
                 following.followers.add(user)
                 follower.following.add(following_user)#new
                 following.save()
@@ -249,9 +249,9 @@ def UnfollowView(request):
         following_username = request.POST.get('following_username') or None
         if user.id is not following:
             if following:
-                following = Follower.objects.get(user=following)
+                following = Follower.objects.prefetch_related("followers").get(user=following)
                 following_user = User.objects.get(username=following_user)#new
-                follower = Follower.objects.get(user=user)#new
+                follower = Follower.objects.prefetch_related('following').get(user=user)#new
                 following.followers.remove(user)
                 follower.following.remove(following_user)#new
                 following.save()
@@ -271,9 +271,7 @@ def UnfollowView(request):
 @login_required(redirect_field_name='next', login_url='account_login')
 def EditLink(request):
     profile = Profile.objects.get(user=request.user)
-    print(profile)
     link = Link.objects.get(profile=profile)
-    print(link)
     
     form = NewLinkForm(instance=link)
     if request.method == 'POST':
@@ -315,14 +313,14 @@ def LinkClick(request, link_id):
 def InterestReport(request):
 
     user = request.user
-    print(user)
     if request.method == 'POST':
-        print('The interest is received!')
         form = NewInterestReportForm(request.POST)
         if form.is_valid():
             interest = form.cleaned_data.get('interest')
+            dislike = form.cleaned_data.get('dislike')
+            modifier = form.cleaned_data.get('modifier')
 
-            Interest.objects.create(user=user, interest=interest)
+            Interest.objects.create(user=user, interest=interest, dislike=dislike, modifier=modifier)
         return HttpResponse('report submitted!')
 
 

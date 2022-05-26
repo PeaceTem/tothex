@@ -11,16 +11,15 @@ from core.forms import NewInterestReportForm
 
 def MassProfile(request, profile_name):
     try:
-        user = User.objects.select_related('profile').get(username=profile_name)
-        profile = user.profile
+        user = request.user
+        owner = User.objects.get(username=profile_name)
+        profile = Profile.objects.select_related("user","streak").get(user=owner)
         link = Link.objects.get(profile=profile)
         
-        follower = Follower.objects.prefetch_related('followers','following').get(user=user)
+        follower = Follower.objects.prefetch_related('followers','following').get(user=owner)
         followersCount = follower.followers.all().count()
         followingsCount = follower.following.all().count()
-        # follower = Follower.objects.annotate(followersCount=followersCount).annotate(followingsCount=followingsCount)
-        print(follower)
-        if user != request.user:
+        if user != owner:
             profile.views += 1
             profile.save()
 
@@ -31,6 +30,7 @@ def MassProfile(request, profile_name):
         return redirect('quiz:quizzes')
     
     context = {
+        'user': user,
         'profile': profile,
         'follower' : follower,
         'link': link,

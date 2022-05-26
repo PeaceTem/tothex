@@ -25,14 +25,15 @@ Streak
     </div>
     {% include 'messages.html' %}
 <ol>
+    {{index}} @{{instance}} {{instance.length}} {% if instance.active %} Active {% else %} Inactive {% endif %}
     {% for leader in leaders %}
     <li>
 
         <div class="element">
             <div class="line">
-        <a href="{% url 'profile:profile' leader.profile  %}">
+        <a href="{% url 'profile:profile' leader  %}">
 
-                    <div class="name">@{{leader.profile}}</div>
+                    <div class="name">@{{leader}}</div>
                     <div class="length">{{leader.length}}</div>
                     <div class="active">
                         {% if leader.active %}

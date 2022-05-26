@@ -208,16 +208,23 @@ button{
 .card .contentBx .linkBx #take-quiz{
     border-right: none;
     border-left: .5px solid #ccc;
+    background: #f11919;
+    border-radius: 4px;
+
+}
+
+.card .contentBx .linkBx #take-quiz a div{
+    background: #f11919;
+    color: #fff;
 
 }
 
 
-
 span.random{
-    background: rgb(43, 226, 19);
+    background: #f11919;
     color: #fff;
-    padding: 4px;
-    border-radius: 4px;
+    padding: 10px;
+    border-radius: 7px;
 }
 
 @media(max-width:700px){

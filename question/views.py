@@ -76,8 +76,8 @@ def Question(request):
 def MyQuestionList(request):
     user = request.user
     preQuestions = []
-    preQuestions += FourChoicesQuestion.objects.filter(user=user, standalone=True)
-    preQuestions += TrueOrFalseQuestion.objects.filter(user=user, standalone=True)
+    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=user, standalone=True)
+    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=user, standalone=True)
     questions = []
     for question in preQuestions:
         questions.append(tuple((question.date_created, question)))
@@ -85,13 +85,13 @@ def MyQuestionList(request):
 
     questions.sort(key=sortKey, reverse=True)
     # add reverse later
-    print(questions)
 
     p = Paginator(questions, 10)
     page = request.GET.get('page')
     questions = p.get_page(page)
 
     context={
+        'user': user,
         'nav': 'my-questions',
         'page_obj': questions,
         "viewer": "owner",
@@ -105,22 +105,21 @@ def MyQuestionList(request):
 def VisitorView(request, owner_id):
     owner = User.objects.get(id=owner_id)
     preQuestions = []
-    preQuestions += FourChoicesQuestion.objects.filter(user=owner, standalone=True)
-    preQuestions += TrueOrFalseQuestion.objects.filter(user=owner, standalone=True)
+    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=owner, standalone=True)
+    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=owner, standalone=True)
     questions = []
     for question in preQuestions:
         questions.append(tuple((question.date_created, question)))
 
 
     questions.sort(key=sortKey, reverse=True)
-    # add reverse later
-    print(questions)
 
     p = Paginator(questions, 20)
     page = request.GET.get('page')
     questions = p.get_page(page)
 
     context={
+        'user':user,
         'nav': 'my-questions',
         'page_obj': questions,
         "viewer": "visitor",
@@ -148,6 +147,11 @@ def AnswerQuestion(request):
         context = {
         'question': question,
         }
+        
+        if question["form"] == "fourChoicesQuestion":
+            ans = [1,2,3,4]
+            shuffle(ans)
+            context["ans"] = ans
         return render(request, 'question/takequestion.html', context)
     else:
 
@@ -157,9 +161,8 @@ def AnswerQuestion(request):
         And filters too 
         """
         if user.is_authenticated:
-            profile = Profile.objects.get(user=user)
+            profile = Profile.objects.prefetch_related("categories","fourChoicesQuestionsMissed","fourChoicesQuestionsTaken","trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken").get(user=user)
             categories = profile.categories.all()
-            categories = [*categories]
             age = profile.get_user_age
 
 
@@ -167,29 +170,65 @@ def AnswerQuestion(request):
             trueOrFalseQuestionsMissed = profile.trueOrFalseQuestionsMissed.all()
             fourChoicesQuestionsTaken = profile.fourChoicesQuestionsTaken.all()
             fourChoicesQuestionsMissed = profile.fourChoicesQuestionsMissed.all()
-            questionsList = [*trueOrFalseQuestionsTaken, *trueOrFalseQuestionsMissed, *fourChoicesQuestionsTaken, *fourChoicesQuestionsMissed]
+            questionsList = (*trueOrFalseQuestionsTaken, *trueOrFalseQuestionsMissed, *fourChoicesQuestionsTaken, *fourChoicesQuestionsMissed,)
             # filter by not in questionsList
 
 
-
-            while len(categories) > 1:
-                print(categories)
-                category = randomChoice(categories)
-                categories.remove(category)
-
             # change the recommendation algorithm to bucket based
+            questions = []
+            lookup = Q(categories__in=categories) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
+            fqs = FourChoicesQuestion.objects.values("id", "form", "question", "answer1", "answer2", "answer3", "answer4", "solution", "duration_in_seconds", "attempts", "avgScore","relevance").filter(lookup).distinct()
+            tqs = TrueOrFalseQuestion.objects.values("id", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore","relevance").filter(lookup).distinct()
 
-            lookup =  Q(solution_quality__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
-            questions += FourChoicesQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "answer3", "answer4", "solution", "duration_in_seconds", "attempts", "avgScore").filter(lookup)[:5]
+            questions = []
+            level1 = 0
+            level2 = 0
+            level3 = 0
+            level4 = 0
+            while fqs.count() > 0:
+                q =  randomChoice(fqs)
+                fqs = fqs.exclude(id=q["id"])
+                if q not in questionsList:
+                    if q["relevance"] >= 0 and q["relevance"] <= 150 and level1 < 10:
+                        questions.append(q)
+                        level1 += 1
+                    elif q["relevance"] > 150 and q["relevance"] <= 500 and level2 < 20:
+                        questions.append(q)
+                        level2 += 1
+                    elif q["relevance"] > 500 and q["relevance"] <= 3000 and level3 < 30:
+                        questions.append(q)
+                        level3 += 1
+                    elif q["relevance"] > 3000 and level4 < 40:
+                        questions.append(q)
+                        level4 += 1
 
-            questions += TrueOrFalseQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore").filter(lookup)[:5]
-            print(questions)
+
+
+            level1 = 0
+            level2 = 0
+            level3 = 0
+            level4 = 0
+            while tqs.count() > 0:
+                q =  randomChoice(tqs)
+                tqs = tqs.exclude(id=q["id"])
+                if q not in questionsList:
+                    if q["relevance"] >= 0 and q["relevance"] <= 150 and level1 < 10:
+                        questions.append(q)
+                        level1 += 1
+                    elif q["relevance"] > 150 and q["relevance"] <= 500 and level2 < 20:
+                        questions.append(q)
+                        level2 += 1
+                    elif q["relevance"] > 500 and q["relevance"] <= 3000 and level3 < 30:
+                        questions.append(q)
+                        level3 += 1
+                    elif q["relevance"] > 3000 and level4 < 40:
+                        questions.append(q)
+                        level4 += 1
 
             if len(questions) > 0:
                 question = randomChoice(questions)
                 questions.remove(question)
                 request.session['OldTownRoad'] = questions
-                print(request.session.get("OldTownRoad"), "Stored!!!!")
             else:
                 messages.info(request, 'The questions are insufficient!')
                 return redirect("question:questions")
@@ -199,10 +238,9 @@ def AnswerQuestion(request):
             
             questions = []
 
-            questions += FourChoicesQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "answer3", "answer4", "solution", "duration_in_seconds", "attempts", "avgScore").filter(solution_quality__gte=3)[:5]
+            questions += FourChoicesQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "answer3", "answer4", "solution", "duration_in_seconds", "attempts", "avgScore").filter(solution_quality__gte=0)[:5]
 
-            questions += TrueOrFalseQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore").filter(solution_quality__gte=3)[:5]
-            print(questions)
+            questions += TrueOrFalseQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore").filter(solution_quality__gte=0)[:5]
 
             if len(questions) > 0:
                 question = randomChoice(questions)
@@ -217,6 +255,11 @@ def AnswerQuestion(request):
     context = {
         'question': question,
     }
+    
+    if question["form"] == "fourChoicesQuestion":
+        ans = [1,2,3,4]
+        shuffle(ans)
+        context["ans"] = ans
     return render(request, 'question/takequestion.html', context)
 
 
@@ -266,15 +309,13 @@ def FollowingQuestion(request):
 
 
 def CorrectionView(request, question_form, question_id, answer):
+    user = request.user
     if question_form == 'fourChoicesQuestion':
-        question = FourChoicesQuestion.objects.get(id=question_id)
-        print(question_form)
+        question = FourChoicesQuestion.objects.prefetch_related("solution_validators").select_related("user").get(id=question_id)
     elif question_form == 'trueOrFalseQuestion':
-        question = TrueOrFalseQuestion.objects.get(id=question_id)
-        print(question_form)
+        question = TrueOrFalseQuestion.objects.prefetch_related("solution_validators").select_related("user").get(id=question_id)
 
 
-    answer = question.getAnswer(answer)
     
     postAd = PostAd.objects.all()
     postAd = randomChoice(postAd)
@@ -285,9 +326,9 @@ def CorrectionView(request, question_form, question_id, answer):
     
 
     context={
+        'user': user,
         'question': question,
         'postAd': postAd,
-        'answer': answer,
     }
 
     return render(request, 'question/correction.html', context)
@@ -335,7 +376,6 @@ def FourChoicesQuestionCreate(request):
     context= {
         'fourChoicesForm': form,
     }
-    print(form)
     return render(request, 'question/fourChoicesQuestionCreate.html', context)
 
 
@@ -383,14 +423,13 @@ Add all the documentation here
 """
 @login_required(redirect_field_name='next' ,login_url='account_login')
 def CategoryCreate(request, question_id):
-    print('The question is relayed to the category view')
     user = request.user
-    profile = Profile.objects.get(user=user)
+    profile = Profile.objects.prefetch_related("categories").get(user=user)
     question_id = question_id.split('-')
     if question_id[0] == 'trueOrFalse':
-        question = TrueOrFalseQuestion.objects.get(id=question_id[1])
+        question = TrueOrFalseQuestion.objects.prefetch_related("categories").get(id=question_id[1])
     elif question_id[0] == 'fourChoices':
-        question = FourChoicesQuestion.objects.get(id=question_id[1])
+        question = FourChoicesQuestion.objects.prefetch_related("categories").get(id=question_id[1])
 
     form = NewCategoryForm()
     categories = Category.objects.all()
@@ -404,10 +443,7 @@ def CategoryCreate(request, question_id):
             category = None
 
             try:
-                print('trying to get the title')
                 newCategory = Category.objects.get(title__iexact=title)
-                print('gotten the title')
-                print(newCategory)
                 if not newCategory in question.categories.all():
 
                     question.categories.add(newCategory)
@@ -521,14 +557,10 @@ def TrueOrFalseQuestionUpdate(request, question_id):
     question.question = reverseStringCleaningService(question.question)
     question.solution = reverseStringCleaningService(question.solution)
     trueOrFalseForm = NewTrueOrFalseQuestionForm(instance=question)
-    print('trueOrFalseForm')
     if request.method == 'POST':
         form = NewTrueOrFalseQuestionForm(request.POST or None, instance=question)
-        print('form')
         if form.is_valid():
-            print('another form')
             form.save()
-            print('form save')
         
 
             return redirect('question:category-create', question_id=f'trueOrFalse-{question.id}')
@@ -552,7 +584,6 @@ def DeleteQuestion(request,question_form, question_id):
         question = TrueOrFalseQuestion.objects.get(id=question_id)
     if request.method == 'POST':
         question.delete()
-        # messages.success(request, "You've successfully deleted a question!")
         return HttpResponse('Deleted!')
 
     context={
@@ -574,7 +605,7 @@ def SubmitQuestion(request):
     try:
         user = request.user
         if user.is_authenticated:
-            profile = Profile.objects.get(user=user)
+            profile = Profile.objects.select_related("user").prefetch_related("fourChoicesQuestionsTaken", "trueOrFalseQuestionsTaken", "fourChoicesQuestionsMissed", "trueOrFalseQuestionsMissed").get(user=user)
         if request.method == 'POST':
             answer = request.POST.get('answer')
 
@@ -585,7 +616,7 @@ def SubmitQuestion(request):
             message = 'The answer is wrong!'
 
             if combination[0] == 'fourChoicesQuestion':
-                question = FourChoicesQuestion.objects.get(id=combination[1])
+                question = FourChoicesQuestion.objects.prefetch_related("categories").select_related("user").get(id=combination[1])
                 pos = combination[2]
                 question.attempts += 1
                     
@@ -657,7 +688,7 @@ def SubmitQuestion(request):
                     question.save()
                     if user.is_authenticated:
                         
-                        profile.coins -= 1
+                        profile.coins -= 2
                         profile.questionAvgScore = decimal.Decimal(round((profile.questionAvgScore * (profile.questionAttempts - 1)) / profile.questionAttempts ,1))
                         if profile.fourChoicesQuestionsMissed.all().count() > 999:
                             remove = profile.fourChoicesQuestionsMissed.first()
@@ -671,7 +702,7 @@ def SubmitQuestion(request):
 
 
             elif combination[0] == 'trueOrFalseQuestion':
-                question = TrueOrFalseQuestion.objects.get(id=combination[1])
+                question = TrueOrFalseQuestion.objects.prefetch_related("categories").select_related("user").get(id=combination[1])
                 pos = combination[2]
                 question.attempts += 1
                     
@@ -781,7 +812,6 @@ def QuizGenerator(request):
                 duration_in_minutes = form.cleaned_data.get('duration_in_minutes')
                 number_of_questions = form.cleaned_data.get('number_of_questions')
                 categories = request.POST.getlist('categories')
-                print(duration_in_minutes, number_of_questions)
                 trueOrFalseQuestions = TrueOrFalseQuestion.objects.none()
                 fourChoicesQuestions = FourChoicesQuestion.objects.none()
                 if user.is_authenticated:
@@ -834,9 +864,6 @@ def QuizGenerator(request):
                     sessionQuestions.append(q)
                 request.session['questions'] = sessionQuestions
                 
-                print(request.session['questions'], request.session['duration'])
-
-                # print(shuffle([1,2,3,4]))
 
                 context = {
                 'questions': questions,
@@ -868,7 +895,6 @@ def ReAttemptQuiz(request):
         questions = request.session['questions']
         duration = request.session['duration']
         questionLength = request.session['questionLength']
-        print(questions, duration)
         sessionQuestions = []
         for question in questions:
             index = question[0]
@@ -914,7 +940,6 @@ def PastQuestions(request):
 
             question = randomChoice(questionsList)
             questionsList.remove(question)
-            print(question)
             if question not in questions:
                 questions.append(tuple((i, question)))
                 i += 1
@@ -952,13 +977,14 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
     if request.method == 'GET':
         if not user.is_authenticated:
             code = str(kwargs.get('ref_code'))
-            ReferralService(code)   
+            device = request.META["HTTP_USER_AGENT"]
+            ReferralService(device, code)   
         return redirect('question:quiz-generator')
 
     
     if request.method == 'POST':
         if user.is_authenticated:
-            profile = get_object_or_404(Profile, user=user)
+            profile = Profile.objects.select_related("user").prefetch_related("fourChoicesQuestionsTaken", "trueOrFalseQuestionsTaken", "fourChoicesQuestionsMissed", "trueOrFalseQuestionsMissed").get(user=user)
             # streak = Streak.objects.get(profile=profile)
     
     
@@ -983,7 +1009,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
             combination = tuple(answer.split('-'))
             
             if combination[0] == 'fourChoices':
-                question = FourChoicesQuestion.objects.get(id=combination[1])
+                question = FourChoicesQuestion.objects.prefetch_related("categories").select_related("user").get(id=combination[1])
                 pos = combination[2]
 
                 question.attempts += 1
@@ -1056,7 +1082,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
 
                     
             elif combination[0] == 'trueOrFalse':
-                question = TrueOrFalseQuestion.objects.get(id=combination[1])
+                question = TrueOrFalseQuestion.objects.prefetch_related("categories").select_related("user").get(id=combination[1])
                 pos = combination[2]
 
                 question.attempts += 1
@@ -1179,7 +1205,6 @@ def SolutionQuality(request, question_form, question_id):
             question = TrueOrFalseQuestion.objects.prefetch_related('solution_validators').get(id=question_id)
 
         quality = request.GET.get('quality')
-        print(quality)
 
         if quality == 'Yes':
             question.solution_quality += 1
@@ -1238,3 +1263,4 @@ def TCorrectionView(request, question_form, question_id, answer):
 
     return render(request, 'question/correction.html', context)
 
+ 

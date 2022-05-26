@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-&qw$#gjx)#=&hti^hwpn*zmmyq8^%0tp0m(u^&&)q)b3f_6-4w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 # DEBUG = config('DEBUG', cast=bool, default=True)
-ALLOWED_HOSTS = ["https://ecclewikitestquiz.herokuapp.com/", "127.0.0.1", "localhost", "0.0.0.0"] 
+ALLOWED_HOSTS = [ "127.0.0.1", "localhost", "0.0.0.0", "https://tothexdemo.herokuapp.com"] 
 
 
 # Application definition
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django.contrib.sites',
+    'django.contrib.sites',
     #authentication
     'allauth',
     'allauth.account',
@@ -91,7 +91,7 @@ PWA_APP_DESCRIPTION = "ToTheX Lite"
 PWA_APP_THEME_COLOR = '#ffffff'
 PWA_APP_BACKGROUND_COLOR = '#ffffff'
 PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = '/quiz/' # change it to / if it gives an error
+PWA_APP_SCOPE = '/' # change it to / if it gives an error
 PWA_APP_ORIENTATION = 'portrait'
 PWA_APP_START_URL = '/quiz/'
 PWA_APP_STATUS_BAR_COLOR = 'default'
@@ -233,7 +233,7 @@ Change this settings later
 """
 ACCOUNT_EMAIL_REQUIRED = False # change this to true
 
-SOCIALACCOUNT_QUERY_EMAIL = False # change this to true
+SOCIALACCOUNT_QUERY_EMAIL = True # change this to true
 
 ACCOUNT_SESSION_REMEMBER = True
 # Default primary key field type

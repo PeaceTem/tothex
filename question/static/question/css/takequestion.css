@@ -30,7 +30,6 @@ a{
 
 .questionBx{
     margin: 10px 4px;
-    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
     min-height: 150px;
     padding-top: 4px;
@@ -43,7 +42,6 @@ a{
 }
 .container > div{
     margin-bottom: 10px;
-    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
@@ -79,7 +77,6 @@ form.question-form-box >*{
     top: 0;
     left: 0;
     margin-bottom: 10px;
-    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
     min-height: 150px;
     padding-top: 4px;

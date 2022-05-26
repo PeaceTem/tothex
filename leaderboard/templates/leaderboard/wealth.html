@@ -16,10 +16,15 @@ Wealth
 
 
     <a href="{% url 'leaderboard:leaderboard' %}">Go Back</a>
+    <div class="line">
+        {{index}} @{{instance}} {{instance.coins}}coins
+
+    </div>
+
     {% for leader in leaders %}
         <div class="line">
             <div class="name">@{{leader}}</div>
-            <div class="length">{{leader.coins}}</div>
+            <div class="length">{{leader.coins}} coins</div>
             <div>
                 <a href="{% url 'profile:profile' leader  %}">See Face</a>
 

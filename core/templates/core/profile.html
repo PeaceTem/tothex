@@ -41,7 +41,7 @@ Profile
     
 
     <div class="username">
-       @{{profile.user.username}}
+       @{{profile}}
     </div>
     <div class="obvious">
         <div class="following childBx">
@@ -70,8 +70,8 @@ Profile
         </div>
     </div>
     
-     {% if request.user != profile.user %}
-        {% if request.user in follower.followers.all %}
+     {% if user != profile.user and user.is_authenticated %}
+        {% if user in follower.followers.all %}
 
         <form id='followForm' action="{% url 'unfollow' %}" method="post">
             {% csrf_token %}
@@ -110,7 +110,7 @@ Profile
             {{link.description}}
         </div>
     {% endif %}
-        {% if request.user == profile.user %}
+        {% if user == profile.user %}
         <div>
             <span>Clicks: {{link.clicks}}</span>
             
@@ -211,7 +211,7 @@ Profile
         </div>
     </div>
 
-    {% if profile.user == request.user %}   
+    {% if profile.user == user %}   
     <div class="userInfo">
         <div class="heading">Profile Views</div>
         <div class="content"> {{profile.views}}</div> 
@@ -305,9 +305,9 @@ Profile
 
 $('#interestForm').submit(function(e){
         e.preventDefault();
-        alert('Working!')
+        // alert('Working!')
         const serializedData = $(this).serialize();
-        alert(serializedData);
+        // alert(serializedData);
         $.ajax({
             type: 'POST',
             url: $(this).attr('action'),
@@ -315,6 +315,7 @@ $('#interestForm').submit(function(e){
             success: function(response){
                 console.log(response)
                 alert('Successful!')
+                $(this).parent().hide(500);
             },
             error: function(response){
                 console.log(response)
@@ -335,7 +336,7 @@ $('#interestForm').submit(function(e){
             data : {
             },
             success : function(response){
-                alert('link clicked!')
+                // alert('link clicked!')
                 
 
             },

@@ -115,7 +115,7 @@ input[type="submit"]{
 </div>
 
 <div class="container">
-<div class="username">@{{quiz.user.username}}</div>
+<div class="username">@{{quiz.user}}</div>
 <div>Number Of Registered Users : {{number_of_registered_users}}</div>
         <div class="minuteBx">
             <div>
@@ -141,7 +141,7 @@ input[type="submit"]{
                 <input type="hidden" name="points" value="{{question.points}}">
                 <div class="questionBx">
                     <div>
-                        Q. {{question.question|safe}}} <br>
+                        Q. {{question.question|linebreaksbr}} <br>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -154,28 +154,28 @@ input[type="submit"]{
                     <div class="answer">
                         <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
                         <label for="id_answer1">
-                            <pre>   A. {{question.answer1|safe}}} </pre>
+                            <pre>   A. {{question.answer1|linebreaksbr}} </pre>
                         </label>
                     </div>
                     
                     <div class="answer">
                         <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
                         <label for="id_answer2">
-                            <pre>   B. {{question.answer2|safe}}} </pre>
+                            <pre>   B. {{question.answer2|linebreaksbr}} </pre>
                         </label>
                     </div>
 
                     <div class="answer">
                         <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
                         <label for="id_answer3">
-                            <pre>   C. {{question.answer3|safe}}} </pre>
+                            <pre>   C. {{question.answer3|linebreaksbr}} </pre>
                         </label>
                     </div>
 
                     <div class="answer">
                         <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
                         <label for="id_answer4">
-                            <pre>   D. {{question.answer4|safe}}} </pre>
+                            <pre>   D. {{question.answer4|linebreaksbr}} </pre>
                         </label>
                     </div>
             </div>
@@ -188,7 +188,7 @@ input[type="submit"]{
                 <input type="hidden" name="points" value="{{question.points}}">
                 <div class="questionBx">
                     <div>
-                        Q. {{question.question|safe}}} <br>
+                        Q. {{question.question|linebreaksbr}} <br>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point

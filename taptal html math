@@ -177,3 +177,90 @@ d.toISOString();
     }
     reload_js('source_file.js');
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LEFT ARROW
+←
+U+02190
+UNICODE
+&#x2190;
+HEX CODE
+&#8592;
+HTML CODE
+&larr;
+HTML ENTITY
+\2190
+UP ARROW
+↑
+U+02191
+UNICODE
+&#x2191;
+HEX CODE
+&#8593;
+HTML CODE
+&uarr;
+HTML ENTITY
+\2191
+RIGHT ARROW
+→
+U+02192
+UNICODE
+&#x2192;
+HEX CODE
+&#8594;
+HTML CODE
+&rarr;
+HTML ENTITY
+\2192
+DOWN ARROW
+↓
+U+02193
+UNICODE
+&#x2193;
+HEX CODE
+&#8595;
+HTML CODE
+&darr;
+HTML ENTITY
+\2193
+LEFT RIGHT ARROW
+↔
+U+02194
+UNICODE
+&#x2194;
+HEX CODE
+&#8596;
+HTML CODE
+&harr;
+HTML ENTITY
+\2194
+UP DOWN ARROW
+↕
+U+02195
+UNICODE
+&#x2195;
+HEX CODE
+&#8597;
+HTML CODE
+&varr;
+HTML ENTITY
+\2195

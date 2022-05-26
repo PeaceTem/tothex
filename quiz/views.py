@@ -15,6 +15,12 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 from django.template.loader import get_template
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
+from django.utils.html import linebreaks
+from django.utils.safestring import mark_safe
+
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
 # all the forms
 # the forms for each model
 from .forms import NewQuizForm, NewFourChoicesQuestionForm, NewTrueOrFalseQuestionForm, NewQuizLinkForm
@@ -118,14 +124,14 @@ def QuizDetail(request, quiz_id, *args, **kwargs):
 
 
         questions.sort(key=sortKey)
-        print(questions)
         profile = None
         number_of_registered_users = Profile.objects.all().count()
         if user.is_authenticated:
             profile = Profile.objects.get(user=user)
         if not user.is_authenticated:
             code = str(kwargs.get('ref_code'))
-            ReferralService(code)
+            device = request.META["HTTP_USER_AGENT"]
+            ReferralService(device, code)
         
         postAd = PostAd.objects.all()
         if postAd.count() > 0:
@@ -195,55 +201,72 @@ def QuizList(request):
         
         quizzes = quizzes.order_by('-relevance').distinct()[:100]
     else:
-        age = profile.get_user_age
-        score_range = ScoreRange(profile.quizAvgScore)
-        quizzes = Quiz.objects.none()
-        for category in profile.categories.all():
-            lookup = Q(categories__title=category.title) & Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(average_score__gte=score_range) & Q(questionLength__gte=2)
-            quizzes |= Quiz.objects.filter(lookup).distinct()[:1000]
-        QUIZZES = quizzes
+        recommendedQuizzes = request.session.get('recommendedQuizzes') or []
 
-        takenQuiz = profile.quizTaken.all()
-        
-        lookup = Q(relevance__gte=3000)
-        quizzes_best = QUIZZES.filter(lookup)[:200]
-
-        lookup = Q(average_score=0)
-        quizzes_new = QUIZZES.filter(lookup)[:200]
-        print(Quiz.objects.all(), "all")
-        print(quizzes, "filtered")
-        print(quizzes_best, "best")
-        print(quizzes_new, "new")
+        if len(recommendedQuizzes) > 0:
+            print(request.session.get("recommendedQuizzes"), "Gotten!!!!")
+            quizzes = recommendedQuizzes[:2]
+            request.session["recommendedQuizzes"] = recommendedQuizzes[1:]
+        else:
 
 
-        """
-        Change the recommendation algorithm
+            age = profile.get_user_age
+            # quizzes = Quiz.objects.none()
+            categories = profile.categories.all()
+            # for category in profile.categories.all():
+            lookup = Q(categories__in=categories) & Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
+            quizzes = Quiz.objects.filter(lookup).distinct()
+            print(quizzes)
+            takenQuiz = profile.quizTaken.all()
+            randomQuizzes = []
+            level1 = 0
+            level2 = 0
+            level3 = 0
+            level4 = 0
+            while quizzes.count() > 0:
+                quiz =  randomChoice(quizzes)
+                quizzes = quizzes.exclude(id=quiz.id)
+                if quiz not in takenQuiz:
+                    if quiz.relevance >= 0 and quiz.relevance <= 50 and level1 < 10:
+                        randomQuizzes.append(quiz)
+                        level1 += 1
+                    elif quiz.relevance > 50 and quiz.relevance <= 150 and level2 < 20:
+                        randomQuizzes.append(quiz)
+                        level2 += 1
+                    elif quiz.relevance > 150 and quiz.relevance <= 300 and level3 < 30:
+                        randomQuizzes.append(quiz)
+                        level3 += 1
+                    elif quiz.relevance > 300 and level4 < 40:
+                        randomQuizzes.append(quiz)
+                        level4 += 1
+            recommendedQuizzes = []
+            for q in randomQuizzes:
+                average_score = round(q.average_score)
+                categories = []
+                container = {
+                    "id":q.id,
+                    "user": q.user.username,
+                    "title": q.title,
+                    "description":q.description,
+                    "when": q.when,
+                    "questionLength": q.questionLength,
+                    "attempts": q.attempts,
+                    "average_score": average_score,
+                    "get_duration": q.get_duration,
+                    "likeCount": q.likeCount,
+                    "age_from": q.age_from,
+                    "age_to": q.age_to,
+                }
 
-        """
-        randomQuizzes1 = []
-        while len(randomQuizzes1) < 50 and quizzes_best.count() > 0:
-            quiz = randomChoice(quizzes_best)
-            # quizzes_best = quizzes_best.exclude(id=quiz.id)
-            if quiz not in takenQuiz:
-                randomQuizzes1.append(quiz)
+                recommendedQuizzes.append(container)
 
+            print("randomQuizzes Quizzes", randomQuizzes)
 
-        randomQuizzes2 = []
-        while len(randomQuizzes2) < 50 and quizzes_new.count() > 0:
-            quiz = randomChoice(quizzes_new)
-            # quizzes_new = quizzes_new.exclude(id=quiz.id)
-            if quiz not in takenQuiz:
-                randomQuizzes2.append(quiz)
-
-        print(randomQuizzes1)
-        print(randomQuizzes2)
-
-        quizzes = [*randomQuizzes1, *randomQuizzes2]
-
-        shuffle(quizzes)
-        print(quizzes, "output")
-    p = Paginator(quizzes, 20)
+            quizzes = recommendedQuizzes[:2]
+            request.session["recommendedQuizzes"] = recommendedQuizzes[1:]
+    p = Paginator(quizzes, 1)
     page = request.GET.get('page')
+    page = 1
     quizzes = p.get_page(page)
     context={
 
@@ -328,7 +351,8 @@ def FollowerQuizList(request):
 def MyQuizList(request):
     user = request.user
     profile = Profile.objects.get(user=user)
-    quizzes = Quiz.objects.get_user_quizzes(user)
+    quizzes = User.quiz_set.all()
+    # quizzes = Quiz.objects.get_user_quizzes(user)
 
     number_of_registered_users = Profile.objects.all().count()
     number_of_quizzes_created = Quiz.objects.all().count()
@@ -495,7 +519,7 @@ def FavoriteQuizList(request):
 
 @login_required(redirect_field_name='next', login_url='account_login')
 def CategoryQuizList(request, category):
-    quizzes = Quiz.objects.filter(categories__title=category, relevance__gte=3000)
+    quizzes = Quiz.objects.filter(categories__title=category, relevance__gte=51).order_by("solution_quality")[:100]
     user = request.user
     profile = Profile.objects.get(user=user)
     number_of_registered_users = Profile.objects.all().count()
@@ -516,7 +540,7 @@ def CategoryQuizList(request, category):
         
 
 
-    p = Paginator(quizzes, 10)
+    p = Paginator(quizzes, 20)
     page = request.GET.get('page')
     quizzes = p.get_page(page)
 
@@ -570,6 +594,7 @@ def PostLike(request):
 
         """
         This is a celery command
+        Remove this from the celery tasks
         """
 
         LikeQuiz.delay(quiz_id, user)
@@ -580,18 +605,18 @@ def PostLike(request):
 
 class RandomQuizPicker(LoginRequiredMixin, View):
     def get(self, request):
+        print(self.request.META["HTTP_USER_AGENT"])
         user = self.request.user
-        profile = Profile.objects.get_selected_and_prefetched_data(user, prefetched=['categories'])
-        quizzes = Quiz.objects.none()
-        quizzes |= Quiz.objects.filter(categories__title__in=profile.categories.all(), questionLength__gt=5, solution_quality__gt=3, average_score__gte=50).distinct()[:100]
-
+        profile = Profile.objects.prefetch_related("categories").get(user=user)
+        categories = profile.categories.all()
+        quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=10, solution_quality__gt=3, average_score__gte=50).distinct()[:100]
         quiz = None
         if not quizzes.count() > 0:
-            quizzes |= Quiz.objects.filter(categories__title__in=profile.categories.all(), questionLength__gt=3, solution_quality__gt=0).distinct()[:100]
+            quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=10, solution_quality__gt=0).distinct()[:100]
 
         
         if not quizzes.count() > 0:
-            quizzes = Quiz.objects.filter(categories__title__in=profile.categories.all(), questionLength__gt=0)[:100]
+            quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=10)[:100]
 
         if quizzes.count() > 0:
             quiz = randomChoice(quizzes)
@@ -694,7 +719,7 @@ Add all the documentation here
 @login_required(redirect_field_name='next', login_url='account_login')
 def QuizUpdate(request, quiz_id):
     user = request.user
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    quiz = Quiz.objects.prefetch_related('fourChoicesQuestions', 'trueOrFalseQuestions').get(id=quiz_id)
     quiz.description = reverseStringCleaningService(quiz.description)
     if user != quiz.user:
         return HttpResponseForbidden()
@@ -704,6 +729,8 @@ def QuizUpdate(request, quiz_id):
         form = NewQuizForm(request.POST, instance=quiz)
         if form.is_valid():
             quiz = form.save()
+            quiz.description = mark_safe(quiz.description)
+            quiz.save()
             for q in quiz.fourChoicesQuestions.all():
                 q.age_from = quiz.age_from
                 q.age_to = quiz.age_to
@@ -715,22 +742,22 @@ def QuizUpdate(request, quiz_id):
             """
             Add this part to the question create and category create
             """
-            for category in quiz.categories.all():
-                for question in quiz.fourChoicesQuestions.all():
-                    if category not in question.categories.all():
-                        question.categories.add(category)
-                for category in question.categories.all():
-                    if category not in quiz.categories.all():
-                        question.categories.remove(category)
-                for question in quiz.trueOrFalseQuestions.all():
-                    if category not in question.categories.all():
-                        question.categories.add(category)
-                for category in question.categories.all():
-                    if category not in quiz.categories.all():
-                        question.categories.remove(category)
+            # for category in quiz.categories.all():
+            #     for question in quiz.fourChoicesQuestions.all():
+            #         if category not in question.categories.all():
+            #             question.categories.add(category)
+            #     for category in question.categories.all():
+            #         if category not in quiz.categories.all():
+            #             question.categories.remove(category)
+            #     for question in quiz.trueOrFalseQuestions.all():
+            #         if category not in question.categories.all():
+            #             question.categories.add(category)
+            #     for category in question.categories.all():
+            #         if category not in quiz.categories.all():
+            #             question.categories.remove(category)
 
 
-                question.categories.add(category)
+            #     question.categories.add(category)
 
 
             return redirect('quiz:create-quiz-link', quiz_id=quiz.id)
@@ -890,8 +917,8 @@ Add all the documentation here
 @login_required(redirect_field_name='next', login_url='account_login')
 def FourChoicesQuestionUpdate(request, quiz_id, question_id):
     user = request.user
-    quiz = get_object_or_404(Quiz, id=quiz_id)
-    question = get_object_or_404(FourChoicesQuestion, id=question_id)
+    quiz = Quiz.objects.prefetch_related("categories").get(id=quiz_id)
+    question = FourChoicesQuestion.objects.prefetch_related("categories").get(id=question_id)
     question.question = reverseStringCleaningService(question.question)
     question.answer1 = reverseStringCleaningService(question.answer1)
     question.answer2 = reverseStringCleaningService(question.answer2)
@@ -909,6 +936,13 @@ def FourChoicesQuestionUpdate(request, quiz_id, question_id):
             quiz.totalScore += instance.points
             quiz.duration += instance.duration_in_seconds
             quiz.save()
+            for category in question.categories.all():
+                question.categories.remove(category)
+
+            for category in quiz.categories.all():
+                question.categories.add(category)
+
+            question.save()
             return redirect('quiz:quiz-detail', quiz_id=quiz.id, ref_code=user.profile.code)
     
     context= {
@@ -935,6 +969,16 @@ def TrueOrFalseQuestionUpdate(request, quiz_id, question_id):
             quiz.totalScore += instance.points
             quiz.duration += instance.duration_in_seconds
             quiz.save()
+
+            for category in question.categories.all():
+                question.categories.remove(category)
+
+            for category in quiz.categories.all():
+                question.categories.add(category)
+
+            question.save()
+
+
             return redirect('quiz:quiz-detail', quiz_id=quiz.id, ref_code=user.profile.code)
     
     context= {
@@ -952,8 +996,8 @@ Add all the documentation here
 @login_required(redirect_field_name='next', login_url='account_login')
 def CategoryCreate(request, quiz_id):
     user = request.user
-    profile = Profile.objects.get(user=user)
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    profile = Profile.objects.prefetch_related("categories").get(user=user)
+    quiz = Quiz.objects.prefetch_related("categories").get(id=quiz_id)
     form = NewCategoryForm()
     categories = Category.objects.all()
 
@@ -978,15 +1022,6 @@ def CategoryCreate(request, quiz_id):
             except:
                 pass
 
-            # if category:
-            #     if category not in quiz.categories.all():
-            #         quiz.categories.add(category)
-            #         quiz.save()  
-            #         messages.success(request, f"{category} has been added!")      
-            #     else:
-            #         messages.warning(request, "This category has already been added!")      
-            # return a message that it is already created
-            # else:
             if not category:
                 newCategory = Category.objects.create(registered_by=user, title=title)
                 quiz.categories.add(newCategory)
@@ -1052,7 +1087,7 @@ def CategoryCreate(request, quiz_id):
 @login_required(redirect_field_name='next' ,login_url='account_login')
 def DeleteQuestion(request,quiz_id, question_form, question_id):
     user =request.user
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    quiz = Quiz.objects.get(id=qui_id)
     if question_form == 'fourChoices':
         question = FourChoicesQuestion.objects.get(id=question_id)
     elif question_form == 'trueOrFalse':
@@ -1084,7 +1119,6 @@ Add all the documentation here
 def TakeQuiz(request, quiz_id):
     user = request.user
     quiz = Quiz.objects.prefetch_related('fourChoicesQuestions', 'trueOrFalseQuestions').get(id=quiz_id)
-    quiz = get_object_or_404(Quiz, id=quiz_id)
     profile = None
     number_of_registered_users = Profile.objects.all().count()
     if user.is_authenticated:
@@ -1096,7 +1130,7 @@ def TakeQuiz(request, quiz_id):
                 messages.info(request, "Earn more coins by taking your quiz here!")
                 return redirect('question:quiz-generator')
             profile.coins -= 5
-            messages.info(request, '5 coins have been removed \n it will be restored when you submit the test!')
+            messages.info(request, '5 coins have been removed!')
             profile.save()
 
 
@@ -1120,6 +1154,7 @@ def TakeQuiz(request, quiz_id):
     if quiz.shuffleQuestions:
         shuffle(questions)
     context = {
+        'user': user,
         'quiz': quiz,
         'questions': questions,
         'profile': profile,
@@ -1144,29 +1179,29 @@ The total score should be adjusted whenever the creator the quiz updates the poi
 #totalScore, questionLength
 
 def SubmitQuiz(request, quiz_id, *args, **kwargs):
-    user = request.user
-    quiz = Quiz.objects.select_related('user').get(id=quiz_id)
-    if not user.is_authenticated:
-        code = str(kwargs.get('ref_code'))
-        ReferralService(code)
-
     if request.method == 'GET':
         return redirect('quiz:take-quiz', quiz_id=quiz.id)
     
-    postAd = PostAd.objects.all()
-    postAd = randomChoice(postAd)
-    postAd.views += 1
-    postAd.submitpageviews += 1
-    postAd.save()
+    user = request.user
+    quiz = Quiz.objects.select_related('user').prefetch_related("categories").get(id=quiz_id)
+    if not user.is_authenticated:
+        code = str(kwargs.get('ref_code'))
+        device = request.META["HTTP_USER_AGENT"]
+        ReferralService(device, code)
+
+    
         
     if user.is_authenticated:
-        profile = Profile.objects.select_related('user').get(user=user)
+        profile = Profile.objects.select_related('user').prefetch_related("categories", "quizTaken", "fourChoicesQuestionsTaken","fourChoicesQuestionsMissed", "TrueOrFalseQuestionsTaken", "TrueOrFalseQuestionsMissed" ).get(user=user)
     
     
     if request.method == 'POST':
         score = 0
         postAd = PostAd.objects.all()
         postAd = randomChoice(postAd)
+        postAd.views += 1
+        postAd.submitpageviews += 1
+        postAd.save()
         # if user.is_authenticated:
         #     streak = Streak.objects.get(profile=profile)
 
@@ -1207,8 +1242,20 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                 if question.correct == combination[2]:
                     score += question.points
                     question.avgScore = round(((question.avgScore *(question.attempts - 1) + 100) / question.attempts), 1)
+                    if user.is_authenticated:
+                        if profile.fourChoicesQuestionsTaken.all().count() > 999:
+                            removed = profile.fourChoicesQuestionsTaken.first()
+                            profile.fourChoicesQuestionsTaken.remove(removed)
+                        profile.fourChoicesQuestionsTaken.add(question)
+                    
                 else:
                     question.avgScore = round((question.avgScore *(question.attempts - 1) / question.attempts), 1)
+                    if user.is_authenticated:
+                        if profile.fourChoicesQuestionsMissed.all().count() > 999:
+                            removed = profile.fourChoicesQuestionsMissed.first()
+                            profile.fourChoicesQuestionsMissed.remove(removed)
+                        profile.fourChoicesQuestionsMissed.add(question)
+                    
 
                           
 
@@ -1233,8 +1280,22 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                 if question.correct == answer:
                     score += question.points
                     question.avgScore = round(((question.avgScore *(question.attempts - 1) + 100) / question.attempts), 1)
+                    if user.is_authenticated:
+                        if profile.trueOrFalseQuestionsTaken.all().count() > 999:
+                            removed = profile.trueOrFalseQuestionsTaken.first()
+                            profile.trueOrFalseQuestionsTaken.remove(removed)
+                        profile.trueOrFalseQuestionsTaken.add(question)
+                    
                 else:
                     question.avgScore = round((question.avgScore *(question.attempts - 1) / question.attempts), 1)
+
+
+                    if user.is_authenticated:
+                        if profile.trueOrFalseQuestionsMissed.all().count() > 999:
+                            removed = profile.trueOrFalseQuestionsMissed.first()
+                            profile.trueOrFalseQuestionsMissed.remove(removed)
+                        profile.trueOrFalseQuestionsMissed.add(question)
+                    
 
 
 
@@ -1262,7 +1323,8 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                                 profile.categories.add(category)
 
                     if quiz not in profile.quizTaken.all():
-                        value = round(((decimal.Decimal(user_avg_score)/100 + 1)**3) *(1 - (quiz.average_score/100)) * decimal.Decimal(user_score),0) + 5
+                        value = generateCoins(decimal.Decimal(user_avg_score), quiz.average_score, quiz.questionLength)
+                        # value = round(((decimal.Decimal(user_avg_score)/100 + 1)**3) *(1 - (quiz.average_score/100)) * decimal.Decimal(user_score),0) + 5
                         profile.coins += value
                         profile.save()
 
@@ -1270,7 +1332,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                         This is a celery tasks
                         don't remove the previous task ooo because it is different from this celery task
                         """
-                        CoinsTransaction.delay(user, value -5)
+                        CoinsTransaction.delay(user, value)
 
                         creator.coins += 1
                         creator.save()
@@ -1297,7 +1359,8 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                         removed = profile.quizTaken.first()
                         profile.quizTaken.remove(removed)
                     profile.quizTaken.add(quiz)
-                    Attempter.objects.create(user=user, quiz=quiz, score=user_score, percentage=user_avg_score, timeTaken=TimeTaken)
+                    if quiz.user != profile.user:
+                        Attempter.objects.create(user=user, quiz=quiz, score=user_score, percentage=user_avg_score, timeTaken=TimeTaken)
 
                 profile.quizAttempts += 1
                 profile.quizAvgScore = decimal.Decimal(round(((profile.quizAvgScore * (profile.quizAttempts - 1) + decimal.Decimal(user_avg_score)) / profile.quizAttempts), 1))
@@ -1324,6 +1387,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
     
         context = {
+            "user": user,
             'quiz': quiz,
             'user_score': user_score,
             'user_avg_score': user_avg_score,
