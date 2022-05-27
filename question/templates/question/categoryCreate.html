@@ -1,14 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-</head>
-<body>
+{% extends 'quiz/base.html' %}
+{% load static %}
+{% load social_share %}
+
+{% block quizTitle %}
+Categories
+{% endblock quizTitle %}
+
+{% block content %}
+
+{% block quizCss %}
+<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+{% endblock quizCss %}
+<section>
 
     <div class="head">Step 2 of 2</div>
 {% include 'messages.html' %}
@@ -31,7 +35,7 @@
     {% endfor %}
     </div>
 
-    <input type="submit" value="Add Categories">
+    <input type="submit" value="add all the categories in the bucket to the question">
 </form>
 
 
@@ -50,6 +54,7 @@
 </a>
 
 </div>
+</section>
 
 <script type="text/javascript">
 
@@ -69,9 +74,5 @@ function addClassCategory(obj_name){
 
 
 </script>
-<script>
- 
-</script>
    
-</body>
-</html>
+{% endblock content %}

@@ -27,7 +27,7 @@ import decimal
 #Paginator
 
 from django.core.paginator import Paginator
-
+from django.utils.translation import gettext_lazy as _
 # django messages
 from django.contrib import messages
 
@@ -230,7 +230,7 @@ def AnswerQuestion(request):
                 questions.remove(question)
                 request.session['OldTownRoad'] = questions
             else:
-                messages.info(request, 'The questions are insufficient!')
+                messages.info(request, _('The questions are insufficient!'))
                 return redirect("question:questions")
 
 
@@ -247,7 +247,7 @@ def AnswerQuestion(request):
                 questions.remove(question)
                 request.session['OldTownRoad'] = questions
             else:
-                messages.info(request, 'The questions are insufficient!')
+                messages.info(request, _('The questions are insufficient!'))
                 return redirect("question:questions")
 
 
@@ -296,7 +296,7 @@ def FollowingQuestion(request):
             questions.remove(question)
             request.session['followingQuestions'] = questions
         else:
-            messages.info(request, 'The questions are insufficient!')
+            messages.info(request, _('The questions are insufficient!'))
             return redirect("question:questions")
 
 
@@ -450,13 +450,13 @@ def CategoryCreate(request, question_id):
                     question.save()
                     newCategory.number_of_questions += 1
                     newCategory.save()
-                    if profile.categories.all().count() > 99:
+                    if profile.categories.all().count() > 29:
                         removed = profile.categories.first()
                         profile.categories.remove(removed)
                     profile.categories.add(newCategory)
                     profile.save()
                 else:
-                    messages.warning(request, f"{newCategory.title} has already been added to the question!")
+                    messages.warning(request, _(f"{newCategory.title} has already been added to the question!"))
                 # return a message that it is already created
             except:
                 newCategory = Category.objects.create(registered_by=user, title=title)
@@ -464,7 +464,7 @@ def CategoryCreate(request, question_id):
                 question.save()
                 newCategory.number_of_questions += 1
                 newCategory.save()
-                if profile.categories.all().count() > 99:
+                if profile.categories.all().count() > 29:
                     removed = profile.categories.first()
                     profile.categories.remove(removed)
                 profile.categories.add(newCategory)
@@ -495,7 +495,7 @@ def CategoryCreate(request, question_id):
                         question.save()
                         category.number_of_questions += 1
                         category.save()
-                        if profile.categories.all().count() > 99:
+                        if profile.categories.all().count() > 29:
                             removed = profile.categories.first()
                             profile.categories.remove(removed)
                         profile.categories.add(category)
@@ -613,7 +613,7 @@ def SubmitQuestion(request):
                 # streak = Streak.objects.get(profile=profile)
                 profile.questionAttempts += 1
             combination = tuple(answer.split('-'))
-            message = 'The answer is wrong!'
+            message = _('The answer is wrong!')
 
             if combination[0] == 'fourChoicesQuestion':
                 question = FourChoicesQuestion.objects.prefetch_related("categories").select_related("user").get(id=combination[1])
@@ -678,10 +678,9 @@ def SubmitQuestion(request):
                                 creator.coins += decimal.Decimal(0.10)
                                 creator.save()
                                 CreatorCoins.delay(creator.user, value)
-                                print(creator.coins)
-                            messages.success(request, f"You've received {value} coins")
+                            messages.success(request, _(f"You've received {value} coins"))
 
-                    messages.success(request, 'CORRECT!')
+                    messages.success(request, _('CORRECT!'))
                     
                 else:
                     question.avgScore = round((question.avgScore *(question.attempts - 1) / question.attempts), 1)
@@ -696,8 +695,8 @@ def SubmitQuestion(request):
                         profile.fourChoicesQuestionsMissed.add(question)
                         profile.save()
 
-                        messages.warning(request, f"You've lost 1 coin")
-                    messages.error(request, 'WRONG!')
+                        messages.warning(request, _("You've lost 1 coin"))
+                    messages.error(request, _('WRONG!'))
                     return redirect('question:correction', question_form=combination[0], question_id=combination[1], answer=combination[2])
 
 
@@ -764,9 +763,9 @@ def SubmitQuestion(request):
                                 creator.coins += decimal.Decimal(0.10)
                                 creator.save()
                                 CreatorCoins.delay(creator.user, value)
-                            messages.success(request, f"You've received {value} coins")
+                            messages.success(request, _(f"You've received {value} coins"))
 
-                    messages.success(request, 'CORRECT!')
+                    messages.success(request, _('CORRECT!'))
                     
                 else:
                     question.avgScore = round((question.avgScore *(question.attempts - 1) / question.attempts), 1)
@@ -780,8 +779,8 @@ def SubmitQuestion(request):
                         profile.trueOrFalseQuestionsMissed.add(question)
                         profile.questionAvgScore = decimal.Decimal(round((profile.questionAvgScore * (profile.questionAttempts - 1)) / profile.questionAttempts ,1))
                         profile.save()
-                        messages.warning(request, f"You've lost 1 coin")
-                    messages.error(request, 'WRONG!')
+                        messages.warning(request, _("You've lost 1 coin"))
+                    messages.error(request, _('WRONG!'))
                     return redirect('question:correction', question_form=combination[0], question_id=combination[1], answer=combination[2])
 
     except:
@@ -853,7 +852,7 @@ def QuizGenerator(request):
                 # questions = randomQuestions(questionSet, number_of_questions)
                 questionLength = len(questions)
                 if questionLength < number_of_questions:
-                    messages.info(request, 'The questions are insufficient!')
+                    messages.info(request, _('The questions are insufficient!'))
 
                 request.session['duration'] = duration_in_minutes
                 request.session['questionLength'] = questionLength
@@ -875,7 +874,7 @@ def QuizGenerator(request):
             return render(request, 'question/quiz.html', context)
 
         except:
-            messages.error(request, 'There are no questions available!')
+            messages.error(request, _('There are no questions available!'))
             return redirect('question:questions')
             
 
@@ -946,14 +945,14 @@ def PastQuestions(request):
 
         questionLength = len(questions)
         if questionLength < 10:
-            messages.info(request, 'The questions are insufficient!')
+            messages.info(request, _('The questions are insufficient!'))
 
 
         duration = 0
         for question in questions:
             duration += question[1].duration_in_seconds
     except:
-        messages.error(request, 'There are no questions available!')
+        messages.error(request, _('There are no questions available!'))
         return redirect('question:questions')
     print(duration, "durations")
     context = {
@@ -1156,10 +1155,10 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
                 # StreakValidator.delay(profile, user_score)
                 user_avg_score = (user_score/total_score) * 100
                 if user_avg_score > 50 and reAttempt == 'no':
-                    value = user_score
+                    value = user_score / 2
                     profile.coins += decimal.Decimal(value)
                     profile.save()
-                    messages.success(request, f"You've won {value} coins!")
+                    messages.success(request, _(f"You've won {value} coins!"))
                     """
                     This is a celery tasks
                     don't remove the previous task ooo because it is different from this celery task
@@ -1168,11 +1167,11 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
 
             except ZeroDivisionError:
                 
-                messages.error(request, "You didn't answer any question.")
+                messages.error(request, _("You didn't answer any question."))
                 return redirect('quiz:take-quiz', quiz_id = quiz.id)
         
 
-        attempt_report = f"You answered {len(answers)} out of {questionLength} questions"
+        attempt_report = _(f"You answered {len(answers)} out of {questionLength} questions")
                    
         context = {
             'user_score': user_score,

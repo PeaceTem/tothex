@@ -9,3 +9,4 @@ admin.site.register(Link)
 admin.site.register(Interest)
 admin.site.register(Device)
 
+

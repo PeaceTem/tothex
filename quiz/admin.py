@@ -5,3 +5,4 @@ from .models import Quiz, QuizLink, Attempter
 admin.site.register(Quiz)
 admin.site.register(QuizLink)
 admin.site.register(Attempter)
+

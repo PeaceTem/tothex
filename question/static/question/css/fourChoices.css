@@ -44,3 +44,12 @@ input[type="submit"]{
     border: none;
     margin: 5px 5px;
 }
+
+
+.copysymbol{
+    width: 25px;
+    margin: 3px;
+}
+.hard{
+    width: 90px;
+}

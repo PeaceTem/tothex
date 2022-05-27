@@ -2,9 +2,13 @@ from __future__ import absolute_import, unicode_literals
 
 from celery import shared_task
 
-from .models import Streak, Profile
+from .models import Streak, Profile, Device
 from quiz.models import Quiz
 from leaderboard.models import CoinsEarnerLeaderBoard, ReferralLeaderBoard, CreatorLeaderBoard
+
+from django.utils import timezone
+
+
 @shared_task
 def add(x: int , y: int):
     return x + y
@@ -48,6 +52,16 @@ def DailyStreakUpdate():
         profile.coins += 500
         profile.save()
     CreatorLeaderBoard.objects.all().update(refers=0)
+
+
+    devices = Device.objects.all().count()
+    tm = timezone.now()
+    for device in devices:
+        td =(tm - device.date).days
+
+        if td >= 30:
+            device.delete()
+
     return "All the streak model has been updated!"
 
 

@@ -314,13 +314,11 @@ def FollowerQuizList(request):
         takenQuiz = profile.quizTaken.all()
 
         randomQuizzes = []
-        print('The fetch has started!')
         while len(randomQuizzes) < 100 and quizzes.count() > 0:
             quiz = randomChoice(quizzes)
             print(quiz)
             quizzes = quizzes.exclude(id=quiz.id)
             if quiz not in takenQuiz:
-                print('The quiz is not in quizTaken!')
                 randomQuizzes.append(quiz)
             
         quizzes = randomQuizzes
@@ -351,8 +349,7 @@ def FollowerQuizList(request):
 def MyQuizList(request):
     user = request.user
     profile = Profile.objects.get(user=user)
-    quizzes = User.quiz_set.all()
-    # quizzes = Quiz.objects.get_user_quizzes(user)
+    quizzes = user.quiz_set.all()
 
     number_of_registered_users = Profile.objects.all().count()
     number_of_quizzes_created = Quiz.objects.all().count()
@@ -391,7 +388,7 @@ def MyQuizList(request):
 def VisitorView(request, owner_id):
     user = User.objects.get(id=owner_id)
     profile = Profile.objects.get(user=user)
-    quizzes = Quiz.objects.get_user_quizzes(user)
+    quizzes = user.quiz_set.all()
 
     number_of_registered_users = Profile.objects.all().count()
     number_of_quizzes_created = Quiz.objects.all().count()
@@ -483,9 +480,9 @@ def FavoriteQuizList(request):
     number_of_quizzes_created = Quiz.objects.all().count()
     q1 = TrueOrFalseQuestion.objects.all().count()
     q2 = FourChoicesQuestion.objects.all().count()
-
     number_of_questions_created = q1 + q2
-
+    ip = request.META.get('REMOTE_ADDR')
+    print(request.META.get('HTTP_X_FORWARDED_FOR'))
     search_input= request.GET.get('search-area') or ''
     if search_input:
         search = search_input.strip()
@@ -501,6 +498,7 @@ def FavoriteQuizList(request):
     quizzes = p.get_page(page)
 
     context={
+        'ip' : ip,
         'page_obj': quizzes,
         'nav': 'favorites',
         'profile': profile,
@@ -622,7 +620,7 @@ class RandomQuizPicker(LoginRequiredMixin, View):
             quiz = randomChoice(quizzes)
 
         if not quiz:
-            messages.error(self.request, 'There is no quiz available')
+            messages.error(self.request, _('There is no quiz available'))
             return redirect('quiz:quizzes')
         return redirect('quiz:take-quiz', quiz_id=quiz.id)
 
@@ -640,7 +638,6 @@ def QuizCreate(request):
     user = request.user
     profile = Profile.objects.get(user=user)
     form = NewQuizForm()
-    print(form)
     if request.method == 'POST':
         form = NewQuizForm(request.POST)
         if form.is_valid():
@@ -652,7 +649,6 @@ def QuizCreate(request):
             quiz = Quiz.objects.create(user=user, title=title, description=description, shuffleQuestions=shuffleQuestions, age_from=age_from, age_to=age_to)
             profile.quizzes += 1
             profile.save()
-            # return redirect('quiz:new-question', quiz_id=quiz.id)
             return redirect('quiz:create-quiz-link', quiz_id=quiz.id)
     
     context= {
@@ -690,11 +686,11 @@ class QuizLinkCreate(LoginRequiredMixin, View):
 
 
                 if user != quiz.user:
-                    messages.error(self.request, 'You are not authorize to add a link')
+                    messages.error(self.request, _('You are not authorize to add a link'))
                     return redirect('quiz:quizzes')
                 try:
                     if quiz.quizlink:
-                        messages.warning(self.request, 'You have already added a link to this quiz!')
+                        messages.warning(self.request, _('You have already added a link to this quiz!'))
                         return redirect('quiz:category-create', quiz_id=quiz.id)
                 except:
                     pass
@@ -705,7 +701,7 @@ class QuizLinkCreate(LoginRequiredMixin, View):
                 return redirect('quiz:category-create', quiz_id=quiz.id)
         except:
             # add IntegrityError 
-            messages.error(self.request, 'An error occurred!')
+            messages.error(self.request, _('An error occurred!'))
             return redirect('quiz:category-create', quiz_id=quiz.id)
 
         return HttpResponse('Creating Quiz Link!')
@@ -1018,7 +1014,7 @@ def CategoryCreate(request, quiz_id):
                     category.number_of_quizzes += 1
                     category.save()
                 else:
-                    messages.warning(request, f"{category.title} has already been added to the quiz!")
+                    messages.warning(request, _(f"{category.title} has already been added to the quiz!"))
             except:
                 pass
 
@@ -1028,13 +1024,13 @@ def CategoryCreate(request, quiz_id):
                 quiz.save()
                 newCategory.number_of_quizzes += 1
                 newCategory.save()
-                if profile.categories.all().count() > 99:
+                if profile.categories.all().count() > 29:
                     removed = profile.categories.first()
                     profile.categories.remove(removed)
                 profile.categories.add(newCategory)
                 profile.save()
 
-                messages.success(request, f"{newCategory} has been added!")      
+                messages.success(request, _(f"{newCategory} has been added!"))
 
 
 
@@ -1058,7 +1054,7 @@ def CategoryCreate(request, quiz_id):
                         quiz.save()
                         category.number_of_quizzes += 1
                         category.save()
-                        if profile.categories.all().count() > 99:
+                        if profile.categories.all().count() > 29:
                             removed = profile.categories.first()
                             profile.categories.remove(removed)
                         profile.categories.add(category)
@@ -1099,7 +1095,6 @@ def DeleteQuestion(request,quiz_id, question_form, question_id):
         quiz.duration -= question.duration_in_seconds
         quiz.save()
         question.delete()
-        messages.success(request, "You've successfully delete a question!")
 
         return HttpResponse('You have deleted a question.')
 
@@ -1126,11 +1121,11 @@ def TakeQuiz(request, quiz_id):
         
         if quiz not in profile.quizTaken.all():
             if profile.coins < 5:
-                messages.error(request, "You don't have enough coins to take a quiz")
-                messages.info(request, "Earn more coins by taking your quiz here!")
+                messages.error(request,_("You don't have enough coins to take a quiz"))
+                messages.info(request,_("Earn more coins by taking your quiz here!"))
                 return redirect('question:quiz-generator')
             profile.coins -= 5
-            messages.info(request, '5 coins have been removed!')
+            messages.info(request, _('5 coins have been removed!'))
             profile.save()
 
 
@@ -1367,13 +1362,13 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
                 profile.save()
             except ZeroDivisionError:
-                messages.error(request, "You didn't answer any question.")
+                messages.error(request, _("You didn't answer any question."))
                 return redirect('quiz:take-quiz', quiz_id = quiz.id)
         else:
             if score > 0:
                 user_score = score
             else:
-                messages.error(request, "You didn't answer any question.")
+                messages.error(request, _("You didn't answer any question."))
                 return redirect('question:answer-question')
         
 
@@ -1383,7 +1378,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
         avgScore = round(quiz.average_score, 2)
         
-        attempt_report = f"You answered {len(answers)} out of {quiz.questionLength} questions"
+        attempt_report = _(f"You answered {len(answers)} out of {quiz.questionLength} questions")
 
     
         context = {
@@ -1461,16 +1456,12 @@ class ReportLink(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         quizLink_id = self.request.POST.get('quizlink_id')
         user = self.request.POST.get('user')
-        print(quizLink_id, user)
         quizLink = QuizLink.objects.get(id=quizLink_id)
-        print(quizLink)
         quizLink.reportCount += 1
         quizLink.reporters.add(user)
 
         if not quizLink.ban:        
-            print(quizLink.ban)
             if quizLink.reportCount >= 10:
-                print(quizLink.reportCount)
                 quizLink.ban = True
 
         quizLink.save()

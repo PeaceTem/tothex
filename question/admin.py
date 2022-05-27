@@ -5,3 +5,4 @@ from .models import TrueOrFalseQuestion, FourChoicesQuestion
 
 admin.site.register(TrueOrFalseQuestion)
 admin.site.register(FourChoicesQuestion)
+

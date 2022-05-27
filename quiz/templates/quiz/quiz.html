@@ -25,7 +25,7 @@
 <div style='text-align: center;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
 <div style='text-align: center;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
 
-
+ip : {{ip}}
 
 {% include 'search.html' %}
 
@@ -94,7 +94,7 @@
                          
                         </div>
                         <div id="take-quiz">
-                            <a class="link" href="{% url 'quiz:take-quiz' quiz.id %}"><div>Take Quiz</div></a>
+                            <a class="link" href="{% url 'quiz:take-quiz' quiz.id %}"><div>Take Quiz →</div></a>
                         </div>
                        </div>
             </div>

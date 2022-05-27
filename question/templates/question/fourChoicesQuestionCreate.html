@@ -15,6 +15,55 @@ Create Four Choices QUestion
 {% include 'messages.html' %}
 
 
+
+<div>
+    <i style="font-size:14px;">Click to copy to clipboard</i>
+</div>
+
+<input type="text"  onclick="copyFunction(this.id)" name="" id="copy" value="&copy" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="times" value="×" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="divide" value="÷" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="ne" value="≠" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="plusmn" value="±" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="elt" value="⋜" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="glt" value="⋝" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="deg" value="°" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="fnof" value="ƒ" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="part" value="∂" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="empty" value="∅" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="isin" value="∈" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="notin" value="∉" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="sum" value="∑" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="mnplus" value="∓" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="radic" value="√" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="radic3" value="∛" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="radic4" value="∜" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="infin" value="∞" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="cap" value="∩" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="cup" value="∪" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="int" value="∫" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="sub" value="⊂" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="sup" value="⊃" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="nsub" value="⊄" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="nsup" value="⊅" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="sube" value="⊆" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="supe" value="⊇" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="nsube" value="⊈" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="nsupe" value="⊉" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="larr" value="←" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="uarr" value="↑" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="rarr" value="→" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="darr" value="↓" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="harr" value="↔" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="varr" value="↕" class="copysymbol" readonly>
+
+<input type="text"  onclick="copyFunction(this.id)" name="" id="hardsub" value="(sub)2(/sub)" class="copysymbol hard" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="hardsup" value="(sup)2(/sup)" class="copysymbol hard" readonly>
+
+
+
+
+
 <div class="question">
 <div class="head">Step 1 of 2</div>
 
@@ -26,6 +75,18 @@ Create Four Choices QUestion
     
 </div>
 
+<script>
+    function copyFunction(base){
+        console.log(base)
+    let copyText = document.getElementById(base);
+    console.log(copyText);
+    copyText.select();
+    copyText.setSelectionRange(0,99999);
+    // document.execCommand("copy")
+    navigator.clipboard.writeText(copyText.value)
+    alert("Copied the text: " + copyText.value)
+}
+</script>
 
 {% endblock content %}
 
