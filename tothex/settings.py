@@ -93,7 +93,7 @@ PWA_APP_BACKGROUND_COLOR = '#ffffff'
 PWA_APP_DISPLAY = 'standalone'
 PWA_APP_SCOPE = '/' # change it to / if it gives an error
 PWA_APP_ORIENTATION = 'portrait'
-PWA_APP_START_URL = '/quiz/'
+PWA_APP_START_URL = '/' #change to /quiz/
 PWA_APP_STATUS_BAR_COLOR = 'default'
 PWA_APP_ICONS = [
 	{
