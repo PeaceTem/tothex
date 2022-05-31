@@ -13,7 +13,6 @@ from .tasks import ReferralTask
 # try using get_or_create
 def ReferralService(device, code):
     try:
-        device = device
         try:
             device = Device.objects.get(name=device)
             return
@@ -28,8 +27,6 @@ def ReferralService(device, code):
 
         ReferralTask.delay(profile.user)
         total = Profile.objects.all().count()
-        print(total)
-        print("Ending the referral service!")
     except:
         pass    
 

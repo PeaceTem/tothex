@@ -6,7 +6,7 @@
 {% load crispy_forms_tags %}
 
 {% block quizTitle %}
-Create A True Or False Question
+Quiz Generator
 {% endblock quizTitle %}
 
 {% block content %}
@@ -30,8 +30,7 @@ Create A True Or False Question
 
 
 <div class="body">
-<div class="head">Step 1 of 2</div>
-
+    <i style="font-size: 12px; color: #777;">The coins earned here are not being included in the leaderboard</i>
     <form action="" method="post">
         {% csrf_token %}
         {{form|crispy}}
@@ -48,16 +47,3 @@ Create A True Or False Question
 </div>
 
 {% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-

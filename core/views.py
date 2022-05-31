@@ -27,7 +27,7 @@ from question.models import TrueOrFalseQuestion, FourChoicesQuestion
 
 # services
 
-from .services import ReferralService
+from .services import ReferralService, get_user_ip
 # # Create your views here.
 # messages.error, warning, success, info, debug
  
@@ -56,7 +56,7 @@ def main_view(request, *args, **kwargs):
     user = request.user
     if not user.is_authenticated:
         code = str(kwargs.get('ref_code'))
-        device = request.META["HTTP_USER_AGENT"]
+        device = get_user_ip(request)
         ReferralService(device, code)
     return redirect('question:answer-question')
 

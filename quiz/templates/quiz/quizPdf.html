@@ -48,13 +48,18 @@ a div{
 
 
 .question-box > li, .container > div{
-    border-top: 4px solid #f11919;
+    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
     box-shadow: 1px 3px 4px #ccc;
     margin: auto;
     margin-bottom: 10px;
+
+}
+
+.question-box > li:nth-child(odd){
+background: #eee;
 
 }
 li div{
@@ -200,14 +205,14 @@ input[type="submit"]{
                     <div class="answer">
                         <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
                         <label for="id_answer1">
-                            <pre>   A. True </pre>
+                            <pre>   A. {{question.answer2}} </pre>
                         </label>
                     </div>
                     
                     <div class="answer">
                         <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
                         <label for="id_answer2">
-                            <pre>   B. False </pre>
+                            <pre>   B. {{question.answer2}} </pre>
                         </label>
                     </div>
             </div>

@@ -56,7 +56,7 @@ class Quiz(models.Model):
     description = models.TextField(max_length=1000, verbose_name=_('Description'))
     date = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
-    when = models.CharField(max_length=200,default='')
+    when = models.CharField(max_length=200, null=True, blank=True)
     fourChoicesQuestions = models.ManyToManyField(FourChoicesQuestion, related_name='fourChoicesQuestions',
         related_query_name='fourChoicesQuestions' , blank=True)
     trueOrFalseQuestions = models.ManyToManyField(TrueOrFalseQuestion, related_name='trueOrFalseQuestions',
@@ -72,7 +72,7 @@ class Quiz(models.Model):
     categories = models.ManyToManyField(Category, blank=True,
         related_name='categories', related_query_name='categories')
     duration = models.PositiveSmallIntegerField(default=30)
-    get_duration = models.CharField(max_length=200,default='')
+    get_duration = models.CharField(max_length=200, null=True, blank=True)
     solution_quality = models.IntegerField(default=0)
     likes = models.ManyToManyField(User, default=None, blank=True, related_name='likes')
     likeCount = models.PositiveIntegerField(default=0)
@@ -98,7 +98,7 @@ class Quiz(models.Model):
             self.relevance = rel
 
         self.get_duration = self.get_quiz_duration
-        self.when = self.when_created
+        self.when = self.when_created 
         super().save(*args, **kwargs)
 
 
@@ -146,6 +146,8 @@ class Quiz(models.Model):
 
     @property
     def when_created(self):
+        if not self.date:
+            return timezone.now()
         days_length = timezone.now() - self.date
         days = days_length.days
         seconds = days_length.seconds
@@ -188,6 +190,7 @@ class Quiz(models.Model):
 
             except:
                 return f"0 seconds"
+        return timezone.now()
 
 
     class Meta:

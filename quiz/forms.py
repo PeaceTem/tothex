@@ -7,7 +7,7 @@ class NewQuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
         fields = '__all__'
-        exclude = ('user','date', 'date_updated', 'likes', 'categories', 'fourChoicesQuestions', 'trueOrFalseQuestions', 'lastQuestionIndex', 'questionLength', 'totalScore', 'attempts','gross_average_score','average_score', 'public', 'solution_quality', 'solution_validators', 'likeCount', 'duration', 'relevance')
+        exclude = ('user','date', 'date_updated', 'likes', 'categories', 'fourChoicesQuestions', 'trueOrFalseQuestions', 'lastQuestionIndex', 'questionLength', 'totalScore', 'attempts','gross_average_score','average_score', 'public', 'solution_quality', 'solution_validators', 'likeCount', 'duration', 'relevance', 'get_duration', 'when')
       
 
 class NewFourChoicesQuestionForm(forms.ModelForm):

@@ -9,17 +9,6 @@ from core.models import Streak
 The list of leaderboard models that will be created.
 It should be specific to a country. Still considering.
 streak
-best question
-best quiz
-top earners
-top buyers
-top losers if the challenges have started.
-most answered questions
-most correctly answered questions
-most wrongly answered questions
-most attempted questions
-
-
 
 Save the state of the streak leader board at the end of each week for future analysis.
 """
@@ -62,9 +51,6 @@ class CreatorLeaderBoard(models.Model):
 class ReferralLeaderBoard(models.Model):
     leader = models.ForeignKey(User, on_delete=models.CASCADE)
     refers = models.PositiveIntegerField(default=0)
-    # The order_by will be used in the views to get the highest coins earners
-    # add the leaderboard for the all time highest coins owner
-
 
     def __str__(self):
         return f"{self.leader}"

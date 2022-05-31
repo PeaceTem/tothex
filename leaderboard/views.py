@@ -16,7 +16,7 @@ And also make all the leaderboard daily
 
 
 @login_required(redirect_field_name='next', login_url='account_login')
-def Leaderboard(request):
+def LeaderboardView(request):
     user = request.user
     profile = Profile.objects.get(user=user)
     context={
@@ -29,7 +29,7 @@ def Leaderboard(request):
 
 
 @login_required(redirect_field_name='next', login_url='account_login')
-def StreakLeaderBoard(request):
+def StreakLeaderBoardView(request):
     user = request.user
     profile = user.profile
     instance = Streak.objects.get(profile=profile)
@@ -52,7 +52,7 @@ def StreakLeaderBoard(request):
 
 
 @login_required(redirect_field_name='next', login_url='account_login')
-def WealthLeaderBoard(request,*args, **kwargs):
+def WealthLeaderBoardView(request,*args, **kwargs):
     user = request.user
     instance = CoinsEarnerLeaderBoard.objects.get(leader=user)
     leaders = CoinsEarnerLeaderBoard.objects.all().order_by('-coins')[0:100]
@@ -69,7 +69,7 @@ def WealthLeaderBoard(request,*args, **kwargs):
 
 
 @login_required(redirect_field_name='next', login_url='account_login')
-def CreatorsLeaderBoard(request,*args, **kwargs):
+def CreatorsLeaderBoardView(request,*args, **kwargs):
     user = request.user
     instance = CreatorLeaderBoard.objects.get(leader=user)
     leaders = CreatorLeaderBoard.objects.all().order_by('-coins')[0:100]
@@ -87,7 +87,7 @@ def CreatorsLeaderBoard(request,*args, **kwargs):
 
 
 @login_required(redirect_field_name='next', login_url='account_login')
-def ReferralLeaderBoard(request,*args, **kwargs):
+def ReferralLeaderBoardView(request,*args, **kwargs):
     user = request.user
     leaders = ReferralLeaderBoard.objects.all().order_by('-refers')[0:100]
     instance = ReferralLeaderBoard.objects.get(leader=user)

@@ -40,7 +40,7 @@ import json
 
 
 
-from core.services import ReferralService
+from core.services import ReferralService, get_user_ip
 from quiz.services import reverseStringCleaningService
 
 # Create your views here.
@@ -976,7 +976,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
     if request.method == 'GET':
         if not user.is_authenticated:
             code = str(kwargs.get('ref_code'))
-            device = request.META["HTTP_USER_AGENT"]
+            device = get_user_ip(request)
             ReferralService(device, code)   
         return redirect('question:quiz-generator')
 

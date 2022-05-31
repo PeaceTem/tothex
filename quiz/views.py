@@ -43,7 +43,7 @@ from core.tasks import LikeQuiz, StreakValidator, CoinsTransaction, CreatorCoins
 
 # services
 
-from core.services import ReferralService
+from core.services import ReferralService, get_user_ip
 from .services import reverseStringCleaningService, ScoreRange
 
 # Utilities
@@ -130,7 +130,7 @@ def QuizDetail(request, quiz_id, *args, **kwargs):
             profile = Profile.objects.get(user=user)
         if not user.is_authenticated:
             code = str(kwargs.get('ref_code'))
-            device = request.META["HTTP_USER_AGENT"]
+            device = get_user_ip(request)
             ReferralService(device, code)
         
         postAd = PostAd.objects.all()
@@ -210,13 +210,11 @@ def QuizList(request):
         else:
 
 
+
             age = profile.get_user_age
-            # quizzes = Quiz.objects.none()
             categories = profile.categories.all()
-            # for category in profile.categories.all():
             lookup = Q(categories__in=categories) & Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
             quizzes = Quiz.objects.filter(lookup).distinct()
-            print(quizzes)
             takenQuiz = profile.quizTaken.all()
             randomQuizzes = []
             level1 = 0
@@ -243,6 +241,7 @@ def QuizList(request):
             for q in randomQuizzes:
                 average_score = round(q.average_score)
                 categories = []
+
                 container = {
                     "id":q.id,
                     "user": q.user.username,
@@ -259,6 +258,7 @@ def QuizList(request):
                 }
 
                 recommendedQuizzes.append(container)
+
 
             print("randomQuizzes Quizzes", randomQuizzes)
 
@@ -481,8 +481,6 @@ def FavoriteQuizList(request):
     q1 = TrueOrFalseQuestion.objects.all().count()
     q2 = FourChoicesQuestion.objects.all().count()
     number_of_questions_created = q1 + q2
-    ip = request.META.get('REMOTE_ADDR')
-    print(request.META.get('HTTP_X_FORWARDED_FOR'))
     search_input= request.GET.get('search-area') or ''
     if search_input:
         search = search_input.strip()
@@ -498,7 +496,6 @@ def FavoriteQuizList(request):
     quizzes = p.get_page(page)
 
     context={
-        'ip' : ip,
         'page_obj': quizzes,
         'nav': 'favorites',
         'profile': profile,
@@ -1181,7 +1178,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
     quiz = Quiz.objects.select_related('user').prefetch_related("categories").get(id=quiz_id)
     if not user.is_authenticated:
         code = str(kwargs.get('ref_code'))
-        device = request.META["HTTP_USER_AGENT"]
+        device = get_user_ip(request)
         ReferralService(device, code)
 
     
