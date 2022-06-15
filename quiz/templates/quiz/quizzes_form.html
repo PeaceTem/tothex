@@ -45,6 +45,7 @@ input[type="text"]{
     {% include 'messages.html' %}
 
     <h1>Quiz Link</h1>
+    <i>Add an external link to the quiz. It'll be displayed on both the detail page and the submit page.</i>
     <a href=" {% url 'quiz:quizzes' %} ">Go Back</a>
     <form action="" method="post">
         {% csrf_token %}

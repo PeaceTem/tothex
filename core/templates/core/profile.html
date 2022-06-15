@@ -1,5 +1,7 @@
 {% extends 'quiz/base.html' %}
 {% load static %}
+{% load i18n %}
+
 {% load crispy_forms_tags %}
 {% load social_share %}
 {% block quizTitle %}
@@ -15,10 +17,9 @@ Profile
 {% include 'navbar.html' %}
 <input type="hidden" id="navActive" value="{{nav}}" name="nav">
 {% include 'messages.html' %}
-<div style="display:none;">
+<div>
     <div class="menu-icon">
 
-        <span>ready</span>
         <a href="{% url 'menu' %}">
             <div ><i class="fa fa-bars" aria-hidden="true">menu</i></div>
         </a>
@@ -45,23 +46,28 @@ Profile
     </div>
     <div class="obvious">
         <div class="following childBx">
-            <div class="heading">Followings</div>
+            <a href="{% url 'follower-list' follower.id 'following' %}">
+            <div class="heading">{% trans "Following" %}</div>
             <div>
                 <b style="font-size: 16px;">
                     {{followingsCount}}
                 </b>
             </div>
+        </a>
          </div>
         <div class="followers childBx">
-            <div class="heading">Followers</div>
+            <a href="{% url 'follower-list' follower.id 'followers' %}">
+
+            <div class="heading">{% trans "Followers" %}</div>
             <div>
                 <b id="followers" style="font-size: 16px;">
                     {{followersCount}}
                 </b>
             </div>
+            </a>
          </div>
          <div class="likes childBx">
-            <div class="heading">Likes</div>
+            <div class="heading">{% trans "Likes" %}</div>
             <div class="content">
                 <b style="font-size: 16px;">
                     {{profile.likes}}
@@ -80,7 +86,7 @@ Profile
             <input type="hidden" name="following_username" value="{{profile.user.username}}" readonly>
 
             <button type='submit' class="btn profile-edit-btn">
-                UnFollow
+                {% trans "UnFollow" %}
             </button>
         </form>
         {% else %}
@@ -93,7 +99,7 @@ Profile
             <input type="hidden" name="following_username" value="{{profile.user.username}}" readonly>
 
             <button type='submit' class="btn profile-edit-btn">
-                Follow
+                {% trans "Follow" %}
             </button>
         </form>
 
@@ -102,7 +108,7 @@ Profile
     <div class="urlLink">
      {% if link.link and link.name and link.description %}
 
-        <span>Link below: </span>
+        <span>{% trans "Link below:" %} </span>
         <div class="link-container face-link">
         <a onclick="clickFunction()" data-url="{% url 'link-click' link.id %}" class="profile-link" href="{{link.link}}" target="_blank" rel="noopener noreferrer">{{link.name}}</a>
         </div>
@@ -116,52 +122,52 @@ Profile
             
         </div>
         <div>
-            <a class="profile change"  href="{% url 'edit-link' %}">Change Link</a>
+            <a class="profile change"  href="{% url 'edit-link' %}">{% trans "Change Link" %}</a>
         </div>
         {% endif %}
     </div>
 <div class="otherInfo">
     <div class="userInfo">
-        <div class="heading">Bio</div>
+        <div class="heading">{% trans "Bio" %}</div>
         <div class="content"> {{profile.bio}}</div>
 
     </div>
     <div class="userInfo">
-        <div class="heading">Gender</div>
+        <div class="heading">{% trans "Gender" %}</div>
         <div class="content"> {{profile.gender}} </div>
 
     </div>
 
     <div class="userInfo">
-        <div class="heading">State Of Residence</div>
+        <div class="heading">{% trans "State Of Residence" %}</div>
         <div class="content"> {{profile.state_of_residence}} </div>
 
     </div>
 
     <div class="userInfo">
-        <div class="heading">State Of Origin</div>
+        <div class="heading">{% trans "State Of Origin" %}</div>
         <div class="content"> {{profile.state_of_origin}} </div>
 
 
     </div>
 
     <div class="userInfo">
-        <div class="heading">Nationality</div>
+        <div class="heading">{% trans "Nationality" %}</div>
         <div class="content"> {{profile.nationality}} </div>
     </div>
     
     <div class="userInfo">
-        <div class="heading">Wallet</div>
-        <div class="content">$0.00</div> 
-        <i style="font-size: 11px; color:#999;">Efforts are being made for users to generate revenue from this app</i>
+        <div class="heading">{% trans "Wallet" %}</div>
+        <div class="content">{% trans "$0.00" %}</div> 
+        <i style="font-size: 11px; color:#999;">{% trans "Efforts are being made for users to generate revenue from this app" %}</i>
     </div>
 
     <div class="userInfo">
-        <div class="heading">Streak's Length</div>
+        <div class="heading">{% trans "Streak's Length" %}</div>
         <div class="content"> {{profile.streak.length}}</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Streak's Status</div>
+        <div class="heading">{% trans "Streak's Status" %}</div>
         <div class="content">
             {% if profile.streak.active %}
             Active
@@ -173,47 +179,47 @@ Profile
 
 
     <div class="userInfo">
-        <div class="heading">Today's Correct Answers</div>
+        <div class="heading">{% trans "Today's Correct Answers" %}</div>
         <div class="content"> {{profile.streak.question}}</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Refers</div>
+        <div class="heading">{% trans "Refers" %}</div>
         <div class="content"> {{profile.refercount}}</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Coins</div>
+        <div class="heading">{% trans "Coins" %}</div>
         <div class="content"> {{profile.coins}}</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Quiz Average Score</div>
+        <div class="heading">{% trans "Quiz Average Score" %}</div>
         <div class="content"> {{profile.quizAvgScore}}%</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Question Average Score</div>
+        <div class="heading">{% trans "Question Average Score" %}</div>
         <div class="content">{{profile.questionAvgScore}}%</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Quiz Attempts</div>
+        <div class="heading">{% trans "Quiz Attempts" %}</div>
         <div class="content">{{profile.quizAttempts}}</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Question Attempts</div>
+        <div class="heading">{% trans "Question Attempts" %}</div>
         <div class="content">{{profile.questionAttempts}}</div> 
     </div>
     <div class="userInfo">
-        <div class="heading">Quizzes Created</div>
+        <div class="heading">{% trans "Quizzes Created" %}</div>
         <div class="content">{{profile.quizzes}}</div> 
         <div>
-            <a href="{% url 'question:visitor' profile.user.id %}">View Questions</a>
+            <a href="{% url 'question:visitor' profile.user.id %}">{% trans "View Questions" %}</a>
         </div>
         <div>
-            <a href="{% url 'quiz:visitor' profile.user.id %}">View Quizzes</a>
+            <a href="{% url 'quiz:visitor' profile.user.id %}">{% trans "View Quizzes" %}</a>
         </div>
     </div>
 
     {% if profile.user == user %}   
     <div class="userInfo">
-        <div class="heading">Profile Views</div>
+        <div class="heading">{% trans "Profile Views" %}</div>
         <div class="content"> {{profile.views}}</div> 
     </div>
     <div>
@@ -226,15 +232,15 @@ Profile
     
     <div class="copy-link-container">
         <div class="label">
-            Copy Your Referral link
+            {% trans "Copy Your Referral link" %}
         </div>
         <div class="copy-text">
-            <input id="copy-link" type="text" class="text">
-            <button onclick="copyFunction()">Copy</button>
+            <input id="copy-link" type="text" class="text" readonly>
+            <button onclick="copyFunction()">{% trans "Copy" %}</button>
         </div>
     </div>
     <div class="share-profile">
-        <div>Share Your Face</div>
+        <div>{% trans "Share Your Face" %}</div>
         {% if profile.user.middle_name %}
         <div>
         {% post_to_facebook  object_or_url 'Facebook' %}
@@ -272,9 +278,12 @@ Profile
     </div>
     <a class="profile"  href="{% url 'edit_profile' %}">
         <div class="edit link userInfo">
-            Edit Face
+            {% trans "Edit Face" %}
         </div>
     </a>
+    <br>
+    <br>
+    <br>
 
    
     {% endif %}
@@ -295,7 +304,7 @@ Profile
     copyText.setSelectionRange(0,99999);
     // document.execCommand("copy")
     navigator.clipboard.writeText(copyText.value)
-
+    alert("copied!")
         // Add the ajax for the link click
     }
 </script>

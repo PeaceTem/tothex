@@ -20,7 +20,7 @@
 
 
 
-<div style='text-align: center;' id="random"> <a href="{% url 'quiz:random-quiz-picker' %}"><span class="random">Take A Random Quiz</span></a> </div>
+<div style='text-align: center;' id="random"> <a href="{% url 'quiz:random-quiz-picker' %}"><span class="random">Take A Random Quiz →</span></a> </div>
 <div style='text-align: center;'>Total Number Of Registered Users : {{number_of_registered_users}}</div>
 <div style='text-align: center;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
 <div style='text-align: center;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
@@ -175,11 +175,11 @@ function likeFunction(value){
         },
         onAfterPageLoad: function () {
             $('.loading').hide();
-            function reload_js(src) {
-            $('script[src="' + src + '"]').remove();
-            $('<script>').attr('src', src).appendTo('head');
-            }
-            reload_js("{% static 'quiz/js/quizzes_list.js' %}");
+            // function reload_js(src) {
+            // $('script[src="' + src + '"]').remove();
+            // $('<script>').attr('src', src).appendTo('head');
+            // }
+            // reload_js("{% static 'quiz/js/quizzes_list.js' %}");
 
         }
         

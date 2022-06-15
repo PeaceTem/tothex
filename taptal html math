@@ -177,12 +177,3 @@ d.toISOString();
     }
     reload_js('source_file.js');
 </script>
-
-
-
-
-
-
-
-
-

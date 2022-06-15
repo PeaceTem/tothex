@@ -32,15 +32,22 @@ from .services import ReferralService, get_user_ip
 # messages.error, warning, success, info, debug
  
 
-from importlib import import_module
-from django.conf import settings
-SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
+# from importlib import import_module
+# from django.conf import settings
+# SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
 def Menu(request):
     return render(request, 'menu.html')
 
 def Home(request):
     return render(request, 'core/home.html', {})
+
+
+def PrivacyPolicy(request):
+    return render(request, 'privacy_policy.html')
+
+def TermsAndConditions(request):
+    return render(request, 'terms_and_conditions.html')
 
 """
 Use try except block to catch errors
@@ -216,7 +223,7 @@ def password_success(request):
 
 
 @login_required(redirect_field_name='next', login_url='account_login')
-def FollowerView(request):
+def FollowView(request):
     user = request.user
     if request.method == 'POST':
         following = request.POST.get('following') or None
@@ -322,6 +329,31 @@ def InterestReport(request):
 
             Interest.objects.create(user=user, interest=interest, dislike=dislike, modifier=modifier)
         return HttpResponse('report submitted!')
+
+
+
+
+def FollowerListView(request, follower_id, page_name):
+    if page_name == 'followers':
+        follower = Follower.objects.prefetch_related('followers').get(id=follower_id)
+        objects = follower.followers.all()
+        object_type = 'followers'
+    elif page_name == 'following':
+        follower = Follower.objects.prefetch_related('following').get(id=follower_id)
+        objects = follower.following.all()
+        object_type = 'following'
+
+    else:
+        return #request.HTTP.META.REFERRER
+
+    context = {
+        'objects' : objects,
+        'object_type' : object_type,
+    }
+
+    return render(request, 'core/followerList.html', context)
+
+    
 
 
 

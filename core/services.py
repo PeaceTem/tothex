@@ -25,8 +25,8 @@ def ReferralService(device, code):
         profile.refercount += 1
         profile.save()
 
-        ReferralTask.delay(profile.user)
-        total = Profile.objects.all().count()
+        # ReferralTask.delay(profile.user)
+        # total = Profile.objects.all().count()
     except:
         pass    
 

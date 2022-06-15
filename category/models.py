@@ -25,6 +25,7 @@ class Category(models.Model):
     question_number_of_times_taken = models.PositiveIntegerField(default=0)
     date_registered = models.DateTimeField(auto_now_add=True)
     #add images to this Also
+    # add languages too.
 
     class Meta:
         verbose_name_plural='Categories'

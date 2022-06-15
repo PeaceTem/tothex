@@ -62,6 +62,7 @@ def DailyStreakUpdate():
         if td >= 30:
             device.delete()
 
+    """ Delete all the expired data in django session storage """
     return "All the streak model has been updated!"
 
 

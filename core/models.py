@@ -134,7 +134,7 @@ class Follower(models.Model):
 
     @property
     def get_number_of_followers(self):
-        num = self.followers
+        num = self.followers.all().count()
         return getSimplifiedNumber(num)
 
 
@@ -142,7 +142,7 @@ class Follower(models.Model):
 
     @property
     def get_number_of_following(self):
-        num = self.following
+        num = self.following.all().count()
         return getSimplifiedNumber(num)
     
 

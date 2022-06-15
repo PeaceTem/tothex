@@ -143,9 +143,10 @@ def AnswerQuestion(request):
         question = randomChoice(questions)
         questions.remove(question)
         request.session['OldTownRoad'] = questions
-
+        score = (2 - question["avgScore"]) * 2
         context = {
         'question': question,
+        'score'  : score,
         }
         
         if question["form"] == "fourChoicesQuestion":
@@ -432,7 +433,7 @@ def CategoryCreate(request, question_id):
         question = FourChoicesQuestion.objects.prefetch_related("categories").get(id=question_id[1])
 
     form = NewCategoryForm()
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by('question_number_of_times_taken')[:100]
 
     title = request.GET.get('newCategory') or ''
     title = title.strip()
@@ -450,7 +451,7 @@ def CategoryCreate(request, question_id):
                     question.save()
                     newCategory.number_of_questions += 1
                     newCategory.save()
-                    if profile.categories.all().count() > 29:
+                    if profile.categories.all().count() > 9:
                         removed = profile.categories.first()
                         profile.categories.remove(removed)
                     profile.categories.add(newCategory)
@@ -464,7 +465,7 @@ def CategoryCreate(request, question_id):
                 question.save()
                 newCategory.number_of_questions += 1
                 newCategory.save()
-                if profile.categories.all().count() > 29:
+                if profile.categories.all().count() > 9:
                     removed = profile.categories.first()
                     profile.categories.remove(removed)
                 profile.categories.add(newCategory)
@@ -495,7 +496,7 @@ def CategoryCreate(request, question_id):
                         question.save()
                         category.number_of_questions += 1
                         category.save()
-                        if profile.categories.all().count() > 29:
+                        if profile.categories.all().count() > 9:
                             removed = profile.categories.first()
                             profile.categories.remove(removed)
                         profile.categories.add(category)
@@ -657,10 +658,10 @@ def SubmitQuestion(request):
                             """
                             This is a celery task
                             """
-                            StreakValidator.delay(profile, 1)
+                            # StreakValidator.delay(profile, 1)
 
 
-                            value = randomCoin()
+                            value = (2 - question.avgScore) * 2
                             profile.coins += value
                             profile.questionAvgScore = decimal.Decimal(round(((profile.questionAvgScore * (profile.questionAttempts - 1)) + 100) / profile.questionAttempts ,1))
                             
@@ -669,7 +670,7 @@ def SubmitQuestion(request):
                             This is a celery tasks
                             don't remove the previous task ooo because it is different from this celery task
                             """
-                            CoinsTransaction.delay(user, value)
+                            # CoinsTransaction.delay(user, value)
 
 
 
@@ -677,7 +678,7 @@ def SubmitQuestion(request):
                             if question.avgScore >= 50:
                                 creator.coins += decimal.Decimal(0.10)
                                 creator.save()
-                                CreatorCoins.delay(creator.user, value)
+                                # CreatorCoins.delay(creator.user, value)
                             messages.success(request, _(f"You've received {value} coins"))
 
                     messages.success(request, _('CORRECT!'))
@@ -687,7 +688,7 @@ def SubmitQuestion(request):
                     question.save()
                     if user.is_authenticated:
                         
-                        profile.coins -= 2
+                        profile.coins -= 1
                         profile.questionAvgScore = decimal.Decimal(round((profile.questionAvgScore * (profile.questionAttempts - 1)) / profile.questionAttempts ,1))
                         if profile.fourChoicesQuestionsMissed.all().count() > 999:
                             remove = profile.fourChoicesQuestionsMissed.first()
@@ -740,11 +741,11 @@ def SubmitQuestion(request):
                             This is a celery task
                             """
 
-                            StreakValidator.delay(profile, 1)
+                            # StreakValidator.delay(profile, 1)
 
 
 
-                            value = randomCoin()
+                            value = (2 - question.avgScore) * 2
                             profile.coins += value
                             profile.questionAvgScore = decimal.Decimal(round(((profile.questionAvgScore * (profile.questionAttempts - 1)) + 100) / profile.questionAttempts ,1))
                             
@@ -753,7 +754,7 @@ def SubmitQuestion(request):
                             This is a celery tasks
                             don't remove the previous task ooo because it is different from this celery task
                             """
-                            CoinsTransaction.delay(user, value)
+                            # CoinsTransaction.delay(user, value)
 
 
 
@@ -762,7 +763,7 @@ def SubmitQuestion(request):
 
                                 creator.coins += decimal.Decimal(0.10)
                                 creator.save()
-                                CreatorCoins.delay(creator.user, value)
+                                # CreatorCoins.delay(creator.user, value)
                             messages.success(request, _(f"You've received {value} coins"))
 
                     messages.success(request, _('CORRECT!'))
@@ -1049,7 +1050,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
                             if question.avgScore >= 50:
                                 creator.coins += decimal.Decimal(0.10)
                                 creator.save()
-                                CreatorCoins.delay(creator.user, value)
+                                # CreatorCoins.delay(creator.user, value)
 
 
                             if profile.fourChoicesQuestionsTaken.all().count() > 999:
@@ -1074,8 +1075,8 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
 
 
                         if profile.fourChoicesQuestionsMissed.all().count() > 999:
-                                removed = profile.fourChoicesQuestionsMissed.first()
-                                profile.fourChoicesQuestionsMissed.remove(removed)
+                            removed = profile.fourChoicesQuestionsMissed.first()
+                            profile.fourChoicesQuestionsMissed.remove(removed)
                         profile.fourChoicesQuestionsMissed.add(question)
                         
 
@@ -1115,7 +1116,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
                             if question.avgScore >= 50:
                                 creator.coins += decimal.Decimal(0.10)
                                 creator.save()
-                                CreatorCoins.delay(creator.user, value)
+                                # CreatorCoins.delay(creator.user, value)
 
 
                             if profile.trueOrFalseQuestionsTaken.all().count() > 999:
@@ -1163,7 +1164,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
                     This is a celery tasks
                     don't remove the previous task ooo because it is different from this celery task
                     """
-                    CoinsTransaction.delay(user, value)
+                    # CoinsTransaction.delay(user, value)
 
             except ZeroDivisionError:
                 

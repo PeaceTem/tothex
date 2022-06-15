@@ -1,0 +1,19 @@
+{% extends 'quiz/base.html' %}
+
+{% block quizTitle %}
+Followers
+{% endblock quizTitle %}
+
+{% block content %}
+
+
+{% block quizCss %}
+
+{% endblock quizCss %}
+
+{% for obj in objects %}
+    {{obj}}
+{% endfor %}
+
+
+{% endblock content %}

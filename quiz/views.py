@@ -114,7 +114,7 @@ class GeneratePDF(LoginRequiredMixin, View):
 def QuizDetail(request, quiz_id, *args, **kwargs):
     try:
         user = request.user
-        quiz = Quiz.objects.get(id=quiz_id)
+        quiz = Quiz.objects.select_related("quizlink").prefetch_related("likes", "categories").get(id=quiz_id)
         preQuestions = []
         preQuestions += quiz.fourChoicesQuestions.all()
         preQuestions += quiz.trueOrFalseQuestions.all()
@@ -592,7 +592,7 @@ def PostLike(request):
         Remove this from the celery tasks
         """
 
-        LikeQuiz.delay(quiz_id, user)
+        # LikeQuiz.delay(quiz_id, user)
 
 
 
@@ -992,7 +992,7 @@ def CategoryCreate(request, quiz_id):
     profile = Profile.objects.prefetch_related("categories").get(user=user)
     quiz = Quiz.objects.prefetch_related("categories").get(id=quiz_id)
     form = NewCategoryForm()
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by('quiz_number_of_times_taken')
 
     title = request.GET.get('newCategory') or ''
     title = title.strip()
@@ -1021,7 +1021,7 @@ def CategoryCreate(request, quiz_id):
                 quiz.save()
                 newCategory.number_of_quizzes += 1
                 newCategory.save()
-                if profile.categories.all().count() > 29:
+                if profile.categories.all().count() > 9:
                     removed = profile.categories.first()
                     profile.categories.remove(removed)
                 profile.categories.add(newCategory)
@@ -1051,7 +1051,7 @@ def CategoryCreate(request, quiz_id):
                         quiz.save()
                         category.number_of_quizzes += 1
                         category.save()
-                        if profile.categories.all().count() > 29:
+                        if profile.categories.all().count() > 9:
                             removed = profile.categories.first()
                             profile.categories.remove(removed)
                         profile.categories.add(category)
@@ -1061,7 +1061,7 @@ def CategoryCreate(request, quiz_id):
         
     quizCategories = quiz.categories.all()
 
-    p = Paginator(categories, 100)
+    p = Paginator(categories, 20)
     page = request.GET.get('page')
     quizzes = p.get_page(page)
 
@@ -1175,7 +1175,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
         return redirect('quiz:take-quiz', quiz_id=quiz.id)
     
     user = request.user
-    quiz = Quiz.objects.select_related('user').prefetch_related("categories").get(id=quiz_id)
+    quiz = Quiz.objects.select_related('user').prefetch_related("categories", "likes").get(id=quiz_id)
     if not user.is_authenticated:
         code = str(kwargs.get('ref_code'))
         device = get_user_ip(request)
@@ -1304,12 +1304,12 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
 
                 if quiz.user != profile.user:
-                    StreakValidator.delay(profile, user_score)
+                    # StreakValidator.delay(profile, user_score)
                     if user_avg_score >= 50:
                         creator = Profile.objects.get(user=quiz.user)
                         for category in quiz.categories.all():
                             if category not in profile.categories.all():
-                                if profile.categories.all().count() > 29:
+                                if profile.categories.all().count() > 9:
                                     removed = profile.categories.first()
                                     profile.categories.remove(removed)
                                 profile.categories.add(category)
@@ -1324,11 +1324,11 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                         This is a celery tasks
                         don't remove the previous task ooo because it is different from this celery task
                         """
-                        CoinsTransaction.delay(user, value)
+                        # CoinsTransaction.delay(user, value)
 
                         creator.coins += 1
                         creator.save()
-                        CreatorCoins.delay(creator.user, 1)
+                        # CreatorCoins.delay(creator.user, 1)
                         messages.success(request, f"You've won {value} coins!")
                     else:
                         value = 5
@@ -1340,7 +1340,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                         This is a celery tasks
                         don't remove the previous task ooo because it is different from this celery task
                         """
-                        CoinsTransaction.delay(user, value -5)
+                        # CoinsTransaction.delay(user, value -5)
 
 
 

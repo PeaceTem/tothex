@@ -13,7 +13,7 @@ Quiz Detail
 {% endblock quizCss %}
 {% include 'messages.html' %}
 
-<div class="detail">
+<div class="detail" id="blur">
     
         <div>
             <a href="{% url 'profile:profile' quiz.user.username %}">
@@ -55,11 +55,11 @@ Quiz Detail
                 {% csrf_token %}
                 <input type="hidden" name="quiz_id" value="{{quiz.id}}">
                 {% if not request.user in quiz.likes.all %}
-                    <button id="like{{quiz.id}}" type="submit">
+                    <button onclick="toggle()" id="like{{quiz.id}}" type="submit">
                         <div style="color:#fff;" id="likeButton{{quiz.id}}" >like</div>
                     </button>
                 {% else %}
-                    <button id="like{{quiz.id}}" type="submit">
+                    <button onclick="toggle()" id="like{{quiz.id}}" type="submit">
                         <div  style="color:#fff;" id="likeButton{{quiz.id}}" >unlike</div>
                     </button>
                 {% endif %}
@@ -212,9 +212,22 @@ Quiz Detail
         
     {% endfor %}
 </div>
+    <div id="popup">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum ut consequatur quas eligendi ullam quia itaque provident natus, consectetur, rem soluta cum aspernatur alias, repellendus aliquid dolor consequuntur at amet voluptas mollitia. Consequatur placeat illo optio quisquam obcaecati earum, rem eius totam vitae est eligendi quo sunt perferendis possimus dolores!
+    </div>
 </div>
 <script src="{% static 'js/jquery.js' %}"></script>
 <script>
+
+function toggle(){
+    var pop = document.getElementById("blur");
+    blur.classList.toggle('active');
+    
+}
+
+
+
+
 $('.deleteButton').click(function(e){
         e.preventDefault();
         const objectBx = $(this);
@@ -302,22 +315,22 @@ $.ajax({
 
 
 
-$('#deleteQuizForm').submit(function(e){
-    e.preventDefault()
-    const serializeData = $(this).serialize()
-    $.ajax({
-    type: 'POST',
-    url : $(this).attr('action'),
-    data : serializeData,
-    success : function(response){
-        window.location.reload();
-    },
-    error : function(){
-        alert('It falis silently!')
-    }
+// $('#deleteQuizForm').submit(function(e){
+//     e.preventDefault()
+//     const serializeData = $(this).serialize()
+//     $.ajax({
+//     type: 'POST',
+//     url : $(this).attr('action'),
+//     data : serializeData,
+//     success : function(response){
+//         window.location.reload();
+//     },
+//     error : function(){
+//         alert('It falis silently!')
+//     }
 
-});
-})
+// });
+// })
 
 
 
@@ -326,3 +339,10 @@ $('#deleteQuizForm').submit(function(e){
 
 <script src="{% static 'quiz/js/copy.js' %}" type="text/javascript"></script>
 {% endblock content %}
+
+
+
+
+
+
+http://localhost:8000/quiz/delete-quiz/9/

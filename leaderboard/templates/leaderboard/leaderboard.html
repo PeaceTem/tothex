@@ -14,30 +14,29 @@ Leaderboard
 {% include 'messages.html' %}
 
 <div class="container">
+    <p style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:30px">Coming Soon...</p>
     <p id="info">Each leaderboard will be reset every 24 hours +0 GMT</p>
     <input type="hidden" id="navActive" name="nav" value="{{nav}}">
-
+    
     <div>
-        <a class="leaderboard" href="{% url 'leaderboard:wealth' %}">
+        <a class="leaderboard" href="#"><!-- {% url 'leaderboard:wealth' %} -->
             Earner
         </a>
     </div>
     
     <div>
-        <a class="leaderboard" href="{% url 'leaderboard:creator' %}">
+        <a class="leaderboard" href="#"><!-- {% url 'leaderboard:creator' %} -->
             Creator
         </a>
     </div>
     
-
-
     <div>
-        <a class="leaderboard" href="{% url 'leaderboard:streak' %}">
+        <a class="leaderboard" href="#"><!-- {% url 'leaderboard:streak' %} -->
             Streak
         </a>
     </div>  
     <div>
-        <a class="leaderboard" href="{% url 'leaderboard:referral' %}">
+        <a class="leaderboard" href="#"><!-- {% url 'leaderboard:referral' %} -->
             Referral
         </a>
     </div>    

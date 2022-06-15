@@ -182,3 +182,20 @@ name : ToTheX-Google-SSO
 client_id : 543635591763-npkhv13tmpk7dli98rfdsaal008g5bns.apps.googleusercontent.com
 
 secret_key : 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
+
+
+
+
+
+
+
+ create a competition app
+
+ delete modal
+data-deleteUrl
+
+
+Add google cloud storage to this app
+
+
+

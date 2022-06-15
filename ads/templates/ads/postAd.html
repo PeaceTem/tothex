@@ -1,5 +1,6 @@
 {% extends 'quiz/base.html' %}
 {% load static %}
+{% load i18n %}
 {% block quizTitle %}
 Ads
 {% endblock quizTitle %}
@@ -52,7 +53,7 @@ const myInterval = setInterval(()=>{
     }
 
 
-    countdownbox.innerHTML = `<b>${seconds}sec left</b>`;
+    countdownbox.innerHTML = `{% trans "<b>${seconds}sec left</b>" %}`;
 
 }, 1000)
 
