@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+<title>
+    Questions and Answers - ToTheX.org
+</title>
+{% endblock title %}
+
+
+{% block css %}
+
+{% endblock css %}
+
+
+{% block content %}
+{% include 'navbar.html' %}
+<div id="question-container">
+	{% for obj in qs %}
+	<div>
+		<a href="{% url 'qxa:answer-page' obj.slug %}">
+			<div>{{obj.question}}</div>
+			<div>Answers: {{obj.answers.count}}</div>
+			<div>Asked by @{{obj.profile}} on {{obj.date|date}}</div>
+			<div>↑ {{obj.upvoters.count}}  ↓ {{obj.downvoters.count}}</div>
+		</a>
+	</div>
+	{% endfor %}
+</div>
+
+<form id='questionForm' data-action="{% url 'qxa:create-question'  %}" method='post'>
+{% csrf_token %}
+{{form|crispy}}
+<!-- <input type='text' placeholder='enter category : compulsory'> -->
+<!-- Add a list of categories generated like that on the main category create page -->
+<input type='submit' value='submit'>
+</form>
+{% include 'jquery.html' %}
+<script>
+// let cate = document.querySelectorAll("input[name='category-list']");
+// cate.on('click', function(e){
+// 	// append this category name to the category list
+// });
+// let obj = document.querySelector("input['submit']");
+// obj.on('change', function(e){
+// 	let texts = $(this).val();
+// 	$.ajax({
+// 	type: 'GET',
+// 	url : '/qxa/category/select',
+// 	data : {texts: texts},
+// 	success : function(response){
+// 	// add the list of categories generated to the box below the input
+// 		for (let cat of response.categories){
+// 		(`<input name='category-list' type='text' value=${cat}>`)
+// 		};
+// 	},
+// 	error : function(response){
+// 		// Log the error type
+// 	},
+// 	});
+
+// });
+
+$('#questionForm').submit(function(e){
+	e.preventDefault();
+	const formName = $(this);	
+	const serializedData = formName.serialize();
+	let container = document.querySelector('#question-container');
+	$.ajax({
+	type : 'POST',
+	url : formName.data('action'),
+	data : serializedData,
+	success : function(response){
+		alert('Submitted successfully');
+		container.appendChild(
+			"just take this as the next one\n Thanks for submitting this question to the forums "
+		// `<div>
+		// <a href="{ url 'qxa:answer-page' ${response.slug} %}">
+		// 	<div>${response.question}</div>
+		// 	<div>Answers: {response.answers.count}</div>
+		// 	<div>Asked by @${response.profile} on ${response.date}</div>
+		// </a>
+		// </div>`
+		);
+		// <div>↑ {{response.upvoters.count}}  ↓ {{response.downvoters.count}}</div>
+
+		// Take the user to the question answers page
+		//then get the data and display it back to the top
+		},
+	error : function(response){
+		alert('An error occurred!');
+		},
+	});
+});
+
+</script>
+{% endblock content %}

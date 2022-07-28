@@ -58,10 +58,10 @@ INSTALLED_APPS = [
     "personalProfile.apps.PersonalprofileConfig",
     "question.apps.QuestionConfig",
     "quiz.apps.QuizConfig",
-
+    "q.apps.QConfig",
     # third party apps
     'crispy_forms',
-
+    'ckeditor',
 
     #progressive web app
     'pwa',
@@ -88,13 +88,13 @@ PWA_SERVICE_WORKER_PATH = BASE_DIR / 'static/js' / 'serviceworker.js'
 
 PWA_APP_NAME = 'ToTheX Lite'
 PWA_APP_DESCRIPTION = "ToTheX Lite"
-PWA_APP_THEME_COLOR = '#ffffff'
+PWA_APP_THEME_COLOR = '#f11919'
 PWA_APP_BACKGROUND_COLOR = '#ffffff'
 PWA_APP_DISPLAY = 'standalone'
 PWA_APP_SCOPE = '/' # change it to / if it gives an error
 PWA_APP_ORIENTATION = 'portrait'
 PWA_APP_START_URL = '/quiz/' #change to /quiz/
-PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_STATUS_BAR_COLOR = '#f11919' #'default'
 PWA_APP_ICONS = [
 	{
 		'src': 'static/images/tothex_160.png',
@@ -120,6 +120,7 @@ PWA_DEBUG_MODE = False
 # crispy forms
 
 # CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 

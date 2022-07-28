@@ -182,7 +182,7 @@ Add all the documentation here
 @login_required(redirect_field_name='next', login_url='account_login')
 def QuizList(request):
     user = request.user
-    profile = Profile.objects.prefetch_related('categories', 'quizTaken').get(user=user)
+    profile = Profile.objects.prefetch_related('categories', 'quizTaken', 'favoriteQuizzes').select_related('favoriteUser').get(user=user)
     number_of_registered_users = Profile.objects.all().count()
     number_of_quizzes_created = Quiz.objects.all().count()
     q1 = TrueOrFalseQuestion.objects.all().count()
@@ -214,7 +214,7 @@ def QuizList(request):
             age = profile.get_user_age
             categories = profile.categories.all()
             lookup = Q(categories__in=categories) & Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
-            quizzes = Quiz.objects.filter(lookup).distinct()
+            quizzes = Quiz.objects.filter(lookup).distinct() # reduce this to a certain figure
             takenQuiz = profile.quizTaken.all()
             randomQuizzes = []
             level1 = 0
@@ -237,6 +237,12 @@ def QuizList(request):
                     elif quiz.relevance > 300 and level4 < 40:
                         randomQuizzes.append(quiz)
                         level4 += 1
+            if profile.favoriteUser is not None:
+                lookup = Q(user=profile.favoriteUser) & Q(age_from__lte=age) & Q(age_to__gte=age)
+                liked_users_quizzes = Quiz.objects.filter(lookup)[:10]
+                for q in liked_users_quizzes:
+                    randomQuizzes.append(q)
+
             recommendedQuizzes = []
             for q in randomQuizzes:
                 average_score = round(q.average_score)
@@ -561,9 +567,9 @@ def PostLike(request):
     user = request.user
     if request.method == 'POST':
         quiz_id = request.POST.get('quiz_id')
-        quiz = Quiz.objects.select_related('user').get(id=quiz_id)
+        quiz = Quiz.objects.prefetch_related('likes').select_related('user').get(id=quiz_id)
         profile = Profile.objects.get(user=quiz.user)
-        likeProfile = Profile.objects.prefetch_related('favoriteQuizzes').get(user=user)
+        likeProfile = Profile.objects.prefetch_related('favoriteQuizzes').select_related('favoriteUser').get(user=user)
 
 
         if user in quiz.likes.all():
@@ -581,8 +587,10 @@ def PostLike(request):
             profile.likes += 1
             quiz.likeCount += 1
             likeProfile.favoriteQuizzes.add(quiz)
+            likeProfile.favoriteUser = user
             quiz.save()
             profile.save()
+            likeProfile.save()
 
             return HttpResponse('liked')
 
@@ -639,7 +647,7 @@ def QuizCreate(request):
         form = NewQuizForm(request.POST)
         if form.is_valid():
             title= form.cleaned_data.get('title')
-            description=form.cleaned_data.get('description')
+            description=stringCleaningService(form.cleaned_data.get('description'))
             shuffleQuestions = form.cleaned_data.get('shuffleQuestions')
             age_from = form.cleaned_data.get('age_from')
             age_to = form.cleaned_data.get('age_to')
@@ -776,6 +784,7 @@ def DeleteQuiz(request, quiz_id):
         quiz = get_object_or_404(Quiz, id=quiz_id)
         if request.method == 'POST':
             profile.quizzes -= 1
+            profile.likes -= 1
             profile.save()
             quiz.delete()
 
@@ -811,20 +820,20 @@ def QuestionCreate(request, quiz_id):
 @login_required(redirect_field_name='next', login_url='account_login')
 def FourChoicesQuestionCreate(request, quiz_id):
     user = request.user
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    quiz = Quiz.objects.prefetch_related('categories' 'fourChoicesQuestions').get(id=quiz_id)
     form = NewFourChoicesQuestionForm()
     if request.method == 'POST':
         form = NewFourChoicesQuestionForm(request.POST)
         if form.is_valid():
-            question= form.cleaned_data.get('question')
-            answer1=form.cleaned_data.get('answer1')
-            answer2=form.cleaned_data.get('answer2')
-            answer3=form.cleaned_data.get('answer3')
-            answer4=form.cleaned_data.get('answer4')
+            question= stringCleaningService(form.cleaned_data.get('question'))
+            answer1= stringCleaningService(form.cleaned_data.get('answer1'))
+            answer2= stringCleaningService(form.cleaned_data.get('answer2'))
+            answer3= stringCleaningService(form.cleaned_data.get('answer3'))
+            answer4= stringCleaningService(form.cleaned_data.get('answer4'))
             correct=form.cleaned_data.get('correct')
             points=form.cleaned_data.get('points')
             duration_in_seconds=form.cleaned_data.get('duration_in_seconds')
-            solution=form.cleaned_data.get('solution')
+            solution= stringCleaningService(form.cleaned_data.get('solution'))
             shuffleAnswers = form.cleaned_data.get('shuffleAnswers')
 
             question = FourChoicesQuestion.objects.create(user=user, question=question,
@@ -863,18 +872,18 @@ Add all the documentation here
 @login_required(redirect_field_name='next', login_url='account_login')
 def TrueOrFalseQuestionCreate(request, quiz_id):
     user = request.user
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    quiz = Quiz.objects.prefetch_related('categories', 'trueOrFalseQuestions').get(id=quiz_id)
     form = NewTrueOrFalseQuestionForm()
     if request.method == 'POST':
         form = NewTrueOrFalseQuestionForm(request.POST)
         if form.is_valid():
-            question= form.cleaned_data.get('question')
+            question= stringCleaningService(form.cleaned_data.get('question'))
             answer1=form.cleaned_data.get('answer1')
             answer2=form.cleaned_data.get('answer2')
             correct=form.cleaned_data.get('correct')
             points=form.cleaned_data.get('points')
             duration_in_seconds=form.cleaned_data.get('duration_in_seconds')
-            solution=form.cleaned_data.get('solution')
+            solution= stringCleaningService(form.cleaned_data.get('solution'))
 
 
             question = TrueOrFalseQuestion.objects.create(user=user, question=question,
@@ -1114,9 +1123,10 @@ def TakeQuiz(request, quiz_id):
     profile = None
     number_of_registered_users = Profile.objects.all().count()
     if user.is_authenticated:
-        profile = Profile.objects.prefetch_related('quizTaken').get(user=user)
+        profile = Profile.objects.prefetch_related('quizTaken','quizWareHouse').get(user=user)
         
         if quiz not in profile.quizTaken.all():
+            profile.quizWareHouse.add(quiz)
             if profile.coins < 5:
                 messages.error(request,_("You don't have enough coins to take a quiz"))
                 messages.info(request,_("Earn more coins by taking your quiz here!"))
@@ -1184,7 +1194,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
     
         
     if user.is_authenticated:
-        profile = Profile.objects.select_related('user').prefetch_related("categories", "quizTaken", "fourChoicesQuestionsTaken","fourChoicesQuestionsMissed", "TrueOrFalseQuestionsTaken", "TrueOrFalseQuestionsMissed" ).get(user=user)
+        profile = Profile.objects.select_related('user').prefetch_related("categories", "quizTaken", "fourChoicesQuestionsTaken","fourChoicesQuestionsMissed", "TrueOrFalseQuestionsTaken", "TrueOrFalseQuestionsMissed", "TrueOrFalseQuestionsWareHouse", "fourChoicesQuestionsWareHouse").get(user=user)
     
     
     if request.method == 'POST':
@@ -1235,6 +1245,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                     score += question.points
                     question.avgScore = round(((question.avgScore *(question.attempts - 1) + 100) / question.attempts), 1)
                     if user.is_authenticated:
+                        profile.fourChoicesQuestionsWareHouse.add(question)
                         if profile.fourChoicesQuestionsTaken.all().count() > 999:
                             removed = profile.fourChoicesQuestionsTaken.first()
                             profile.fourChoicesQuestionsTaken.remove(removed)
@@ -1243,6 +1254,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                 else:
                     question.avgScore = round((question.avgScore *(question.attempts - 1) / question.attempts), 1)
                     if user.is_authenticated:
+                        profile.fourChoicesQuestionsWareHouse.add(question)
                         if profile.fourChoicesQuestionsMissed.all().count() > 999:
                             removed = profile.fourChoicesQuestionsMissed.first()
                             profile.fourChoicesQuestionsMissed.remove(removed)
@@ -1273,6 +1285,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                     score += question.points
                     question.avgScore = round(((question.avgScore *(question.attempts - 1) + 100) / question.attempts), 1)
                     if user.is_authenticated:
+                        profile.trueOrFalseQuestionsWareHouse.add(question)
                         if profile.trueOrFalseQuestionsTaken.all().count() > 999:
                             removed = profile.trueOrFalseQuestionsTaken.first()
                             profile.trueOrFalseQuestionsTaken.remove(removed)
@@ -1283,6 +1296,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
 
                     if user.is_authenticated:
+                        profile.trueOrFalseQuestionsWareHouse.add(question)
                         if profile.trueOrFalseQuestionsMissed.all().count() > 999:
                             removed = profile.trueOrFalseQuestionsMissed.first()
                             profile.trueOrFalseQuestionsMissed.remove(removed)
@@ -1464,3 +1478,22 @@ class ReportLink(LoginRequiredMixin, View):
         quizLink.save()
 
         return HttpResponse('The link has been reported!')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

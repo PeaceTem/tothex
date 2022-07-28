@@ -11,13 +11,15 @@ Old Town Road
 {% block quizCss %}
 <link rel="stylesheet" href="{% static 'question/css/takequestion.css' %}">
 {% endblock quizCss %}
+{% include 'core/header.html' %}
 
-{% include 'messages.html' %}
 <!-- <a href="{% url 'question:questions' %}">Go Back</a> -->
 <div class="container">
     <div class="top">
         <div class="title">Old Town Road</div>
     </div>
+{% include 'messages.html' %}
+
 
     <div class="inline">
         <div>
@@ -49,7 +51,7 @@ Old Town Road
                 <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
 
                         <div>
-                            {{question.question|linebreaksbr}}
+                            {{question.question|safe|linebreaksbr}}
 
                         </div>
 
@@ -59,7 +61,7 @@ Old Town Road
                         <div class="answer">
                             <label for="id_answer1">
                             <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
-                            {{question.answer1|linebreaksbr}}
+                            {{question.answer1|safe|linebreaksbr}}
                         </label>
                         </div>
                         {% elif a == 2 %}
@@ -67,7 +69,7 @@ Old Town Road
 
                             <label for="id_answer2">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
-                            {{question.answer2|linebreaksbr}}
+                            {{question.answer2|safe|linebreaksbr}}
                         </label>
 
                         </div>
@@ -76,7 +78,7 @@ Old Town Road
                         <div class="answer">
                             <label for="id_answer3">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
-                            {{question.answer3|linebreaksbr}}
+                            {{question.answer3|safe|linebreaksbr}}
                         </label>
                         </div>
                         {% elif a == 4 %}
@@ -84,7 +86,7 @@ Old Town Road
                         <div class="answer">
                             <label for="id_answer4">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
-                            {{question.answer4|linebreaksbr}}
+                            {{question.answer4|safe|linebreaksbr}}
                         </label>
                         </div>
                         {% endif %}
@@ -102,7 +104,7 @@ Old Town Road
                 <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
 
                 <div>
-                    {{question.question|linebreaksbr}}
+                    {{question.question|safe|linebreaksbr}}
 
                 </div>
 
@@ -114,14 +116,14 @@ Old Town Road
                 <div class="answer">
                     <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
                     <label for="id_answer1"> 
-                            {{question.answer1|linebreaksbr}}
+                            {{question.answer1|safe|linebreaksbr}}
                     </label>
                 </div>
                 
                 <div class="answer">
                     <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
                     <label for="id_answer2"> 
-                            {{question.answer2|linebreaksbr}}
+                            {{question.answer2|safe|linebreaksbr}}
                     </label>
                 </div>
                 <div>
@@ -134,13 +136,20 @@ Old Town Road
                     
                         
                 {% endif %}
+                <input type="hidden" name="questionType" value="{{questionType}}">
         </form>
     
     <!-- disable the submit button if the question has not been answered -->
+    {% if questionType == 'OldTownRoad' %}
     <div>
         <form action="{% url 'question:answer-question' %}" method="get">
             <input id="skipButton" type="submit" value="Skip">
         </form>
+    {% elif questionType == 'Following' %}
+        <form action="{% url 'question:following-questions' %}" method="get">
+            <input id="skipButton" type="submit" value="Skip">
+        </form>
+    {% endif %}
         <a href=""  class="a">
             <div>Download Image</div>
         </a>

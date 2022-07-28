@@ -3,14 +3,13 @@ from django.contrib.auth.models import User
 from datetime import date, datetime
 from django.utils import timezone
 import pytz
-from django.contrib.postgres.fields import ArrayField
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
 
-from question.models import TrueOrFalseQuestion, FourChoicesQuestion
+# from question.models import TrueOrFalseQuestion, FourChoicesQuestion
 
 from category.models import Category
 
@@ -57,10 +56,10 @@ class Quiz(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     when = models.CharField(max_length=200, null=True, blank=True)
-    fourChoicesQuestions = models.ManyToManyField(FourChoicesQuestion, related_name='fourChoicesQuestions',
-        related_query_name='fourChoicesQuestions' , blank=True)
-    trueOrFalseQuestions = models.ManyToManyField(TrueOrFalseQuestion, related_name='trueOrFalseQuestions',
-        related_query_name='trueOrFalseQuestions', blank=True)
+    # fourChoicesQuestions = models.ManyToManyField(FourChoicesQuestion, related_name='fourChoicesQuestions',
+        # related_query_name='fourChoicesQuestions' , blank=True)
+    # trueOrFalseQuestions = models.ManyToManyField(TrueOrFalseQuestion, related_name='trueOrFalseQuestions',
+        # related_query_name='trueOrFalseQuestions', blank=True)
 
     lastQuestionIndex = models.PositiveSmallIntegerField(default=0)
     questionLength = models.PositiveSmallIntegerField(default=0)
@@ -71,7 +70,7 @@ class Quiz(models.Model):
     public = models.BooleanField(default=True)
     categories = models.ManyToManyField(Category, blank=True,
         related_name='categories', related_query_name='categories')
-    duration = models.PositiveSmallIntegerField(default=30)
+    duration = models.PositiveSmallIntegerField(default=0)
     get_duration = models.CharField(max_length=200, null=True, blank=True)
     solution_quality = models.IntegerField(default=0)
     likes = models.ManyToManyField(User, default=None, blank=True, related_name='likes')
@@ -220,8 +219,8 @@ class QuizLink(models.Model):
 
 
 class Attempter(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attempters')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempters')
     score = models.PositiveSmallIntegerField(default=0)
     percentage = models.FloatField(default=0.0)
     timeTaken = models.PositiveSmallIntegerField(default=0)

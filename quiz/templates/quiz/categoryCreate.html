@@ -10,7 +10,13 @@ Categories
 
 {% block quizCss %}
 <link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+<meta name="description" content="add categories to quiz or question">
+<meta name="keywords" content="categories,tothex,quiz,question">
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="author" content="ToTheX">
 {% endblock quizCss %}
+{% include 'core/header.html' %}
+
 <section>
 <div class="head">Step 2 of 3</div>
 
@@ -73,6 +79,10 @@ Categories
 
 </div>
 </section>
+
+
+{% include 'jquery.html' %}
+
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 <script>

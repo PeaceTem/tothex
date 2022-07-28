@@ -20,10 +20,10 @@
 
 
 
-<div style='text-align: center;' id="random"> <a href="{% url 'quiz:random-quiz-picker' %}"><span class="random">Take A Random Quiz →</span></a> </div>
-<div style='text-align: center;'>Total Number Of Registered Users : {{number_of_registered_users}}</div>
-<div style='text-align: center;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
-<div style='text-align: center;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
+<div style='text-align: center;padding: 4px; border-radius:4px;' id="random"> <a href="{% url 'quiz:random-quiz-picker' %}"><span class="random">Take A Random Quiz →</span></a> </div>
+<div style='text-align: center; font-size: 10px; '>Total Number Of Registered Users : {{number_of_registered_users}}</div>
+<div style='text-align: center; font-size: 10px;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
+<div style='text-align: center; font-size: 10px;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
 
 
 {% include 'search.html' %}
@@ -58,7 +58,7 @@
                 
                 </div>
                 <div class="desc">
-                    {{quiz.description|linebreaks|truncatewords:50}}
+                    {{quiz.description|safe|linebreaks|truncatewords:50}}
                 </div>
                 <!-- <div class="creator"> -->
                 <!-- <div class="create" style="display:none;">{{quiz.user|capfirst}}</div> -->
@@ -116,10 +116,11 @@
         </span>
     </div>
 </div>
-<script>
-    
-</script>
-<script src="{% static 'js/jquery.js' %}"></script>
+
+
+
+{% include 'jquery.html' %}
+
 <script>
 
 
@@ -161,6 +162,8 @@ function likeFunction(value){
     like(value);
 }
 </script>
+
+
 <script src="/static/quiz/js/quizzes_list.js"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>

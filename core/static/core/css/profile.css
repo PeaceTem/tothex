@@ -148,8 +148,12 @@ a.profile-link{
 }
 a.profile.change{
     font-size: 12px;
-    padding-top: 20px;
+    padding: 5px;
+    color: #f11919;
+    background: #eee;
+
 }
+
 
 
 

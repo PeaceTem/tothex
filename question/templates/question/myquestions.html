@@ -11,16 +11,13 @@ My Questions
 {% block quizCss %}
 <link rel="stylesheet" href="{% static 'question/css/myquestions.css' %}">
 {% endblock quizCss %}
+{% include 'core/header.html' %}
+
 <!-- <div style="text-align:left;" class="top-link"> -->
     <!-- <a style="text-align:left;" href="{% url 'question:questions' %}">Go back</a> -->
 <!-- </div> -->
-<div id="messageContainerTop">
-    <div class="messageContainer">
-        <div class="messageText">deleted!</div>
-    </div>
-</div>
 {% include 'messages.html' %}
-
+<i>Total questions' attempts = {{total_question_attempts}}</i>
 <div class="container infinite-container" onchange="changed()">
 
         {% for date_created, question in page_obj %}
@@ -28,7 +25,7 @@ My Questions
 
         {% if question.form == 'trueOrFalseQuestion' %}
             <div class="quizItem">
-                {{question.question|linebreaksbr|truncatechars:80}}
+                {{question.question|safe|linebreaksbr|truncatechars:80}}
             </div>
             <div class="inline">
     
@@ -68,7 +65,7 @@ My Questions
     {% elif question.form == 'fourChoicesQuestion' %}
     
             <div class="quizItem">
-                {{question.question|linebreaksbr|truncatechars:80}}
+                {{question.question|safe|linebreaksbr|truncatechars:80}}
             </div>
             <div class="inline">
     
@@ -127,8 +124,7 @@ My Questions
     </div>
 </div>
 
-
-<script src="{% static 'js/jquery.js' %}"></script>
+{% include 'jquery.html' %}
 
 <script src="{% static 'question/js/myquestions.js' %}"></script>
 

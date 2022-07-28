@@ -332,10 +332,25 @@ def InterestReport(request):
 
 
 
-
+@login_required(redirect_field_name='next', login_url='account_login')
 def FollowerListView(request, follower_id, page_name):
+    search_input = request.GET.get('search-area') or ''
+
+    if search_input:
+        context = {}
+        search_input = search_input.split()
+        search_input = "_".join(search_input)
+        searched_user = User.objects.filter(username=search_input).exists() 
+        if searched_user:
+            # profile = Profile.objects.get(user=searched_user)
+            return redirect('profile:profile', profile_name=search_input)
+        else:
+            messages.error(request, f"There is no user named {search_input}")
+            return redirect('profile')
+
+
     if page_name == 'followers':
-        follower = Follower.objects.prefetch_related('followers').get(id=follower_id)
+        follower = Follower.objects.prefetch_related('followers', 'following').get(id=follower_id)
         objects = follower.followers.all()
         object_type = 'followers'
     elif page_name == 'following':
@@ -344,17 +359,40 @@ def FollowerListView(request, follower_id, page_name):
         object_type = 'following'
 
     else:
-        return #request.HTTP.META.REFERRER
+        return HttpResponse('Error!')
 
     context = {
-        'objects' : objects,
+        'objects' : follower,
         'object_type' : object_type,
+        'follower_id': follower_id,
     }
 
     return render(request, 'core/followerList.html', context)
 
+
+
     
+@login_required(redirect_field_name='next', login_url='account_login')
+def FollowActionView(request, follower_id, user_id, action):
+    user = request.user
+    _user = User.objects.get(id=user_id)
+    follower = Follower.objects.prefetch_related('followers').get(id=follower_id) #the action taker
+    _follower = Follower.objects.prefetch_related('followers').get(user=_user) # the action recipient
+    # Make some necessary adjustments here!
+    if action == 'follow':
+        follower.following.add(_user)
+        _follower.followers.add(user)
+        follower.save()
+        _follower.save()
 
+    elif action == 'unfollow':
+        follower.following.remove(_user)
+        _follower.followers.remove(user)
+        follower.save()
+        _follower.save()
 
+    return HttpResponse('Done!')
+
+    
 
 

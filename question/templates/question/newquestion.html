@@ -10,6 +10,8 @@ Create Question
 {% block quizCss %}
 <link rel="stylesheet" href="{% static 'question/css/newquestion.css' %}">
 {% endblock quizCss %}
+{% include 'core/header.html' %}
+
 {% include 'messages.html' %}
 
 <section>
@@ -30,10 +32,5 @@ Create Question
 <a href="{% url 'question:questions' %}">Go Back</a>
 </div>
 </section>
-
-<script>
-
-</script>
-
 
 {% endblock content %}

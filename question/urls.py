@@ -32,7 +32,7 @@ urlpatterns = [
     # answer question
     path('take/', views.AnswerQuestion, name='answer-question'),
     path('submit/', views.SubmitQuestion, name='submit-question'),
-    path('correction/<str:question_form>/<str:question_id>/<str:answer>', views.CorrectionView, name='correction'),
+    path('correction/<str:question_form>/<str:question_id>/<str:qtype>/<str:answer>/', views.CorrectionView, name='correction'),
     
 
 

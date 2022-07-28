@@ -109,3 +109,19 @@ def get_random_quiz(user):
         return quiz
 
     return None
+
+
+
+
+
+
+
+
+def logged(function):
+    def wrapper(*args, **kwargs):
+        value = function(*args, **kwargs)
+        name = function.__name__
+        print('This  is just a decorator that will log the name of the function that is being executed out!')
+        return value
+
+    return wrapper

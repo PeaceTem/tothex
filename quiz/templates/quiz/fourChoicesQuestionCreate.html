@@ -1,6 +1,7 @@
 {% extends 'quiz/base.html' %}
 {% load static %}
 {% load social_share %}
+{% load crispy_forms_tags %}
 
 {% block quizTitle %}
 Create Four Choices Questions
@@ -22,9 +23,9 @@ Create Four Choices Questions
 {% endblock quizCss %}
 
 
-{% load crispy_forms_tags %}
 
 
+{% include 'core/header.html' %}
 
 {% include 'messages.html' %}
 

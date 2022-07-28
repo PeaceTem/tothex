@@ -1,0 +1,111 @@
+
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<title>
+    {{q.question|truncatewords:20}} - ToTheX
+</title>
+{% endblock title %}
+
+
+{% block css %}
+
+{% endblock css %}
+
+
+{% block content %}
+Add title to question
+{% include 'core/header.html' %}
+
+
+<section>
+    <div>
+        <div>
+            <h4>
+                {{q.question}}
+            </h4>
+        </div>
+        <div>
+            <p>
+                {{q.description}}
+            </p>
+        </div>
+    </div>
+    
+    <div>
+        <b>
+            Answers: {{q.answers.count}}
+        </b>
+    </div>
+	<div>↑ {{q.upvoters.count}}  ↓ {{q.downvoters.count}}</div>
+
+    <div>
+        {% for answer in q.answers.all %}
+        <div>
+            {{answer}}
+        </div>
+	    <div>↑ {{answer.upvoters.count}}  ↓ {{answer.downvoters.count}}</div>
+
+        <div>
+
+            <form id="replyForm" data-action="{% url 'qxa:create-reply' answer.id %}" method="post">
+                {% csrf_token %}
+                {{replyForm|crispy}}
+                <input type="submit" value="Submit" >
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+    <form id="answerForm"  data-action="{% url 'qxa:answer-question' q.id %}" method="post">
+        {% csrf_token %}
+        {{form|crispy}}
+        <input type="submit" value="Submit" >
+    </form>
+
+
+    {% include 'jquery.html' %}
+    <script>
+
+    $('#replyForm').submit(function(e){
+        e.preventDefault();
+        let formName = $(this);	
+        let serializedData = formName.serialize();
+        $.ajax({
+        type : 'POST',
+        url : formName.data('action'),
+        data : serializedData,
+        success : function(response){
+            alert('Submitted successfully');
+            },
+        error : function(response){
+            alert('An error occurred!');
+            },
+        });
+    });
+    
+
+    
+    $('#answerForm').submit(function(e){
+        e.preventDefault();
+        let formName = $(this);	
+        let serializedData = formName.serialize();
+        $.ajax({
+        type : 'POST',
+        url : formName.data('action'),
+        data : serializedData,
+        success : function(response){
+            alert('Submitted successfully');
+            },
+        error : function(response){
+            alert('An error occurred!');
+            },
+        });
+    });
+    
+    </script>
+
+{% endblock content %}
+

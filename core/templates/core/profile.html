@@ -112,6 +112,7 @@ Profile
         <div class="link-container face-link">
         <a onclick="clickFunction()" data-url="{% url 'link-click' link.id %}" class="profile-link" href="{{link.link}}" target="_blank" rel="noopener noreferrer">{{link.name}}</a>
         </div>
+        <div>{{link.link}}</div>
         <div style="font-size: 12px; color: #777;">
             {{link.description}}
         </div>
@@ -161,7 +162,8 @@ Profile
         <div class="content">{% trans "$0.00" %}</div> 
         <i style="font-size: 11px; color:#999;">{% trans "Efforts are being made for users to generate revenue from this app" %}</i>
     </div>
-
+    {% comment %}
+<!-- 
     <div class="userInfo">
         <div class="heading">{% trans "Streak's Length" %}</div>
         <div class="content"> {{profile.streak.length}}</div> 
@@ -175,8 +177,8 @@ Profile
             InActive
             {% endif %}
         </div> 
-    </div>
-
+    </div> -->
+    {% endcomment %}
 
     <div class="userInfo">
         <div class="heading">{% trans "Today's Correct Answers" %}</div>
@@ -289,7 +291,13 @@ Profile
     {% endif %}
 </div>
 </div>
-<script src="{% static 'js/jquery.js' %}"></script>
+
+
+
+
+
+{% include 'jquery.html' %}
+
 <script src="{% static 'core/js/profile.js' %}">
 </script>
 {% if user == profile.user %}
@@ -314,20 +322,18 @@ Profile
 
 $('#interestForm').submit(function(e){
         e.preventDefault();
-        // alert('Working!')
         const serializedData = $(this).serialize();
-        // alert(serializedData);
+
+        const objectBx = $(this)
         $.ajax({
             type: 'POST',
             url: $(this).attr('action'),
             data: serializedData,
             success: function(response){
-                console.log(response)
-                alert('Successful!')
-                $(this).parent().hide(500);
+                alert('This action was successful!\nThanks for the review!')
+                objectBx.parent().hide(500);
             },
             error: function(response){
-                console.log(response)
                 alert('Failed!')
 
             }

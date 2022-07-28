@@ -1,5 +1,6 @@
 {% extends 'quiz/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block quizTitle %}
 Create A New Quiz
@@ -25,15 +26,9 @@ Create A New Quiz
 {% endblock quizCss %}
 
 
-{% load crispy_forms_tags %}
+{% include 'core/header.html' %}
 
 {% include 'messages.html' %}
-
-
-
-{% load static %}
-{% load crispy_forms_tags %}
-
 
 <div class="head">Step 1 of 3</div>
     <div>

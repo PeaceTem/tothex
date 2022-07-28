@@ -2,11 +2,15 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from . import views
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     path('register/', views.RegisterPage.as_view(), name='register'),
     path('login/', views.CustomLoginView, name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='account_login'), name='logout'),
+    # offliine page
+    path('offline/', TemplateView.as_view(template_name='core/offline.html')),
 
     #essentials
     path('privacy-policy/', views.PrivacyPolicy, name='privacy-policy'),
@@ -24,6 +28,7 @@ urlpatterns = [
     path('profile/follower', views.FollowView, name='follower'),
     path('profile/unfollow', views.UnfollowView, name='unfollow'),
     path('profile/followerlist/<str:follower_id>/<str:page_name>/', views.FollowerListView, name='follower-list'),
+    path('profile/follow-action/<str:follower_id>/<str:user_id>/<str:action>/', views.FollowActionView, name='follow-action'),
 
     # link clicks
     path('profile/link-click/<str:link_id>', views.LinkClick, name='link-click'),

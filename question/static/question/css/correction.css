@@ -63,9 +63,12 @@ ol.answers li{
 
 
 input[type="submit"]{
-    background: rgba(241, 25, 25, .05);
+    background: rgb(14, 221, 118);
     color: #fff;
-    border: 1px solid #f11919;
+    padding: 6px;
+    border-radius : 5px;
+    border: none;
+    outline: none;
 }
 
 

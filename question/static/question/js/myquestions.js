@@ -9,24 +9,24 @@ console.log('This js file is working!')
 
 $('.DeleteForm').submit(function(e){
     e.preventDefault();
-    const objectBx = $(this).parent().parent().parent();
-    serializedData = $(this).serialize();
-    $.ajax({
-        type: 'POST',
-        url : $(this).attr('action'),
-        data : serializedData,
-        success : function(response){
-            objectBx.hide(500);
-            // const modal = document.querySelector('div#messageContainerTop');
-            // document.querySelector('div.messageContainer').style.visibility = 'visible';
-            // modal.hide(3000)
+    
+    let ans = confirm('This change is permanent\nAre you sure you want to delete this question?');
+    if (ans == true){
+        const objectBx = $(this).parent().parent().parent();
+        serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url : $(this).attr('action'),
+            data : serializedData,
+            success : function(response){
+                objectBx.hide(500);
+            },
+            error : function(){
+                alert('It falis silently!')
+            }
 
-        },
-        error : function(){
-            alert('It falis silently!')
-        }
-
-    });
+        });
+    }
 });
  
 

@@ -24,8 +24,6 @@ a{
     width: 500px;
     max-width: 95vw;
     margin-top: 20px;
-
-
 }
 
 .questionBx{
@@ -37,7 +35,7 @@ a{
 
 }
 .questionBx > *{
-    margin: 10px 4px;
+    margin: 4px 4px;
 
 }
 .container > div{

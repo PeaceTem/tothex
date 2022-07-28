@@ -30,7 +30,7 @@ class Profile(models.Model):
         ('male', 'male'),
         ('female', 'female'),
     )
-    user = models.OneToOneField(User,null=True, blank=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User,null=True, blank=True, on_delete=models.CASCADE, related_name='profile')
     picture = models.ImageField(upload_to='images/', null=True, blank=True)
     first_name = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("First Name"))
     last_name = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Last Name"))
@@ -39,6 +39,7 @@ class Profile(models.Model):
     bio = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_("Biography"))
     gender = models.CharField(max_length=10, choices=SEX, null=True, blank=True, verbose_name=_("Gender"))
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=_("Date Of Birth"))
+    preferred_age = models.PositiveSmallIntegerField(default=15, help_text=_("This is the age that will be used to generate quizzes and questions to you!"))
     state_of_residence = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("state Of Residence"))
     state_of_origin = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("State Of Origin"))
     nationality = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Nationlity"))
@@ -52,11 +53,17 @@ class Profile(models.Model):
     views = models.PositiveIntegerField(default=0)
     categories = models.ManyToManyField(Category, blank=True, related_name='profileCategories')
     quizTaken = models.ManyToManyField(Quiz, blank=True, related_name='profileQuizTaken')
+    quizWareHouse = models.ManyToManyField(Quiz, blank=True, related_name='profileQuizWareHouse')
+
     trueOrFalseQuestionsTaken = models.ManyToManyField(TrueOrFalseQuestion, blank=True, related_name='trueOrFalseQuestionsTaken')
     fourChoicesQuestionsTaken = models.ManyToManyField(FourChoicesQuestion, blank=True, related_name='fourChoicesQuestionsTaken')
     
     trueOrFalseQuestionsMissed = models.ManyToManyField(TrueOrFalseQuestion, blank=True, related_name='trueOrFalseQuestionsMissed')
     fourChoicesQuestionsMissed = models.ManyToManyField(FourChoicesQuestion, blank=True, related_name='fourChoicesQuestionsMissed')
+    
+    trueOrFalseQuestionsWareHouse = models.ManyToManyField(TrueOrFalseQuestion, blank=True, related_name='trueOrFalseQuestionsWareHouse')
+    fourChoicesQuestionsWareHouse = models.ManyToManyField(FourChoicesQuestion, blank=True, related_name='fourChoicesQuestionsWareHouse')
+
     quizAvgScore = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     questionAvgScore = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     quizAttempts = models.IntegerField(default=0)
@@ -64,8 +71,8 @@ class Profile(models.Model):
     likes = models.IntegerField(default=0)
     quizzes = models.IntegerField(default=0)
     favoriteQuizzes = models.ManyToManyField(Quiz, blank=True, related_name='favoriteQuizzes')
-    
-
+    favoriteUser = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='favoriteUser')
+    last_question_date = models.DateTimeField(null=True)
 
 
     objects = ProfileManager()
@@ -76,17 +83,18 @@ class Profile(models.Model):
 
     @property
     def get_user_age(self):
-        dob = self.date_of_birth
-        if dob:
-            # dob = pytz.utc.localize(self.date_of_birth)
+        # dob = self.date_of_birth
+        # if dob:
+        #     # dob = pytz.utc.localize(self.date_of_birth)
 
-            # dob_aware = tz.localize(dob)
-            days_length = timezone.now().date() - dob
-            days = days_length.days
-            years = days//365
-            print(years)
-            return years
-        return 15
+        #     # dob_aware = tz.localize(dob)
+        #     days_length = timezone.now().date() - dob
+        #     days = days_length.days
+        #     years = days//365
+        #     print(years)
+        #     return years
+        # return 15
+        return self.preferred_age
 
 
     @property
@@ -198,7 +206,7 @@ class Streak(models.Model):
 
 # add description
 class Link(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='link')
     name = models.CharField(max_length=20, null=True, blank=True)
     link = models.URLField(null=True, blank=True)
     description = models.TextField(max_length=200,blank=True, null=True)
@@ -244,7 +252,7 @@ Change this place and use def clean instead
 
 
 class Interest(models.Model):
-    user= models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    user= models.ForeignKey(User,on_delete=models.SET_NULL, null=True, related_name='interest')
     interest = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_("What do you like most about this app?"))
     dislike = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_("What don't you like about this app?"))
     modifier = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_("What do you want us to add to this app?"))

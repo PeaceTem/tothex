@@ -2,6 +2,7 @@
 
 {% extends 'quiz/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block quizTitle %}
 Create True Or False Question
@@ -23,7 +24,7 @@ Create True Or False Question
 {% endblock quizCss %}
 
 
-{% load crispy_forms_tags %}
+{% include 'core/header.html' %}
 
 {% include 'messages.html' %}
 

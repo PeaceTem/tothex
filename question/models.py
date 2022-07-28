@@ -14,7 +14,7 @@ from .managers import TrueOrFalseQuestionManager
 from quiz.services import stringCleaningService
 
 
-
+from quiz.models import Quiz
 # Create your models here.
 """
 User should be able to like this quiz
@@ -25,16 +25,17 @@ User should be able to like this quiz
 
 class FourChoicesQuestion(models.Model):
     ANSWER_CHOICES = (
-        ('answer1', 'answer1'),
-        ('answer2', 'answer2'),
-        ('answer3', 'answer3'),
-        ('answer4', 'answer4'),
+        ('answer1', _('First Option')),
+        ('answer2', _('Second Option')),
+        ('answer3', _('Third Option')),
+        ('answer4', _('Fourth Option')),
     )
 
     SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
     DURATION_CHOICES = zip( range(15,181, 5), range(15,181, 5) )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fourchoicesquestions')
+    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, blank=True, related_name='fourChoicesQuestions')
     form = models.CharField(max_length=30, default='fourChoicesQuestion')
     index = models.PositiveSmallIntegerField(default=0)
     question = models.TextField(max_length=1000, verbose_name=_('Question'))
@@ -66,9 +67,6 @@ class FourChoicesQuestion(models.Model):
     objects = FourChoicesQuestionManager()
 
 
-
-    class Meta:
-        ordering = ['-date_created']
 
 
     def clean(self):
@@ -211,14 +209,16 @@ class FourChoicesQuestion(models.Model):
 
 class TrueOrFalseQuestion(models.Model):
     ANSWER_CHOICES = (
-        (_('True'), _('True')),
-        (_('False'), _('False')),
+        ('answer1', _('True')),
+        ('answer2', _('False')),
     )
 
 
     DURATION_CHOICES = zip(range(15,181, 5), range(15,181, 5))
     SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trueOrFalseQuestions')
+    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, blank=True, related_name='trueOrFalseQuestions')
+
     form = models.CharField(max_length=20, default='trueOrFalseQuestion')
     index = models.PositiveSmallIntegerField(default=0)
     question = models.TextField(max_length=1000, verbose_name=_('Question'))
@@ -247,12 +247,6 @@ class TrueOrFalseQuestion(models.Model):
   
 
     objects = TrueOrFalseQuestionManager()
-
-
-
-    class Meta:
-        ordering = ['-date_created']
-
 
 
 

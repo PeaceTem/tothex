@@ -12,7 +12,7 @@ Create A New Question
 {% endblock quizCss %}
 
 
-{% load crispy_forms_tags %}
+{% include 'core/header.html' %}
 
 {% include 'messages.html' %}
 
@@ -40,10 +40,5 @@ Create A New Question
 </div>
 </div>
 </section>
-
-<script>
-
-</script>
-
 
 {% endblock content %}

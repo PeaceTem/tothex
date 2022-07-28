@@ -1,5 +1,5 @@
 {% extends 'quiz/base.html' %}
-
+{% load static %}
 {% block quizTitle %}
 Followers
 {% endblock quizTitle %}
@@ -8,12 +8,77 @@ Followers
 
 
 {% block quizCss %}
-
+<link rel="stylesheet" href="/static/core/css/follows.css">
 {% endblock quizCss %}
+{% include 'core/header.html' %}
 
-{% for obj in objects %}
-    {{obj}}
-{% endfor %}
+Add a customized search elements to the part of the html template
+{% include 'search.html' %}
 
+{% if object_type == 'following' %}
+
+    {% for obj in objects.following.all %}
+    <div class="followers">
+
+        {{obj}} 
+        <a class="clickable" href="{% url 'follow-action' follower_id obj.id 'unfollow' %}"><button style="border-radius:4px; padding: 3px; border:none; color: #fff; background:#f11919;">Unfollow</button></a> 
+    </div>
+    <br>
+
+    {% endfor %}
+
+{% elif object_type == 'followers' %}
+
+    {% for obj in objects.followers.all %}
+    <div>
+
+        {{obj}} 
+        {% if obj in objects.following.all %}
+            <i style="font-size: 11px; color: #666; background:#eee;">followed</i>
+        {% else %}
+            <a class="clickable" href="{% url 'follow-action' follower_id obj.id 'follow' %}"><button style="border-radius:4px; padding: 3px; border:none; color: #fff; background:#f11919;">Follow</button></a> 
+        {% endif %}
+    </div>
+    <br>
+
+    {% endfor %}
+
+{% endif %}
+    <br>
+    <br>
+<!-- Add jquery -->
+
+{% include 'jquery.html' %}
+
+<script>
+    
+$('.clickable').click(function(e){
+        e.preventDefault();
+        // Add a logic that removes the user that's not the creator of this quiz
+        // let ans = confirm('This change is permanent\nAre you sure you want to delete this question?');
+        // if (ans == true){
+            const objectBx = $(this);
+            $.ajax({
+                type: 'GET',
+                url : $(this).attr('href'),
+                data : {
+                },
+                success : function(response){
+                    objectBx.parent().css({'background-color':'#ddd','border-radius':'4px'})
+                    objectBx.remove()
+                    // objectBx.parent().parent().hide(500);
+                    // $('#questionLength').text('{{quiz.questionLength|add:-1}}')
+                    // document.getElementById('questionLength').innerText = parseInt(document.getElementById('questionLength').innerText) + 1
+                    alert("This action is successful!")
+
+                },
+                error : function(){
+                    alert('It falis silently!')
+                }
+
+            });
+        });
+      
+</script>
 
 {% endblock content %}

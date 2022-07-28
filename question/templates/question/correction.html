@@ -29,21 +29,21 @@ Old Town Road Correction
         <div class="question-box download-container">
             {% if question.form == 'fourChoicesQuestion' %}
             <div>
-                    {{question.question|linebreaksbr}}
+                    {{question.question|safe|linebreaksbr}}
                     <ol class="answers">
                         <ol class="answers">
                             {% if question.correct == 'answer1' %}
                             <li class="answerGreen">
                                 <div class="answer">
-                                    {{question.answer1|linebreaksbr}}
+                                    {{question.answer1|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                             </li>
-                            {% elif answer == question.answer1 %}
+                            {% elif answer == 'answer1' %}
                             
                             <li class="answerRed">
                                 <div class="answer">
-                                    {{question.answer1|linebreaksbr}}
+                                    {{question.answer1|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                             </li>
@@ -52,7 +52,7 @@ Old Town Road Correction
     
                             <li>
                                 <div class="answer">
-                                    {{question.answer1|linebreaksbr}}
+                                    {{question.answer1|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                             </li>
@@ -67,15 +67,15 @@ Old Town Road Correction
                             {% if question.correct == 'answer2' %}
                             <li class="answerGreen">
                                 <div class="answer">
-                                    {{question.answer2|linebreaksbr}}
+                                    {{question.answer2|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                             </li>
-                            {% elif answer == question.answer2 %}
+                            {% elif answer == 'answer2' %}
                             
                             <li class="answerRed">
                                 <div class="answer">
-                                    {{question.answer2|linebreaksbr}}
+                                    {{question.answer2|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                             </li>
@@ -84,7 +84,7 @@ Old Town Road Correction
     
                             <li>
                                 <div class="answer">
-                                    {{question.answer2|linebreaksbr}}
+                                    {{question.answer2|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                             </li>
@@ -99,15 +99,15 @@ Old Town Road Correction
                             {% if question.correct == 'answer3' %}
                             <li class="answerGreen">
                                 <div class="answer">
-                                    {{question.answer3|linebreaksbr}} 
+                                    {{question.answer3|safe|linebreaksbr}} 
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                             </li>
-                            {% elif answer == question.answer3 %}
+                            {% elif answer == 'answer3' %}
                             
                             <li class="answerRed">
                                 <div class="answer">
-                                    {{question.answer3|linebreaksbr}}
+                                    {{question.answer3|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                             </li>
@@ -116,7 +116,7 @@ Old Town Road Correction
     
                             <li>
                                 <div class="answer">
-                                    {{question.answer3|linebreaksbr}}
+                                    {{question.answer3|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                             </li>
@@ -131,15 +131,15 @@ Old Town Road Correction
                             {% if question.correct == 'answer4' %}
                             <li class="answerGreen">
                                 <div class="answer">
-                                    {{question.answer4|linebreaksbr}} 
+                                    {{question.answer4|safe|linebreaksbr}} 
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                             </li>
-                            {% elif answer == question.answer4 %}
+                            {% elif answer == 'answer4' %}
                             
                             <li class="answerRed">
                                 <div class="answer">
-                                    {{question.answer4|linebreaksbr}}
+                                    {{question.answer4|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                             </li>
@@ -148,7 +148,7 @@ Old Town Road Correction
     
                             <li>
                                 <div class="answer">
-                                    {{question.answer4|linebreaksbr}}
+                                    {{question.answer4|safe|linebreaksbr}}
                                 </div>
                                 <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                             </li>
@@ -160,7 +160,7 @@ Old Town Road Correction
                     </ol>
                         
                         <div class="solution">
-                            Solution: {{question.solution|linebreaksbr}}
+                            Solution: {{question.solution|safe|linebreaksbr}}
                         </div>
                         {% if not user in question.solution_validators.all %}
 
@@ -181,20 +181,20 @@ Old Town Road Correction
 
 
                 <div>
-                        {{question.question|linebreaksbr}}
+                        {{question.question|safe|linebreaksbr}}
                         <ol class="answers">
                             {% if question.correct == 'True' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer1|linebreaksbr}}
+                                {{question.answer1|safe|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
-                        {% elif answer == question.answer1 %}
+                        {% elif answer == 'answer1' %}
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer1|linebreaksbr}}
+                                {{question.answer1|safe|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -203,7 +203,7 @@ Old Town Road Correction
 
                         <li>
                             <div class="answer">
-                                {{question.answer1|linebreaksbr}}
+                                {{question.answer1|safe|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -218,15 +218,15 @@ Old Town Road Correction
                         {% if question.correct == 'False' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer2|linebreaksbr}}
+                                {{question.answer2|safe|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
-                        {% elif answer == question.answer2 %}
+                        {% elif answer == 'answer2' %}
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer2|linebreaksbr}} 
+                                {{question.answer2|safe|linebreaksbr}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -235,7 +235,7 @@ Old Town Road Correction
 
                         <li>
                             <div class="answer">
-                                {{question.answer2|linebreaksbr}}
+                                {{question.answer2|safe|linebreaksbr}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -285,10 +285,16 @@ Old Town Road Correction
             <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'correction' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
         </div>
         
-        
-        <div>
-            <a href="{% url 'question:answer-question' %}">Continue Answering Questions</a>
-        </div>
+        {% if questionType == 'OldTownRoad' %}
+            <div>
+                <a href="{% url 'question:answer-question' %}">Continue Answering Questions</a>
+            </div>
+        {% elif questionType == 'Following' %}
+            <div>
+                <a href="{% url 'question:following-questions' %}">Continue Answering Questions</a>
+            </div>
+        {% endif %}
+       
         
         
 <!-- </div> -->
@@ -299,7 +305,10 @@ Old Town Road Correction
 </div>
 
 <script src="{% static 'question/html2canvas.js' %}"></script>
-<script src="{% static 'js/jquery.js' %}"></script>
+
+{% include 'jquery.html' %}
+
+
 <script>
 
 let elm = document.querySelector('.question-box.download-container');
