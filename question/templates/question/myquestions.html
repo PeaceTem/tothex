@@ -1,16 +1,16 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 
 {% load static %}
 
-{% block quizTitle %}
+{% block title %}
 My Questions
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'question/css/myquestions.css' %}">
-{% endblock quizCss %}
+{% endblock css %}
 {% include 'core/header.html' %}
 
 <!-- <div style="text-align:left;" class="top-link"> -->
@@ -65,7 +65,7 @@ My Questions
     {% elif question.form == 'fourChoicesQuestion' %}
     
             <div class="quizItem">
-                {{question.question|safe|linebreaksbr|truncatechars:80}}
+                {{question.question|safe|truncatechars:80}}
             </div>
             <div class="inline">
     

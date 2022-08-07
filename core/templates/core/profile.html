@@ -4,27 +4,21 @@
 
 {% load crispy_forms_tags %}
 {% load social_share %}
-{% block quizTitle %}
+{% block title %}
 Profile
-{% endblock quizTitle %}
+{% endblock title %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'core/css/profile.css' %}">
+{% endblock css %}
 {% block content %}
 
 
-{% block quizCss %}
-<link rel="stylesheet" href="{% static 'core/css/profile.css' %}">
-{% endblock quizCss %}
+{% include 'head.html' %}
+
 {% include 'navbar.html' %}
 <input type="hidden" id="navActive" value="{{nav}}" name="nav">
 {% include 'messages.html' %}
-<div>
-    <div class="menu-icon">
-
-        <a href="{% url 'menu' %}">
-            <div ><i class="fa fa-bars" aria-hidden="true">menu</i></div>
-        </a>
-    </div>
-</div>
 <div class="profile-box">
     <div class="imgBx">
         <img src="/static/images/tothex_500.png">
@@ -162,28 +156,7 @@ Profile
         <div class="content">{% trans "$0.00" %}</div> 
         <i style="font-size: 11px; color:#999;">{% trans "Efforts are being made for users to generate revenue from this app" %}</i>
     </div>
-    {% comment %}
-<!-- 
-    <div class="userInfo">
-        <div class="heading">{% trans "Streak's Length" %}</div>
-        <div class="content"> {{profile.streak.length}}</div> 
-    </div>
-    <div class="userInfo">
-        <div class="heading">{% trans "Streak's Status" %}</div>
-        <div class="content">
-            {% if profile.streak.active %}
-            Active
-            {% else %}
-            InActive
-            {% endif %}
-        </div> 
-    </div> -->
-    {% endcomment %}
 
-    <div class="userInfo">
-        <div class="heading">{% trans "Today's Correct Answers" %}</div>
-        <div class="content"> {{profile.streak.question}}</div> 
-    </div>
     <div class="userInfo">
         <div class="heading">{% trans "Refers" %}</div>
         <div class="content"> {{profile.refercount}}</div> 
@@ -212,10 +185,13 @@ Profile
         <div class="heading">{% trans "Quizzes Created" %}</div>
         <div class="content">{{profile.quizzes}}</div> 
         <div>
-            <a href="{% url 'question:visitor' profile.user.id %}">{% trans "View Questions" %}</a>
+            <a class="obj-link" href="{% url 'question:visitor' profile.user.id %}">{% trans "View Questions" %}</a>
         </div>
         <div>
-            <a href="{% url 'quiz:visitor' profile.user.id %}">{% trans "View Quizzes" %}</a>
+            <a class="obj-link" href="{% url 'quiz:visitor' profile.user.id %}">{% trans "View Quizzes" %}</a>
+        </div>
+        <div>
+            <a class="obj-link" href="{% url 'qxa:my-q' %}">{% trans "My Questions and Answers" %}</a>
         </div>
     </div>
 
@@ -224,59 +200,19 @@ Profile
         <div class="heading">{% trans "Profile Views" %}</div>
         <div class="content"> {{profile.views}}</div> 
     </div>
-    <div>
-        <form id="interestForm" action="{%  url 'interest' %}" method="post">
-            {% csrf_token %}
-            {{form|crispy}}
-            <input type="submit" value="submit">
-        </form>
-    </div>
-    
     <div class="copy-link-container">
-        <div class="label">
-            {% trans "Copy Your Referral link" %}
-        </div>
         <div class="copy-text">
-            <input id="copy-link" type="text" class="text" readonly>
-            <button onclick="copyFunction()">{% trans "Copy" %}</button>
+            <div>
+                <a class="obj-link" id="shareReferralButton" href="#">{% trans "Copy Your Referral link" %}</a>
+            </div>
         </div>
     </div>
     <div class="share-profile">
         <div>{% trans "Share Your Face" %}</div>
-        {% if profile.user.middle_name %}
         <div>
-        {% post_to_facebook  object_or_url 'Facebook' %}
-        {% post_to_twitter "View {{profile.user.middle_name}}'s profile on ToTheX." object_or_url "Twitter" %}
-        {% post_to_linkedin  object_or_url "Post to Linkedin" %}
-        {% send_email "{{profile.user.username|capfirst}}: ToTheX User Proflle" "View {{profile.user.middle_name}}'s profile on ToTheX." object_or_url "Email" %}
-        {% post_to_reddit "View {{profile.user.middle_name}}'s profile on ToTheX." object_or_url %}
-        {% post_to_telegram "View {{profile.user.middle_name}}'s profile on ToTheX." object_or_url %}
-        {% post_to_whatsapp object_or_url "WhatsApp" %}
-        {% save_to_pinterest object_or_url %}
+            <a class="obj-link" id="shareButton" href="#">Share to Social Media</a>
         </div>
-        {% elif profile.user.first_name %}
-        {% post_to_facebook  object_or_url 'Facebook' %}
-        {% post_to_twitter "View {{profile.user.first_name}}'s profile on ToTheX." object_or_url "Twitter" %}
-        {% post_to_linkedin  object_or_url "Post to Linkedin" %}
-        {% send_email "{{profile.user.username|capfirst}}: ToTheX User Proflle" "View {{profile.user.first_name}}'s profile on ToTheX." object_or_url "Email" %}
-        {% post_to_reddit "View {{profile.user.first_name}}'s profile on ToTheX." object_or_url %}
-        {% post_to_telegram "View {{profile.user.first_name}}'s profile on ToTheX." object_or_url %}
-        {% post_to_whatsapp object_or_url "WhatsApp" %}
-        {% save_to_pinterest object_or_url %}
-
-
-        {% elif profile.user.username %}
-
-        {% post_to_facebook  object_or_url 'Facebook' %}
-        {% post_to_twitter "View {{profile.user.username}}'s profile on ToTheX." object_or_url "Twitter" %}
-        {% post_to_linkedin  object_or_url "Post to Linkedin" %}
-        {% send_email "{{profile.user.username|capfirst}}: ToTheX User Proflle" "View {{profile.user.username}}'s profile on ToTheX." object_or_url "Email" %}
-        {% post_to_reddit "View {{profile.user.username}}'s profile on ToTheX." object_or_url %}
-        {% post_to_telegram "View {{profile.user.username}}'s profile on ToTheX." object_or_url %}
-        {% post_to_whatsapp object_or_url "WhatsApp" %}
-        {% save_to_pinterest object_or_url %}
-
-        {% endif %}
+    
     </div>
     <a class="profile"  href="{% url 'edit_profile' %}">
         <div class="edit link userInfo">
@@ -302,46 +238,55 @@ Profile
 </script>
 {% if user == profile.user %}
 <script>
+    const shareButton = document.querySelector('a#shareButton');
+    const title = window.document.title;
+    const url = window.document.location.href;
+    shareButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(navigator.share){
+            navigator.share({
+                title: `${title}`,
+                url : `${url}`
+            }).catch(console.error);
+        }else{
+            alert('Use a default share button');
+        }
+    });
+</script>
+<script>
+    const shareReferralButton = document.querySelector('a#shareReferralButton');
+    const referral = "An invitation to the world where geniuses gather";
+    const website = window.location.origin
+    const referral_url = `${website}/core/referral/{{profile.code}}`;
+    shareReferralButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(navigator.share){
+            navigator.share({
+                title: `${referral}`,
+                url : `${referral_url}`
+            }).catch(console.error);
+        }else{
+            alert('Use a default share button');
+        }
+    });
+    
+</script>
+<script>
 
-
-    const website = window.location.hostname
-    document.querySelector('#copy-link').value = `${website}/core/referral/{{profile.code}}`;
-    function copyFunction(){
-    let copyText = document.getElementById('copy-link');
-    copyText.select();
-    copyText.setSelectionRange(0,99999);
-    // document.execCommand("copy")
-    navigator.clipboard.writeText(copyText.value)
-    alert("copied!")
-        // Add the ajax for the link click
-    }
+    // const website = window.location.hostname
+    // document.querySelector('#copy-link').value = `${website}/core/referral/{{profile.code}}`;
+    // function copyFunction(){
+    // let copyText = document.getElementById('copy-link');
+    // copyText.select();
+    // copyText.setSelectionRange(0,99999);
+    // // document.execCommand("copy")
+    // navigator.clipboard.writeText(copyText.value)
+    // alert("copied!")
+    //     // Add the ajax for the link click
+    // }
 </script>
 {% endif %}
 <script>
-
-
-$('#interestForm').submit(function(e){
-        e.preventDefault();
-        const serializedData = $(this).serialize();
-
-        const objectBx = $(this)
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: serializedData,
-            success: function(response){
-                alert('This action was successful!\nThanks for the review!')
-                objectBx.parent().hide(500);
-            },
-            error: function(response){
-                alert('Failed!')
-
-            }
-        })
-    })
-
-
-
     function clickFunction(){
         
         $.ajax({
@@ -362,7 +307,9 @@ $('#interestForm').submit(function(e){
         });
 
     }
+</script>
 
+<script>
 
 $('#followForm').submit(function(e){
 e.preventDefault();

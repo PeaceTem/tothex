@@ -303,37 +303,38 @@ Quiz Generator Submit
         
     </div>
 {% endif %}
-<div>
-    <img src="{{postAd.picture.url}}">
-</div>
-
-<div>
-    {{postAd.description|linebreaksbr}}
-</div>
-
-<div>
-    <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'submit' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
-</div>
-
-
 <div class="social-share">
     <i style="font-size:11px;">
         Refer To Earn More Coins (20 coins per click)
 
     </i>
-{% post_to_facebook  object_or_url 'Post to Facebook' %}
-{% post_to_twitter "Take A Quiz: " object_or_url "Post to Twitter" %}
-{% post_to_linkedin  object_or_url "Post to" %}
-{% send_email "ToTheX Quiz" "Take A Quiz: " object_or_url "Share via email" %}
-{% post_to_reddit "Take A Quiz: " object_or_url %}
-{% post_to_telegram "Take A Quiz: " object_or_url %}
-{% post_to_whatsapp object_or_url "Share via WhatsApp" %}
-{% save_to_pinterest object_or_url %}
+    <div>
+        <a id="shareButton" href="#">Share to Social Media</a>
+    </div>
+
 </div>
 
 </div>
 
 <script src="{% static 'js/jquery.js' %}"></script>
+<script>
+
+    const shareButton = document.querySelector('a#shareButton');
+    const title = window.document.title;
+    const url = window.document.location.href;
+    shareButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(navigator.share){
+            navigator.share({
+                title: `${title}`,
+                url : `${url}`
+            }).catch(console.error);
+        }else{
+            alert('Use a default share button');
+        }
+    });
+    
+    </script>
 <script>
 
 

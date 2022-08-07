@@ -1,15 +1,15 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% block quizTitle %}
+{% block title %}
 Create Question
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'question/css/newquestion.css' %}">
-{% endblock quizCss %}
+{% endblock css %}
 {% include 'core/header.html' %}
 
 {% include 'messages.html' %}

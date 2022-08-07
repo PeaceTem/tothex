@@ -24,13 +24,19 @@ Take Quiz
         <div style="display:none;" id="minute">{{quiz.duration}}</div>
         <div>
             {{quiz.get_quiz_duration}}
-        </div> 
+        </div>
     </div>
     <div id="countdownbox"></div>
+    {% if quiz.composition %}
+    <div>
+        {{quiz.composition|safe}}
+    </div>
+    {% endif %}
 </div>
 
 
 <div class="question-card-container">
+
     {% if user.is_authenticated %}
     <form action="{% url 'quiz:submit-quiz' quiz.id profile.code %}" method="post" enctype="multipart/form-data" id="quizForm">
     {% else %}
@@ -44,8 +50,8 @@ Take Quiz
             <li class="question">
                 <input type="hidden" name="points" value="{{question.points}}">
                 <div class="questionBx">
-                    <div>
-                        {{question.question|safe|linebreaksbr}} <br>
+                    
+                    <div>{{question.question|safe}}
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point

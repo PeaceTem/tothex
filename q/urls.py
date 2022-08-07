@@ -11,6 +11,10 @@ urlpatterns = [
 
     
     path('', views.QuestionPage.as_view(), name='question-page'),
-    path('answers/<slug:slug>', views.AnswerPage.as_view(), name='answer-page'),
+    path('answers/<slug:slug>/<int:pk>', views.AnswerPage.as_view(), name='answer-page'),
+    path('my-questions', views.MyQPage.as_view(), name='my-q'),
+    # the global category list url
+    path('category/list/', views.CategoryList.as_view(), name='category-list')
+
 
 ]

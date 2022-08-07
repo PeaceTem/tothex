@@ -1,11 +1,7 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from core.models import Profile, Follower, Link, Interest
+from django.shortcuts import render, redirect
+from core.models import Profile, Follower, Link
 from django.contrib.auth.models import User
-from django.db.models import Count, Q
-from quiz.models import Quiz
-from question.models import TrueOrFalseQuestion, FourChoicesQuestion
 
-from core.forms import NewInterestReportForm
 # Create your views here.
 
 
@@ -23,7 +19,6 @@ def MassProfile(request, profile_name):
             profile.views += 1
             profile.save()
 
-        form = NewInterestReportForm()
         
         
     except:
@@ -37,7 +32,6 @@ def MassProfile(request, profile_name):
         'nav': 'profile',
         'followersCount': followersCount,
         'followingsCount': followingsCount,
-        'form': form,
     }
 
     return render(request, 'core/profile.html', context)

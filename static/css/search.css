@@ -1,22 +1,23 @@
-form{
-    display: inline-block;
-    margin: auto;
-}
-.search .input input, .search .submit input{
+form .search{
+    display: flex;
+    margin: 0 auto;
     width: 100vw;
-    margin-top: 2px;
-    height: 20px;
+    justify-content: center;
+    /* align-items: center; */
 }
-
-.search .submit input{
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    background: var(--theme-color);
+.search .input input{
+    width: 93vw;
+    max-width: 400px;
+    margin: 7px 0 3px 2px;
+    /* margin: 0 auto; */
+    outline: none;
+    border-radius: 7px;
     cursor: pointer;
 }
+
 .search .clear{
-    font-size: 15px;
-    display: none;
+    font-size: 30px;
+    position: relative;
+    left: -30px;
 }
 

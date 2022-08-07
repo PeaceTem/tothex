@@ -17,7 +17,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 import pytz
 
-
+from ckeditor.fields import RichTextField
 from .managers import ProfileManager
 
 from .utils import getSimplifiedNumber
@@ -47,6 +47,7 @@ class Profile(models.Model):
     language2 = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Second Language"))
 
     coins = models.DecimalField(default=20.0, decimal_places=2, max_digits=200)
+    total_coins = models.FloatField(default=0)
     date_updated = models.DateTimeField(auto_now=True)
     code = models.CharField(max_length=32, null=True, blank=True)
     refercount = models.PositiveIntegerField(default=0)
@@ -73,6 +74,11 @@ class Profile(models.Model):
     favoriteQuizzes = models.ManyToManyField(Quiz, blank=True, related_name='favoriteQuizzes')
     favoriteUser = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='favoriteUser')
     last_question_date = models.DateTimeField(null=True)
+    recommended_quizzes = models.ManyToManyField(Quiz, blank=True, related_name='recommended_quizzes_profiles')
+    recommended_four_choices_questions = models.ManyToManyField(FourChoicesQuestion, blank=True, related_name='recommended_four_choices_questions_profiles')
+    recommended_true_or_false_questions = models.ManyToManyField(TrueOrFalseQuestion, blank=True, related_name='recommended_true_or_false_questions_profiles')
+    
+
 
 
     objects = ProfileManager()
@@ -249,22 +255,24 @@ Change this place and use def clean instead
 """
 
 
-
-
-class Interest(models.Model):
-    user= models.ForeignKey(User,on_delete=models.SET_NULL, null=True, related_name='interest')
-    interest = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_("What do you like most about this app?"))
-    dislike = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_("What don't you like about this app?"))
-    modifier = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_("What do you want us to add to this app?"))
-
-    def __str__(self):
-        return f"{self.user}"
-
-
-
 """
 Delete the instances of this model every month.
 """
 class Device(models.Model):
     name = models.CharField(max_length=1000)
     date = models.DateTimeField(auto_now_add=True)
+
+
+
+class FeedBack(models.Model):
+    title = models.CharField(max_length=100, verbose_name=_("Title"))
+    feedback = RichTextField(verbose_name=_("Feedback"))
+    date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
+    seen = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.title}"
+
+
+

@@ -8,6 +8,6 @@ const topNavigation = document.querySelectorAll('.topNavigation');
 
 if (navigation == 'leaderboard'){
     console.log('yes');
-    console.log(topNavigation[2])
-    topNavigation[2].classList.add('active');
+    console.log(topNavigation[3])
+    topNavigation[3].classList.add('active');
 }

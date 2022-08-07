@@ -15,6 +15,8 @@ from quiz.services import stringCleaningService
 
 
 from quiz.models import Quiz
+from ckeditor.fields import RichTextField
+
 # Create your models here.
 """
 User should be able to like this quiz
@@ -38,7 +40,7 @@ class FourChoicesQuestion(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, blank=True, related_name='fourChoicesQuestions')
     form = models.CharField(max_length=30, default='fourChoicesQuestion')
     index = models.PositiveSmallIntegerField(default=0)
-    question = models.TextField(max_length=1000, verbose_name=_('Question'))
+    question = RichTextField(max_length=1000, verbose_name=_('Question'))
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     answer1 = models.CharField(max_length=200, verbose_name=_('First Option'))
@@ -47,7 +49,7 @@ class FourChoicesQuestion(models.Model):
     answer4 = models.CharField(max_length=200, verbose_name=_('Fourth Option'))
     correct = models.CharField(max_length=100, choices=ANSWER_CHOICES, verbose_name=_('Correct Option'))
     points = models.PositiveSmallIntegerField(choices=SCORE_CHOICES, default=1)
-    solution = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_('Solution'))
+    solution = RichTextField(max_length=1000, null=True, blank=True, verbose_name=_('Solution'))
     duration_in_seconds = models.PositiveSmallIntegerField(choices=DURATION_CHOICES, default=30, verbose_name=_('Duration In Seconds'))
     categories = models.ManyToManyField(Category, related_name='FourChoicesQuestioncategories', blank=True)
     attempts = models.PositiveIntegerField(default=0)
@@ -74,19 +76,6 @@ class FourChoicesQuestion(models.Model):
         a2 = self.age_to
         if a1 is not None and a2 is not None and a1 > a2:
             raise ValidationError(_('minimum age should be less than or equal too maximum age'))
-
-            if a2 > 65:
-                raise ValidationError(_("The maximum age can be less than  or equal to 65"))
-
-            if a2 - a1 > 4:
-                raise ValidationError(_("The margin between the maximum and minimum age should not be more than 4 years"))
-        
-        self.question = stringCleaningService(self.question)
-        self.answer1 = stringCleaningService(self.answer1)
-        self.answer2 = stringCleaningService(self.answer2)
-        self.answer3 = stringCleaningService(self.answer3)
-        self.answer4 = stringCleaningService(self.answer4)
-        self.solution = stringCleaningService(self.solution)
 
         super().clean()
     
@@ -209,8 +198,8 @@ class FourChoicesQuestion(models.Model):
 
 class TrueOrFalseQuestion(models.Model):
     ANSWER_CHOICES = (
-        ('answer1', _('True')),
-        ('answer2', _('False')),
+        ('True', _('True')),
+        ('False', _('False')),
     )
 
 
@@ -221,16 +210,16 @@ class TrueOrFalseQuestion(models.Model):
 
     form = models.CharField(max_length=20, default='trueOrFalseQuestion')
     index = models.PositiveSmallIntegerField(default=0)
-    question = models.TextField(max_length=1000, verbose_name=_('Question'))
+    question = RichTextField(max_length=1000, verbose_name=_('Question'))
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
-    answer1 = models.CharField(max_length=20, default=_('True'))
-    answer2 = models.CharField(max_length=20, default=_('False'))
+    answer1 = models.CharField(max_length=20, default='True')
+    answer2 = models.CharField(max_length=20, default='False')
     correct = models.CharField(max_length=100, choices=ANSWER_CHOICES, verbose_name=_('Correct Option'))
     points = models.PositiveSmallIntegerField(choices=SCORE_CHOICES, default=1, verbose_name=_('Points'))
 
-    solution = models.TextField(max_length=1000, null=True, blank=True, verbose_name=_('Solution'))
+    solution = RichTextField(max_length=1000, null=True, blank=True, verbose_name=_('Solution'))
     duration_in_seconds = models.PositiveSmallIntegerField(choices=DURATION_CHOICES, default=20, verbose_name=_('Duration In Seconds'))
     categories = models.ManyToManyField(Category, related_name='trueOrFalseQuestioncategories', blank=True)
     attempts = models.PositiveIntegerField(default=0)
@@ -255,15 +244,6 @@ class TrueOrFalseQuestion(models.Model):
         a2 = self.age_to
         if a1 is not None and a2 is not None and a1 > a2:
             raise ValidationError(_('minimum age should be less than or equal too maximum age'))
-
-            if a2 > 65:
-                raise ValidationError(_("The maximum age can be less than  or equal to 65"))
-            if a2 - a1 > 4:
-                raise ValidationError(_("The margin between the maximum and minimum age should not be more than 4 years"))
-        
-        self.question = stringCleaningService(self.question)
-        
-        self.solution = stringCleaningService(self.solution)
 
         super().clean()
     
@@ -311,7 +291,6 @@ class TrueOrFalseQuestion(models.Model):
     @property
     def when_created(self):
         days_length = date.today() - self.date_created.date()
-        print(days_length)
         
         try:
             days_length_shrink = str(days_length).split(',', 1)[0]
@@ -357,7 +336,28 @@ class TrueOrFalseQuestion(models.Model):
         return f"{self.question}"
 
 
+class TrueOrFalseAttempter(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attempted_true_or_false_question')
+    question = models.ManyToManyField(TrueOrFalseQuestion, blank=True, related_name='attempters')
+    timetaken = models.PositiveSmallIntegerField(null=True)
+    correct = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True)
+    
+
+    def __str__(self):
+        return f"{self.question}"
 
 
+
+class FourChoicesAttempter(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attempted_four_choices_question')
+    question = models.ManyToManyField(FourChoicesQuestion, blank=True, related_name='attempters')
+    timetaken = models.PositiveSmallIntegerField(null=True)
+    correct = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True)
+    
+
+    def __str__(self):
+        return f"{self.question}"
 
 

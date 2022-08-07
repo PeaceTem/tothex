@@ -1,7 +1,7 @@
 :root{
     --card-background-color: #fff;
     --background-color: #dfdfdf;
-    --theme-color:  #777/* rgb(219, 104, 104) #333edb*/;
+    --theme-color:  #f11/* rgb(219, 104, 104) #333edb*/;
     --white-theme: #fff;
     --dark-theme: #666;
 }
@@ -15,54 +15,44 @@
     color: var(--dark-theme);
     transition: all 0.3s ease-in-out;
 }
-.menu{
-    position: absolute;
-    right:3px;
-    top: 3px;
-}
+
 
 header{
     width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: block;
     position: sticky;
     top: 0;
     left: 0;
-    /* border-bottom: 2px solid var(--dark-theme); */
-    z-index: 11000;
-    background-color: white;
+    z-index: 1;
+    background-color: #fff;
     box-shadow: 0 1px 3px var(--dark-theme);
 }
 
-header .name h3{
-    color: #f11919;
-    font-weight: 600;
-    font-size: 20px;
-    display: absolute;
-    top: 4px;
-    left: 10px;
-    margin-left: 10px;
-}
 
 header .top-navigation{
     background: #fff;
     padding: .01rem;
     width:100vw;
-    /* max-width: 95vw; */
+    height: 30px;
     display: flex;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 2;
     align-items: center;
     justify-content: center;
-    position: relative;
+    /* position: relative; */
 }
 
 
 header .top-navigation a{
     padding: 1rem 0.5rem;
-    display: inline-block;
+    /* display: inline-block; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-decoration: none;
-    color: #a1a1a1;
+    color: #f11;
     width: 100px;
     text-align: center;
     border: none;
@@ -70,16 +60,16 @@ header .top-navigation a{
 
 
 header .top-navigation a.active{
-    color: var(--theme-color);
+    color: #f11;
     font-weight: bold;
     height: 100%;
     position: relative;
-    border-bottom: 3px solid var(--theme-color);
+    border-bottom: 3px solid #f11;
 }
 
 header .top-navigation a:hover{
-    color: var(--theme-color);
-    border-bottom: 3px solid var(--theme-color);
+    color: #f11;
+    border-bottom: 3px solid #f11;
 }
 
 
@@ -89,63 +79,16 @@ header .top-navigation a:hover{
     justify-content: center;
     align-items: flex-end;
 }
-
 span img.svg{
-    height: 20px;
-    width: 20px;
+    height: 16px;
+    width: 16px;
 }
-
-
-span .streakActive::before{
-    content: '';
-    position: relative;
-    top: 0;
-    left: 0;
-    background: #00ff00;
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
-
-}
-
-span .streakInActive::before{
-    content: '';
-    position: relative;
-    top: 0;
-    left: 0;
-    background: #ff0000;
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
-
-}
-/* 
-
-span img{
-    background: #77b822;
-} */
 
 a.link{
     background: #fff;
-    color: var(--theme-color);
+    color: #f11;
     text-decoration: none;
     text-align: center;
-}
-
-.create-quiz{
-    position: fixed;
-    background: var(--theme-color);
-    border-radius: 10px;
-    padding: 10px;
-    bottom: 10px;
-    right: 20px;
-    box-shadow: 0 0 10px #666;
-}
-
-.create-quiz a{
-    font-size: 20px;
-    color: var(--white-theme);
-    background: var(--theme-color);
 }
 
 @media(max-width: 700px){
@@ -153,7 +96,7 @@ a.link{
         font-size: 16px;
     }
 
-    header .name{
+    .name{
         font-size: 20px;
     }
 
@@ -161,7 +104,7 @@ a.link{
     header .top-navigation a{
         height: 100%;
         padding: 0rem 0rem;
-        width: 25%;
+        width: 20%;
         font-size: 10px;
     }
 }

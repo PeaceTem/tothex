@@ -19,6 +19,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.shortcuts import render
+def zoho(request):
+    return render(request, 'core/verifyforzoho.html')
+
+
 urlpatterns = [
     path('', include('pwa.urls')),
     # path('debug/', include('debug_toolbar.urls')),
@@ -27,11 +32,14 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('core/', include('core.urls')),
     path('quiz/', include('quiz.urls', namespace='quiz')),
+    path('category/', include('category.urls', namespace='category')),
     path('question/', include('question.urls', namespace='question')),
     path('leaderboard/', include('leaderboard.urls', namespace='leaderboard')),
     path('@', include('personalProfile.urls', namespace='profile')),
     path('ads/', include('ads.urls', namespace='ads')),
     path('qxa/', include('q.urls', namespace='qxa')),
+    path('zohoverify/verifyforzoho.html', zoho),
+    # add zohomail verify to this part of the code.
 
 ]
 

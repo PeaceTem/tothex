@@ -34,7 +34,7 @@ Create A New Question
 
     <div class="inputBx">
         <p>
-            Finished? <a href="{% url 'quiz:quiz-detail' quiz.id profile.code %} ">finish</a>
+            Finished? <a href="{% url 'quiz:quiz-detail' quiz.id quiz.slug profile.code %} ">finish</a>
         </p>
     </div>
 </div>

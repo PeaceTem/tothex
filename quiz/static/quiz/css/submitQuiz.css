@@ -41,7 +41,8 @@ a div{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 1px 4px 4px #ccc;
+    /* box-shadow: 1px 4px 4px #ccc; */
+    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
 }
 ol{
     max-width: 100%;
@@ -101,8 +102,8 @@ button{
     width: 120px;
     max-width: 25vw;
     border-radius: 4px;
-    box-shadow: inset 1px 3px 10px rgb(173, 52, 52);
-
+    /* box-shadow: inset 1px 3px 10px rgb(173, 52, 52); */
+    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
 }
 
 ol.answers{

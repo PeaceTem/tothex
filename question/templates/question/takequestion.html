@@ -1,45 +1,43 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 
 {% load static %}
 
-{% block quizTitle %}
+{% block title %}
 Old Town Road
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'question/css/takequestion.css' %}">
-{% endblock quizCss %}
-{% include 'core/header.html' %}
+{% endblock css %}
 
-<!-- <a href="{% url 'question:questions' %}">Go Back</a> -->
+<a href="{% url 'question:questions' %}">Go Back</a>
 <div class="container">
-    <div class="top">
-        <div class="title">Old Town Road</div>
-    </div>
 {% include 'messages.html' %}
 
-
-    <div class="inline">
-        <div>
-            Prize: {{score}}
+    <div>
+        <div class="inline">
+            <div>
+                Prize: {{score}}
+            </div>
+            <div class="attempt">
+                {% if question.attempts < 2 %}
+                    {{question.attempts}} attempt
+                {% else %}
+                    {{question.attempts}} attempts
+                {% endif %}
+            </div>
+            <div class="average">
+                {{question.avgScore}}%
+            </div>
+            <div id="seconds" class="duration">{{question.duration_in_seconds}}</div>
+            <div class="secondsName">
+                seconds            
+            </div>
+        
         </div>
-        <div class="attempt">
-            {% if question.attempts < 2 %}
-                {{question.attempts}} attempt
-            {% else %}
-                {{question.attempts}} attempts
-            {% endif %}
-        </div>
-        <div class="average">
-            {{question.avgScore}}%
-        </div>
-        <div id="seconds" class="duration">{{question.duration_in_seconds}}</div>
-        <div class="secondsName">
-            seconds            
-        </div>
-    
+        
     </div>
     
     
@@ -51,7 +49,7 @@ Old Town Road
                 <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
 
                         <div>
-                            {{question.question|safe|linebreaksbr}}
+                            {{question.question|safe}}
 
                         </div>
 
@@ -61,7 +59,7 @@ Old Town Road
                         <div class="answer">
                             <label for="id_answer1">
                             <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
-                            {{question.answer1|safe|linebreaksbr}}
+                            {{question.answer1|safe}}
                         </label>
                         </div>
                         {% elif a == 2 %}
@@ -69,7 +67,7 @@ Old Town Road
 
                             <label for="id_answer2">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
-                            {{question.answer2|safe|linebreaksbr}}
+                            {{question.answer2|safe}}
                         </label>
 
                         </div>
@@ -78,7 +76,7 @@ Old Town Road
                         <div class="answer">
                             <label for="id_answer3">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
-                            {{question.answer3|safe|linebreaksbr}}
+                            {{question.answer3|safe}}
                         </label>
                         </div>
                         {% elif a == 4 %}
@@ -86,7 +84,7 @@ Old Town Road
                         <div class="answer">
                             <label for="id_answer4">
                             <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
-                            {{question.answer4|safe|linebreaksbr}}
+                            {{question.answer4|safe}}
                         </label>
                         </div>
                         {% endif %}
@@ -104,7 +102,7 @@ Old Town Road
                 <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
 
                 <div>
-                    {{question.question|safe|linebreaksbr}}
+                    {{question.question|safe}}
 
                 </div>
 
@@ -116,14 +114,14 @@ Old Town Road
                 <div class="answer">
                     <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
                     <label for="id_answer1"> 
-                            {{question.answer1|safe|linebreaksbr}}
+                            {{question.answer1|safe}}
                     </label>
                 </div>
                 
                 <div class="answer">
                     <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
                     <label for="id_answer2"> 
-                            {{question.answer2|safe|linebreaksbr}}
+                            {{question.answer2|safe}}
                     </label>
                 </div>
                 <div>

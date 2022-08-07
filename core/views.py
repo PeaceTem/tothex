@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden, HttpResponse
+from django.http import HttpResponseForbidden, HttpResponse, HttpResponseRedirect
 
 # function based views
 from django.views.generic.edit import FormView
@@ -13,17 +13,11 @@ from django.contrib.auth import login, authenticate
 
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.db.models import Count, Q
-from django.utils import timezone
-from datetime import datetime, date, time, timedelta
 
-from .models import Profile, Follower, Link, Interest
-from .forms import ProfileCreationForm, LoginForm, NewLinkForm, NewInterestReportForm
-from quiz.models import Quiz
-from question.models import TrueOrFalseQuestion, FourChoicesQuestion
+from .models import Profile, Follower, Link, FeedBack
+from .forms import FeedBackForm, ProfileCreationForm, LoginForm, NewLinkForm
 
-
-
+from django.utils.translation import gettext_lazy as _
 
 # services
 
@@ -48,6 +42,30 @@ def PrivacyPolicy(request):
 
 def TermsAndConditions(request):
     return render(request, 'terms_and_conditions.html')
+
+
+def Donate(request):
+    return HttpResponseRedirect('https://paystack.com/pay/tothex-donation')
+
+
+
+
+
+class FeedBack(FormView):
+    form_class = FeedBackForm
+    template_name = 'core/feedback.html'
+    model = FeedBack
+    success_url = reverse_lazy('quiz:quizzes')
+
+    def form_valid(self, form):
+        feedback = form.save()
+        feedback.user = self.request.user
+        feedback.save()
+        messages.success(self.request, _('Your feedback has been submitted!'))
+
+        return super().form_valid(form)
+
+
 
 """
 Use try except block to catch errors
@@ -162,7 +180,6 @@ def ProfilePage(request):
     followingsCount = follower.following.all().count()
     link = Link.objects.get(profile=profile)
 
-    form = NewInterestReportForm()
 
     context={
         'user': user,
@@ -172,7 +189,6 @@ def ProfilePage(request):
         'nav': 'profile',
         'followersCount': followersCount,
         'followingsCount': followingsCount,
-        'form' : form,
     }
 
     return render(request, 'core/profile.html', context)
@@ -182,7 +198,7 @@ def ProfilePage(request):
 def ProfileCreationPage(request):
     user = request.user
     if not user.is_authenticated:
-        messages.warning(self.request, "Login to continue")
+        messages.warning(request, "Login to continue")
         return redirect('login')
 
     profile = Profile.objects.get(user=user)
@@ -311,24 +327,6 @@ def LinkClick(request, link_id):
     print(link.clicks)
 
     return HttpResponse('clicked')
-
-
-
-
-
-
-def InterestReport(request):
-
-    user = request.user
-    if request.method == 'POST':
-        form = NewInterestReportForm(request.POST)
-        if form.is_valid():
-            interest = form.cleaned_data.get('interest')
-            dislike = form.cleaned_data.get('dislike')
-            modifier = form.cleaned_data.get('modifier')
-
-            Interest.objects.create(user=user, interest=interest, dislike=dislike, modifier=modifier)
-        return HttpResponse('report submitted!')
 
 
 

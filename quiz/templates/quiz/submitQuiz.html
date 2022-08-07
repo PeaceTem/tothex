@@ -57,14 +57,18 @@ Quiz Submit
         
         {% for question, answer in questionsList %}
         <div class="question-box">
-
+            {% if quiz.composition %}
+            <div>
+                {{quiz.composition|safe}}
+            </div>
+            {% endif %}
             {% if question.form == 'fourChoicesQuestion' %}
         <li class="question">
 
             <div class="indicator"></div>
 
             <div>
-                    {{question.question|safe|linebreaksbr}} <br>
+                    {{question.question|safe}} <br>
                     <div class="points">
                         {% if question.points < 2 %}
                         {{question.points}} point
@@ -76,7 +80,7 @@ Quiz Submit
                         {% if question.correct == 'answer1' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer1|safe|linebreaksbr}}
+                                {{question.answer1|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -84,7 +88,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer1|safe|linebreaksbr}}
+                                {{question.answer1|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -93,7 +97,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer1|safe|linebreaksbr}}  
+                                {{question.answer1|safe}}  
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -108,7 +112,7 @@ Quiz Submit
                         {% if question.correct == 'answer2' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer2|safe|linebreaksbr}}
+                                {{question.answer2|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -116,7 +120,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer2|safe|linebreaksbr}} 
+                                {{question.answer2|safe}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -125,7 +129,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer2|safe|linebreaksbr}} 
+                                {{question.answer2|safe}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -140,7 +144,7 @@ Quiz Submit
                         {% if question.correct == 'answer3' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer3|safe|linebreaksbr}}
+                                {{question.answer3|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -148,7 +152,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer3|safe|linebreaksbr}} 
+                                {{question.answer3|safe}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -157,7 +161,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer3|safe|linebreaksbr}}
+                                {{question.answer3|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer3}}</div>
                         </li>
@@ -172,7 +176,7 @@ Quiz Submit
                         {% if question.correct == 'answer4' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer4|safe|linebreaksbr}}
+                                {{question.answer4|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -180,7 +184,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer4|safe|linebreaksbr}}
+                                {{question.answer4|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -189,7 +193,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer4|safe|linebreaksbr}}
+                                {{question.answer4|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer4}}</div>
                         </li>
@@ -202,7 +206,7 @@ Quiz Submit
 
                     </ol>
                     <div class="solution">
-                        Solution: {{question.solution|safe|linebreaksbr}}
+                        Solution: {{question.solution|safe}}
                     </div>
                
             </div>
@@ -213,7 +217,7 @@ Quiz Submit
 
 
                 <div>
-                        {{question.question|safe|linebreaksbr}} <br>
+                        {{question.question|safe}} <br>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -225,7 +229,7 @@ Quiz Submit
                             {% if question.correct == 'True' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer1|safe|linebreaksbr}} 
+                                {{question.answer1|safe}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -233,7 +237,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer1|safe|linebreaksbr}}
+                                {{question.answer1|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -242,7 +246,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer1|safe|linebreaksbr}}
+                                {{question.answer1|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer1}}</div>
                         </li>
@@ -257,7 +261,7 @@ Quiz Submit
                         {% if question.correct == 'False' %}
                         <li class="answerGreen">
                             <div class="answer">
-                                {{question.answer2|safe|linebreaksbr}}
+                                {{question.answer2|safe}}
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -265,7 +269,7 @@ Quiz Submit
                         
                         <li class="answerRed">
                             <div class="answer">
-                                {{question.answer2|safe|linebreaksbr}} 
+                                {{question.answer2|safe}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -274,7 +278,7 @@ Quiz Submit
 
                         <li class="answerWhite">
                             <div class="answer">
-                                {{question.answer2|safe|linebreaksbr}} 
+                                {{question.answer2|safe}} 
                             </div>
                             <div class="percentage">{{question.get_percentage_chosen_of_answer2}}</div>
                         </li>
@@ -291,7 +295,7 @@ Quiz Submit
                            
                         </ol>
                         <div class="solution">
-                            Solution: {{question.solution|safe|linebreaksbr}}
+                            Solution: {{question.solution|safe}}
                         </div>
                    
                 </div>
@@ -377,12 +381,12 @@ Quiz Submit
         </div>
     </div>
     
-    <div>
+    <!-- <div>
         <div class="link-container">
             <a href="" class="a">Download the Image</a>
         </div>
     </div>
-   
+    -->
     <div>
         <div class="link-container">
             <a href="{% url 'quiz:quiz-pdf' quiz.id %}">
@@ -392,30 +396,12 @@ Quiz Submit
     </div>
 
 
-<div>
-    <img src="{{postAd.picture.url}}">
-</div>
-
-<div>
-    {{postAd.description|linebreaksbr}}
-</div>
-
-<div class="link-container">
-    <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'submit' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
-</div>
-
-
 <div class="social-share">
     <i style="font-size: 12px; color: #777;">Refer To Earn More Coins (20 coins per click)</i>
     
-{% post_to_facebook  object_or_url 'Post to Facebook' %}
-{% post_to_twitter "Take A Quiz: {{quiz.title}}" object_or_url "Post to Twitter" %}
-{% post_to_linkedin  object_or_url "Post to" %}
-{% send_email "ToTheX Quiz" "Take A Quiz: {{quiz.title}}" object_or_url "Share via email" %}
-{% post_to_reddit "Take A Quiz: {{quiz.title}}" object_or_url %}
-{% post_to_telegram "Take A Quiz: {{quiz.title}}" object_or_url %}
-{% post_to_whatsapp object_or_url "Share via WhatsApp" %}
-{% save_to_pinterest object_or_url %}
+    <div>
+        <a id="shareButton" href="#">Share to Social Media</a>
+    </div>
 </div>
 
 {% if quizLink %}
@@ -460,26 +446,6 @@ Quiz Submit
 
 
 
-    function clickFunction(){
-        $.ajax({
-            // change this to post
-            type: 'GET', 
-            url : $('a.postAd').data('url'),
-            data : {
-            },
-            success : function(response){
-                alert('link clicked!')
-                
-
-            },
-            error : function(){
-                alert('It falis silently!')
-            }
-
-        });
-
-    }
-
 
     function QuizLinkClickFunction(){
         $.ajax({
@@ -492,9 +458,6 @@ Quiz Submit
             },
             success : function(response){
                 alert('link clicked!')
-                
-                
-
             },
             error : function(){
                 alert('It falis silently!')
@@ -520,8 +483,6 @@ $('form#report').submit(function(e){
                 console.log(response);
                 console.log('Why are you prosecuting me?')
 
-                
-
             },
             error : function(response){
                 alert('It falis silently!')
@@ -544,19 +505,14 @@ function ActivateForm(){
         const object = $('#solutionQualityForm');
         const dataList = object.serialize()
         $.ajax({
-            // change this to post
             type: 'GET', 
-            // serialize the data
             url : $('#solutionQualityForm').data('url'),
             data : dataList,
             success : function(response){
                 $('#solutionQualityForm').parent().hide(1000);
-                
-
             },
             error : function(){
             }
-
         });
         });
 
@@ -567,23 +523,14 @@ $('.likeForm').submit(function(e){
 e.preventDefault();
 const serializeData = $(this).serialize()
 const quiz_id = $(this).data('quiz')
-// alert('Still working!')
-// alert(serializeData)
 $.ajax({
     type: 'POST',
     url : $(this).data('url'),
     data : serializeData,
     success : function(response){
-        // alert('It works');
-        // document.querySelector('#deleteButton').parentNode.parentNode.style.display = 'none';
-        // console.log(id);
-        // console.log(response)
-        
         if (response == 'liked'){
-            // console.log($(`#likeButton${id}`));
             $(`#likeButton${quiz_id}`).text('unlike');
         }else if (response == 'unliked'){
-            // console.log($(`#unlikeButton${id}`));
             $(`#likeButton${quiz_id}`).text('like');
         }
         
@@ -596,23 +543,19 @@ $.ajax({
 });
 })
 
-// console.log(document.querySelector('.social-share'))
-
-// const yourAnswer = document.getElementsByClassName('yourAnswer')
-//     const correctAnswer = document.getElementsByClassName('correctAnswer')
-//     const indicators = document.getElementsByClassName('indicator')
-//     for(let i = 0; i < yourAnswer.length; i++){
-//         console.log(yourAnswer[i].innerText)
-//         console.log(correctAnswer[i].innerText)
-//         if(yourAnswer[i].innerText  == correctAnswer[i].innerText){
-//             indicators[i].style.backgroundColor =  'green';
-//             console.log('correct!');
-//         }else{
-//             indicators[i].style.backgroundColor =  'red';
-//             console.log('wrong!');
-//         }
-//     }
-
-
+const shareButton = document.querySelector('a#shareButton');
+const title = window.document.title;
+const url = window.document.location.href;
+shareButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(navigator.share){
+        navigator.share({
+            title: `${title}`,
+            url : `${url}`
+        }).catch(console.error);
+    }else{
+        alert('Use a default share button');
+    }
+});
 </script>
 {% endblock content %}

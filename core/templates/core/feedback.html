@@ -1,0 +1,36 @@
+
+
+{% extends 'core/form.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+Feedback
+{% endblock title %}
+
+{% block main %}
+<style>
+  *{
+    font-family: sans-serif;
+  }
+
+  textarea{
+    width: 240px;
+  }
+</style>
+
+
+<h3>Feedback</h3>
+<p>
+    Send us a feedback. Thanks in advance!
+</p>
+<form action="" method="post">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input type="submit" value="Submit" style="margin: 5px 0 5px 4px;background: #f11919; color: #fff;  width: 250px; max-width: 90vw; padding: 4px 4px;border-radius: 4px; border: none;">
+</form>
+
+
+{% endblock %}

@@ -62,8 +62,8 @@ Create A True Or False Question
 <input type="text"  onclick="copyFunction(this.id)" name="" id="harr" value="↔" class="copysymbol" readonly>
 <input type="text"  onclick="copyFunction(this.id)" name="" id="varr" value="↕" class="copysymbol" readonly>
 
-<input type="text"  onclick="copyFunction(this.id)" name="" id="hardsub" value="(sub)2(/sub)" class="copysymbol hard" readonly>
-<input type="text"  onclick="copyFunction(this.id)" name="" id="hardsup" value="(sup)2(/sup)" class="copysymbol hard" readonly>
+<!-- <input type="text"  onclick="copyFunction(this.id)" name="" id="hardsub" value="(sub)2(/sub)" class="copysymbol hard" readonly> -->
+<!-- <input type="text"  onclick="copyFunction(this.id)" name="" id="hardsup" value="(sup)2(/sup)" class="copysymbol hard" readonly> -->
 
 
 
@@ -72,8 +72,9 @@ Create A True Or False Question
 <div class="question">
 <div class="head">Step 1 of 2</div>
 
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {{trueOrFalseForm.media}}
         {{trueOrFalseForm|crispy}}
         <input type="submit" value="Create" style="margin: 5px 0 5px 4px;background: #f11919; color: #fff;  width: 200px; max-width: 90vw; padding: 4px 4px;border-radius: 4px; border: none;">
     </form>
@@ -82,9 +83,7 @@ Create A True Or False Question
 
 <script>
     function copyFunction(base){
-        console.log(base)
     let copyText = document.getElementById(base);
-    console.log(copyText);
     copyText.select();
     copyText.setSelectionRange(0,99999);
     // document.execCommand("copy")

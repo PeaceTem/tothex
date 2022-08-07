@@ -22,8 +22,6 @@ def fetch_resources(uri, rel):
 
 
 
-
-
 def sortKey(e):
     return e[0]
 

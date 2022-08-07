@@ -1,9 +1,9 @@
 {% load static %}
 
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'quiz/css/quizzes_list.css' %}">
-{% endblock quizCss %}
+{% endblock css %}
 {% include 'navbar.html' %}
 
 {% include 'messages.html' %}
@@ -21,9 +21,6 @@
 
 
 <div style='text-align: center;padding: 4px; border-radius:4px;' id="random"> <a href="{% url 'quiz:random-quiz-picker' %}"><span class="random">Take A Random Quiz →</span></a> </div>
-<div style='text-align: center; font-size: 10px; '>Total Number Of Registered Users : {{number_of_registered_users}}</div>
-<div style='text-align: center; font-size: 10px;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
-<div style='text-align: center; font-size: 10px;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
 
 
 {% include 'search.html' %}
@@ -45,10 +42,14 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div id="outputDate" class="outputDate">{{quiz.when}}</div>
+                <div id="outputDate" class="outputDate">{{quiz.date|date}}</div>
                 <!-- use aspect-ratio for the background of the title. -->
                 <div class="title-block">
-                    <a class="link" href="{% url 'quiz:quiz-detail' quiz.id profile.code %}">
+                    {% if profile %}
+                    <a class="link" href="{% url 'quiz:quiz-detail' quiz.id quiz.slug profile.code %}">
+                    {% else %}
+                    <a class="link" href="{% url 'quiz:quiz-detail' quiz.id quiz.slug None %}">
+                    {% endif %}
                         <img src="https://picsum.photos/300/180" alt="">
                         <div class="title">
                             {{quiz.title|capfirst}}
@@ -58,7 +59,7 @@
                 
                 </div>
                 <div class="desc">
-                    {{quiz.description|safe|linebreaks|truncatewords:50}}
+                    {{quiz.description|safe|truncatewords:50}}
                 </div>
                 <!-- <div class="creator"> -->
                 <!-- <div class="create" style="display:none;">{{quiz.user|capfirst}}</div> -->
@@ -99,9 +100,11 @@
             </div>
         </div>
     {% endfor %}
+
 </div>
-
-
+<div id="openForm">
+        <a id="open" class="link" href="{% url 'quiz:quiz-create' %}">+</a>
+</div>
 <div class="d-flex d-none position-fixed" style="color:white;bottom:2vh;left:46vw">
     <button style="display:none;" class="btn btn-danger loading">
         <span style="color:white; display:none" class="spinner-border spinner-border-sm"></span>
@@ -161,31 +164,13 @@ if (navigation == 'quizzes'){
 function likeFunction(value){
     like(value);
 }
+
+
+
 </script>
 
 
 <script src="/static/quiz/js/quizzes_list.js"></script>
-<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/infinite.min.js' %}"></script>
-<script>
-    var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
 
-        offset: 'bottom-in-view',
 
-        onBeforePageLoad: function () {
-            $('.loading').show();
-        },
-        onAfterPageLoad: function () {
-            $('.loading').hide();
-            // function reload_js(src) {
-            // $('script[src="' + src + '"]').remove();
-            // $('<script>').attr('src', src).appendTo('head');
-            // }
-            // reload_js("{% static 'quiz/js/quizzes_list.js' %}");
-
-        }
-        
-    
-    });
-</script>
+{% include 'waypoint.html' %}

@@ -19,7 +19,7 @@ urlpatterns = [
     path('favorites/', views.FavoriteQuizList, name='favorites'),
 
 
-    path('detail/<str:quiz_id>/<str:ref_code>', views.QuizDetail, name='quiz-detail'),
+    path('detail/<str:quiz_id>/<slug:quiz_slug>/<str:ref_code>', views.QuizDetail, name='quiz-detail'),
     path('create-quiz/', views.QuizCreate, name='quiz-create'),
     path('create/', views.CreateObject, name='object-create'),
     path('edit-quiz/<str:quiz_id>/', views.QuizUpdate, name='quiz-update'),

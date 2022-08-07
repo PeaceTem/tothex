@@ -2,12 +2,8 @@
 
 {% load static %}
 {% block title %}
-<title>ToTheX | {% block quizTitle %}{% endblock quizTitle %}</title>
-<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
-<meta name="description" content="add categories to quiz or question">
-<meta name="keywords" content="categories,tothex,quiz,question">
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<meta name="author" content="ToTheX">
+{% block quizTitle %}{% endblock quizTitle %}
+
 {% endblock title %}
 
 
@@ -15,7 +11,11 @@
 
 
 {% block css %}
-
+<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+<meta name="description" content="add categories to quiz or question">
+<meta name="keywords" content="categories,tothex,quiz,question">
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="author" content="ToTheX">
 {% block quizCss %}
 
 {% endblock quizCss %}

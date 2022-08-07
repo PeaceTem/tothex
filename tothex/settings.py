@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.postgres',
     #authentication
     'allauth',
     'allauth.account',
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     # third party apps
     'crispy_forms',
     'ckeditor',
+    'rest_framework',
 
     #progressive web app
     'pwa',
@@ -94,7 +96,7 @@ PWA_APP_DISPLAY = 'standalone'
 PWA_APP_SCOPE = '/' # change it to / if it gives an error
 PWA_APP_ORIENTATION = 'portrait'
 PWA_APP_START_URL = '/quiz/' #change to /quiz/
-PWA_APP_STATUS_BAR_COLOR = '#f11919' #'default'
+PWA_APP_STATUS_BAR_COLOR = '#fff' #'default'
 PWA_APP_ICONS = [
 	{
 		'src': 'static/images/tothex_160.png',
@@ -135,8 +137,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "core.middleware.LoggingMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 
@@ -173,6 +175,23 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+
+
+# DATABASES = {
+#     'default' : {},
+#     'auth_db':{
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'auth.db.sqlite3',  
+#     },
+#     'object_db':{
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'object.db.sqlite3',  
+#     },
+# }
+
+# DATABASE_ROUTERS = ['routers.db_routers.AuthRouter','routers.db_routers.ObjectRouter']
 
 
 # Password validation
@@ -214,10 +233,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/' 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'quiz' / 'static',
-    BASE_DIR / 'question' / 'static',
-    BASE_DIR / 'core' / 'static',
-    BASE_DIR / 'ads' / 'static',
+    BASE_DIR / 'static' / 'quiz' ,
+    BASE_DIR / 'static' / 'question' ,
+    BASE_DIR / 'static' / 'core' ,
+    BASE_DIR / 'static' / 'ads' ,
 ]
 
 # media files configuration
@@ -258,7 +277,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'olumidejonathan10@gmail.com'
+EMAIL_HOST_USER = 'olumidejonathan10@gmail.com' # 'olumidejonathan@zohomail.com'
 EMAIL_HOST_PASSWORD = 'triumphant'
 
 # SOCIAL AUTHENTICATION_BACKENDS

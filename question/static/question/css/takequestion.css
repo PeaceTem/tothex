@@ -31,8 +31,10 @@ a{
     border-radius: 4px;
     min-height: 150px;
     padding-top: 4px;
-    box-shadow: 0 1px 4px #ccc;
-
+    margin:auto;
+    width: 500px;
+    max-width: 95vw;
+    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211)
 }
 .questionBx > *{
     margin: 4px 4px;
@@ -43,8 +45,7 @@ a{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 0 1px 4px #ccc;
-    
+    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211)
 }
 
 .container .inline{

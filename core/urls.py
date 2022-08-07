@@ -15,8 +15,8 @@ urlpatterns = [
     #essentials
     path('privacy-policy/', views.PrivacyPolicy, name='privacy-policy'),
     path('terms-and-conditions/', views.TermsAndConditions, name='terms-and-conditions'),
-
-
+    path('donate', views.Donate, name='donate'),
+    path('feedback', views.FeedBack.as_view(), name='feedback'),
     #referral
     path('', views.Home, name='home'),
     path('menu/', views.Menu, name='menu'),
@@ -32,10 +32,6 @@ urlpatterns = [
 
     # link clicks
     path('profile/link-click/<str:link_id>', views.LinkClick, name='link-click'),
-
-
-    # interest 
-    path('interest/', views.InterestReport, name='interest'),
 
 
     #change password

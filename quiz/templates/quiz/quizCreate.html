@@ -82,9 +82,10 @@ Create A New Quiz
 
   <div class="containerBx">
 
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     <div class="quiz-info">You'll earn 1 coin per successful(score >= 50%) attempt <br> Add more than 5 questions to this quiz!</div>
     {% csrf_token %}
+    {{form.media}}
     {{form|crispy}}
     <input type="submit" value="Create Quiz" style="background: #f11919; color: #fff;  width: 500px; max-width: 90vw;">
 </form>

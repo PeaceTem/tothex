@@ -1,67 +1,101 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block title %}
-<title>
-    Questions and Answers - ToTheX.org
-</title>
+    Questions and Answers
 {% endblock title %}
 
 
 {% block css %}
-
+<link rel="stylesheet" href="/static/q/css/question_page.css">
 {% endblock css %}
 
 
 {% block content %}
+{% include 'head.html' %}
+
 {% include 'navbar.html' %}
-<div id="question-container">
-	{% for obj in qs %}
-	<div>
-		<a href="{% url 'qxa:answer-page' obj.slug %}">
-			<div>{{obj.question}}</div>
+{% include 'search.html' %}
+<input type="hidden" id="navActive" name="nav" value="{{nav}}">
+<div style="text-align: center;">
+	Coming Soon!<br>
+	Refrain from this page for now.
+</div>
+<div id="question-container" class="infinite-container">
+	<!-- <div id="shade"></div> -->
+	<div id="openForm">
+        <div id="open">
+            +
+        </div>
+    </div>
+	{% for obj in page_obj %}
+	<div class="question-card infinite-item">
+		<a class="question-link" href="{% url 'qxa:answer-page' obj.slug obj.id %}">
+			<div class="question">{{obj.question}}</div>
+			<div>{{obj.description|truncatewords:50}}</div>
+			<span>{{obj.views}} views</span>
 			<div>Answers: {{obj.answers.count}}</div>
-			<div>Asked by @{{obj.profile}} on {{obj.date|date}}</div>
-			<div>↑ {{obj.upvoters.count}}  ↓ {{obj.downvoters.count}}</div>
+			<div>Asked by <b>@{{obj.profile}}</b> on {{obj.date|date}}</div>
 		</a>
 	</div>
 	{% endfor %}
 </div>
+<div id="form-container" class="inactive-bar">
 
-<form id='questionForm' data-action="{% url 'qxa:create-question'  %}" method='post'>
-{% csrf_token %}
-{{form|crispy}}
-<!-- <input type='text' placeholder='enter category : compulsory'> -->
-<!-- Add a list of categories generated like that on the main category create page -->
-<input type='submit' value='submit'>
-</form>
+	<form id='questionForm' data-action="{% url 'qxa:create-question'  %}" method='post'>
+		<div id="closeBtn">
+			<div id="close">
+				Close
+			</div>
+		</div>
+		
+		{% csrf_token %}
+		{{form|crispy}}
+		<!-- <input type='text' placeholder='enter category : compulsory'> -->
+		<!-- Add a list of categories generated like that on the main category create page -->
+		<input type='submit' value='submit'>
+		</form>
+</div>
+
+
+<div class="d-flex d-none position-fixed" style="color:white;bottom:2vh;left:46vw">
+    <button style="display:none;" class="btn btn-danger loading">
+        <span style="color:white; display:none" class="spinner-border spinner-border-sm"></span>
+    </button>
+</div>
+
+<div class="row d-none">
+    <div class="col-12">
+        {% if page_obj.has_next %}
+        <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+        </span>
+    </div>
+</div>
+
+
+
 {% include 'jquery.html' %}
+<script src="/static/q/js/question_page.js"></script>
+{% include 'waypoint.html' %}
 <script>
-// let cate = document.querySelectorAll("input[name='category-list']");
-// cate.on('click', function(e){
-// 	// append this category name to the category list
-// });
-// let obj = document.querySelector("input['submit']");
-// obj.on('change', function(e){
-// 	let texts = $(this).val();
-// 	$.ajax({
-// 	type: 'GET',
-// 	url : '/qxa/category/select',
-// 	data : {texts: texts},
-// 	success : function(response){
-// 	// add the list of categories generated to the box below the input
-// 		for (let cat of response.categories){
-// 		(`<input name='category-list' type='text' value=${cat}>`)
-// 		};
-// 	},
-// 	error : function(response){
-// 		// Log the error type
-// 	},
-// 	});
+    const formContainer = document.querySelector('#form-container');
+    const openForm = document.querySelector('#openForm');
+    const close = document.querySelector('#close');
+    openForm.addEventListener('click', function(e){
+        e.preventDefault()
+        formContainer.classList.toggle('inactive-bar');
+    });
 
-// });
+    close.addEventListener('click', function(){
+        formContainer.classList.toggle('inactive-bar');
+        
+    });
 
 $('#questionForm').submit(function(e){
 	e.preventDefault();
+	formContainer.classList.toggle('inactive-bar');
+
 	const formName = $(this);	
 	const serializedData = formName.serialize();
 	let container = document.querySelector('#question-container');
@@ -73,18 +107,7 @@ $('#questionForm').submit(function(e){
 		alert('Submitted successfully');
 		container.appendChild(
 			"just take this as the next one\n Thanks for submitting this question to the forums "
-		// `<div>
-		// <a href="{ url 'qxa:answer-page' ${response.slug} %}">
-		// 	<div>${response.question}</div>
-		// 	<div>Answers: {response.answers.count}</div>
-		// 	<div>Asked by @${response.profile} on ${response.date}</div>
-		// </a>
-		// </div>`
 		);
-		// <div>↑ {{response.upvoters.count}}  ↓ {{response.downvoters.count}}</div>
-
-		// Take the user to the question answers page
-		//then get the data and display it back to the top
 		},
 	error : function(response){
 		alert('An error occurred!');

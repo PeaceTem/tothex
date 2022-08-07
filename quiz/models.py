@@ -7,9 +7,7 @@ import pytz
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-
-
-# from question.models import TrueOrFalseQuestion, FourChoicesQuestion
+from ckeditor.fields import RichTextField
 
 from category.models import Category
 
@@ -20,8 +18,7 @@ from random import shuffle
 
 from .managers import QuizManager
 
-
-from .services import stringCleaningService
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -48,19 +45,15 @@ Use Try except block thoroughly
 
 
 class Quiz(models.Model):
-
     DURATION_CHOICES = zip( range(1,61), range(1,61) )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, verbose_name=_('Title'))
-    description = models.TextField(max_length=1000, verbose_name=_('Description'))
+    description = RichTextField(max_length=1000, verbose_name=_('Description'))
+    slug = models.SlugField(unique=True, null=True,blank=True)
+    composition = RichTextField(max_length=10000, null=True, blank=True, verbose_name=_("Composition and Instructions"))
     date = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     when = models.CharField(max_length=200, null=True, blank=True)
-    # fourChoicesQuestions = models.ManyToManyField(FourChoicesQuestion, related_name='fourChoicesQuestions',
-        # related_query_name='fourChoicesQuestions' , blank=True)
-    # trueOrFalseQuestions = models.ManyToManyField(TrueOrFalseQuestion, related_name='trueOrFalseQuestions',
-        # related_query_name='trueOrFalseQuestions', blank=True)
-
     lastQuestionIndex = models.PositiveSmallIntegerField(default=0)
     questionLength = models.PositiveSmallIntegerField(default=0)
     totalScore = models.PositiveSmallIntegerField(default=0)
@@ -68,8 +61,7 @@ class Quiz(models.Model):
     attempts = models.PositiveIntegerField(default=0)
     average_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     public = models.BooleanField(default=True)
-    categories = models.ManyToManyField(Category, blank=True,
-        related_name='categories', related_query_name='categories')
+    categories = models.ManyToManyField(Category, blank=True, related_name='quizzes')
     duration = models.PositiveSmallIntegerField(default=0)
     get_duration = models.CharField(max_length=200, null=True, blank=True)
     solution_quality = models.IntegerField(default=0)
@@ -98,6 +90,7 @@ class Quiz(models.Model):
 
         self.get_duration = self.get_quiz_duration
         self.when = self.when_created 
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
 
@@ -106,14 +99,6 @@ class Quiz(models.Model):
         a2 = self.age_to
         if a1 is not None and a2 is not None and a1 > a2:
             raise ValidationError(_('minimum age should be less than or equal too maximum age'))
-
-            if a2 > 65:
-                raise ValidationError(_("The maximum age can be less than  or equal to 65"))
-
-            if a2 - a1 > 4:
-                raise ValidationError(_("The margin between the maximum and minimum age should not be more than 4 years"))
-        
-        self.description = stringCleaningService(self.description)
 
         super().clean()
     
@@ -219,6 +204,7 @@ class QuizLink(models.Model):
 
 
 class Attempter(models.Model):
+    # change this to profile later
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attempters')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempters')
     score = models.PositiveSmallIntegerField(default=0)
@@ -248,62 +234,3 @@ class Attempter(models.Model):
         return f"{self.user.username}"
 
     # check if the attempter has not been created before creating another instance of attempter
-
-
-
-# class Person(models.Model):
-#     name = CharField(max_length=100)
-#     age = supply property
-
-
-
-
-# class Author(models.Model):
-#     person = supply the property
-
-
-# class Book(models.Model):
-#     name = CharField(max_length=100)
-
-#     published_date = supply the property
-#     # a book has many readers and may have many authors
-#     readers = supply the property
-#     authors = supply the property
-#     category = supply field
-
-# class Category(models.Model):
-#     name = models.CharField(max_length=100, unique=True, help_text="Each category is unique!")
-#     # register by a person
-#     registered_by = supply the field to this property of the object category.
-#     date_created = supply the field to this property of the object category.
-
-
-
-
-# class Library(models.Model):
-#     name = models.CharField(max_length=100)
-#     librarian = supply field
-#     books = supply field
-
-    # def save(self, *args, **kwargs):
-    #     #use the pre_save signal to handle this task.
-    #     # change this at property
-    #     print('printing')
-
-    #     if self.age_to is None and self.age_from is None:
-    #         age = None
-    #         try:
-    #             age = self.user.profile.date_of_birth
-    #             age = date.today() - age
-    #             age = age.days // 365
-    #             print(age)
-    #             if age < 65:
-    #                 print(age)
-    #                 self.age_from = age - 2
-                    
-    #                 self.age_to = age
-    #                 super().save(*args, **kwargs)
-    #                 print('saved')
-    #         except:
-    #             pass
-    #     super().save(*args, **kwargs)

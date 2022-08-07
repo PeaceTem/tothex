@@ -3,52 +3,69 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-<title>
-    {{q.question|truncatewords:20}} - ToTheX
-</title>
+    {{q.question|truncatewords:20}}
 {% endblock title %}
 
 
 {% block css %}
-
+<link rel="stylesheet" href="/static/q/css/answer_page.css">
 {% endblock css %}
 
 
 {% block content %}
-Add title to question
 {% include 'core/header.html' %}
 
 
-<section>
-    <div>
-        <div>
-            <h4>
-                {{q.question}}
-            </h4>
-        </div>
-        <div>
-            <p>
-                {{q.description}}
-            </p>
-        </div>
-    </div>
-    
-    <div>
-        <b>
-            Answers: {{q.answers.count}}
-        </b>
-    </div>
-	<div>↑ {{q.upvoters.count}}  ↓ {{q.downvoters.count}}</div>
 
-    <div>
+<section>
+    <div id="question-card">
+        <div>
+            <div>
+                <h4>
+                    {{q.question}}
+                </h4>
+            </div>
+            <div>
+                <p>
+                    {{q.description}}
+                </p>
+            </div>
+            <div id="share">
+                <a id="shareButton" href="#">Share</a>
+            </div>
+        </div>
+        <div id="stat">
+	        <div>
+                ↑ {{q.upvoters.count}}  ↓ {{q.downvoters.count}}
+            </div>
+
+            <div>
+                    Answers: <b>{{q.answers.count}}</b>
+            </div>
+            <div>
+                <b>
+                    <b>{{q.views}}</b> views
+                </b>
+            </div>
+        </div>
+ 
+    
+
+    <div id="answer-box">
         {% for answer in q.answers.all %}
         <div>
             {{answer}}
         </div>
-	    <div>↑ {{answer.upvoters.count}}  ↓ {{answer.downvoters.count}}</div>
+	    <div>
+            ↑ {{answer.upvoters.count}}  ↓ {{answer.downvoters.count}}
+        </div>
 
-        <div>
-
+        <div id="reply-box">
+            {% for reply in answer.replies.all %}
+            <div>
+                {{reply}}
+            </div>
+            {% endfor %}
             <form id="replyForm" data-action="{% url 'qxa:create-reply' answer.id %}" method="post">
                 {% csrf_token %}
                 {{replyForm|crispy}}
@@ -57,13 +74,15 @@ Add title to question
         </div>
         {% endfor %}
     </div>
-</section>
-
     <form id="answerForm"  data-action="{% url 'qxa:answer-question' q.id %}" method="post">
         {% csrf_token %}
         {{form|crispy}}
         <input type="submit" value="Submit" >
     </form>
+    </div>
+
+</section>
+
 
 
     {% include 'jquery.html' %}
@@ -71,12 +90,12 @@ Add title to question
 
     $('#replyForm').submit(function(e){
         e.preventDefault();
-        let formName = $(this);	
-        let serializedData = formName.serialize();
+        let form_name = $(this);	
+        let serialized_data = form_name.serialize();
         $.ajax({
         type : 'POST',
-        url : formName.data('action'),
-        data : serializedData,
+        url : form_name.data('action'),
+        data : serialized_data,
         success : function(response){
             alert('Submitted successfully');
             },
@@ -105,6 +124,27 @@ Add title to question
         });
     });
     
+const shareButton = document.querySelector('a#shareButton');
+const title = window.document.title;
+const url = window.document.location.href;
+shareButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(navigator.share){
+        navigator.share({
+            title: `${title}`,
+            url : `${url}`
+        // })
+        // .then(()=>{
+        //     // alert('Thanks for sharing!');
+        }).catch(console.error);
+    }else{
+        alert('Use a default share button');
+    }
+});
+
+
+
+
     </script>
 
 {% endblock content %}

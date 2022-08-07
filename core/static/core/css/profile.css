@@ -5,7 +5,9 @@
     color: #333;
     text-align: center;
 }
-
+a{
+    text-decoration: none;
+}
 textarea{
     width: 200px;
     height: 60px;
@@ -43,7 +45,8 @@ a div{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 0 1px 4px #ddd;
+    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
+
 }
 
 img{
@@ -201,3 +204,12 @@ border-radius: 4px;
 
 
 
+a.obj-link{
+    margin: 4px 3px;
+    background: #f11919;
+    border-radius: 4px;
+    color: white;
+    padding: 4px 6px;
+    margin: 5px;
+    display: block;
+}

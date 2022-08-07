@@ -15,10 +15,12 @@ And also make all the leaderboard daily
 
 
 
-@login_required(redirect_field_name='next', login_url='account_login')
+# @login_required(redirect_field_name='next', login_url='account_login')
 def LeaderboardView(request):
     user = request.user
-    profile = Profile.objects.get(user=user)
+    profile = None
+    if user.is_authenticated:
+        profile = Profile.objects.get(user=user)
     context={
         'nav': 'leaderboard',
         'profile': profile,

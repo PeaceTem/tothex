@@ -1,15 +1,17 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% block quizTitle %}
+{% block title %}
 Questions
-{% endblock quizTitle %}
+{% endblock title %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'question/css/questions.css' %}">
+{% endblock css %}
 {% block content %}
 
 
-{% block quizCss %}
-<link rel="stylesheet" href="{% static 'question/css/questions.css' %}">
-{% endblock quizCss %}
+{% include 'head.html' %}
+
 {% include 'navbar.html' %}
 
 {% include 'messages.html' %}
@@ -25,7 +27,9 @@ Questions
     </div>
 
     <div>
-        <a class="question" href="{% url 'ads:postAd' 'following' %}">
+        <!-- <a class="question" href="{% url 'ads:postAd' 'following' %}"> -->
+        <a class="question" href="{% url 'question:following-questions' %}">
+
             <div>
                 Following
             </div>
@@ -33,7 +37,9 @@ Questions
     </div>
        
     <div>
-        <a class="question" href="{% url 'ads:postAd' 'oldtownroad' %}">
+        <!-- <a class="question" href="{% url 'ads:postAd' 'oldtownroad' %}"> -->
+        <a class="question" href="{% url 'question:answer-question' %}">
+
             
             <div>
                 Old Town Road
@@ -55,26 +61,83 @@ Questions
         </a>
     </div>
 </div>
+
+
+
+
+
+<div class="contentBx inactive-bar">
+    <div class="formBx">
+        <h2>Create Question</h2>
+        <div class="question-info">You'll earn 0.1 coin per successful attempt</div>
+<div>
+    <a class="create" href="{% url 'question:trueOrFalseQuestion' %}">Create A True Or False Question</a>
+</div>
+<div>
+    <a class="create" href="{% url 'question:fourChoicesQuestion' %}">Create A Four Choices Question</a>
+</div>
+
+
+</div>
+<a href="{% url 'question:questions' %}">Go Back</a>
+</div>
+
+
+
+
+
+
+
  
 
+<div id="openForm">
+    <a id="open" class="link" href="{% url 'question:new-question' %}">+</a>
+</div>
 <div id="explanation">
 <p>
     Dear user, this is to inform you that this app is still in testing phase.<br>
     Feel free to give me any feedback on your profile page(XFace)<br>
-    Create quizzes, questions, qxas as many as you can because this is how money will be generated from this app very soon.
+    Create quizzes, questions, qxas(Question and Answers) as many as you can because this is how money will be generated from this app very soon.
     <br>
+    This app is not meant to be addictive. Only 200 quizzes and questions will be recommeded to each user daily.<br>
     I'm hopeful, by the end of november 2022, this app will be fully functional.
     <br>
     And last but not the least, you can donate some token as low as #100 as a gesture of good will.
-    Add the paystack link here
+    <div>
+        <a id="paystack" href="https://paystack.com/pay/tothex-donation" target="self">Donate</a>
+    </div>
+</p>
+
+<p style="display:none;">
+    Ask about what users think about bitcoin and other cryptocurrency.
+    Tell them they will be able to trade them here.
+    Allow payment in Naira at a flat rate of #400 per dollar at payout and payin
+    The currency will be TTXD.<br>
+    1 USD = 1 TTXD flat rate.<br>
+    1 400 = 1 TTXD flat rate.<br>
+    Collect money inside a wallet, and use the available funds in the wallet for any payment on the app.
+    The payment will be set before paypal or paystack or coinbase client is contacted.
+    The payout will be 85%.
 </p>
 </div>
 
-<div class="create-quiz">
+<div style='text-align: center; font-size: 10px; '>Total Number Of Registered Users : {{number_of_registered_users}}</div>
+<div style='text-align: center; font-size: 10px;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
+<div style='text-align: center; font-size: 10px;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
 
-    <a  class="link" href="{% url 'question:new-question' %}">+</a>
-</div>
-<script src="/static/js/navbar.js" type="text/javascript"></script>
 
 <script src="{% static 'question/js/questions.js' %}"></script>
+<script>
+    const formContainer = document.querySelector('.contentBx');
+    const openForm = document.querySelector('#openForm');
+    openForm.addEventListener('click', function(e){
+        e.preventDefault()
+        formContainer.classList.toggle('inactive-bar');
+    });
+
+    formContainer.addEventListener('click', function(){
+        formContainer.classList.toggle('inactive-bar');
+        
+    });
+</script>
 {% endblock content %}

@@ -1,17 +1,17 @@
 
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
 
-{% block quizTitle %}
+{% block title %}
 Create Four Choices QUestion
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'question/css/fourChoices.css' %}">
-{% endblock quizCss %}
+{% endblock css %}
 {% include 'core/header.html' %}
 
 {% include 'messages.html' %}
@@ -56,11 +56,11 @@ Create Four Choices QUestion
 <input type="text"  onclick="copyFunction(this.id)" name="" id="uarr" value="↑" class="copysymbol" readonly>
 <input type="text"  onclick="copyFunction(this.id)" name="" id="rarr" value="→" class="copysymbol" readonly>
 <input type="text"  onclick="copyFunction(this.id)" name="" id="darr" value="↓" class="copysymbol" readonly>
-<input type="text"  onclick="copyFunction(this.id)" name="" id="harr" value="↔" class="copysymbol" readonly>
-<input type="text"  onclick="copyFunction(this.id)" name="" id="varr" value="↕" class="copysymbol" readonly>
+<!-- <input type="text"  onclick="copyFunction(this.id)" name="" id="harr" value="↔" class="copysymbol" readonly> -->
+<!-- <input type="text"  onclick="copyFunction(this.id)" name="" id="varr" value="↕" class="copysymbol" readonly> -->
 
-<input type="text"  onclick="copyFunction(this.id)" name="" id="hardsub" value="(sub)2(/sub)" class="copysymbol hard" readonly>
-<input type="text"  onclick="copyFunction(this.id)" name="" id="hardsup" value="(sup)2(/sup)" class="copysymbol hard" readonly>
+<!-- <input type="text"  onclick="copyFunction(this.id)" name="" id="hardsub" value="(sub)2(/sub)" class="copysymbol hard" readonly> -->
+<!-- <input type="text"  onclick="copyFunction(this.id)" name="" id="hardsup" value="(sup)2(/sup)" class="copysymbol hard" readonly> -->
 
 
 
@@ -69,8 +69,9 @@ Create Four Choices QUestion
 <div class="question">
 <div class="head">Step 1 of 2</div>
 
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {{fourChoicesForm.media}}
         {{fourChoicesForm|crispy}}
         <input type="submit" value="Create">
     </form>

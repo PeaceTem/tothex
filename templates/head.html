@@ -1,0 +1,96 @@
+{% load static %}
+
+<link rel="stylesheet" href="/static/css/head.css">
+
+
+
+<div id="head-box">
+    <div class="name">
+        <h3>ToTheX</h3>
+    </div>
+    <div id="profileUser">
+        {% if profile.user == request.user %}
+        <span>{{profile.coins}}
+            <img class='svg' src="{%static 'images/coin-svgrepo-com.svg' %}" alt="coins">
+        </span>
+        {% endif %}
+    </div>
+    <div >
+        <a id="menu-box" href="{% url 'menu' %}">
+            <div class='menu' ><i class="fa fa-bars" aria-hidden="true">menu</i></div>
+        </a>
+    </div>
+</div>
+
+<div id="menu-detail" class="inactive-bar">
+    <div id="closeBtn">
+        <div id="close-icon">
+            X
+        </div>
+    </div>
+
+<section >
+    <div class="icon"><i class="fa fa-cog" aria-hidden="true"></i>
+        <div>settings ...</div>
+    </div>
+
+    <div class="icon"><i class="fa fa-info-circle" aria-hidden="true"></i>
+        <div>
+        <a href="{% url 'feedback' %}">help & feedback</a>
+        </div>
+    </div>
+    
+    <div class="icon"><i class="fa fa-user-secret" aria-hidden="true"></i>
+        <div><a href="{% url 'privacy-policy' %}">privacy policy</a> </div>
+    </div>
+    
+    <div class="icon"><i class="fa fa-check-square-o" aria-hidden="true"></i>
+        <div>     <a href="{% url 'terms-and-conditions' %}">terms & conditions</a> </div>
+    </div>  
+        
+    <div class="icon"><i class="fa fa-gift" aria-hidden="true"></i>
+        <div>
+            <a href="{% url 'donate' %}">Donate</a>
+        </div>
+    </div>
+
+    <div class="icon"><i class="fa fa-handshake-o" aria-hidden="true"></i>
+        <div> advertise with us ...</div>
+    </div>
+
+    <div class="icon"><i class="fa fa-info" aria-hidden="true"></i>
+        <div>about ...</div>
+    </div>    
+
+ 
+    <a href="{% url 'logout' %}">
+        <div class="icon"><i class="fa fa-sign-out" aria-hidden="true"></i>
+            <div>logout</div>
+        </div>
+    </a>
+
+
+</section>
+</div>
+
+
+
+<script>
+    const menuBx = document.querySelector('#menu-box');
+    const menuDetail = document.querySelector('#menu-detail');
+    const close_icon = document.querySelector('#close-icon');
+    menuBx.addEventListener('click', function(e){
+        e.preventDefault()
+        menuDetail.classList.toggle('inactive-bar');
+    });
+
+    close_icon.addEventListener('click', function(){
+        menuDetail.classList.toggle('inactive-bar');
+        
+    });
+
+    menuDetail.addEventListener('click', function(){
+        menuDetail.classList.toggle('inactive-bar');
+        
+    });
+</script>

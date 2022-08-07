@@ -3,10 +3,6 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-
- 
-
-
 """
 Perform some calculations on the number of times the category has being taken.
 and the relevance

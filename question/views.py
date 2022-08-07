@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponseForbidden, JsonResponse, HttpResponse
 
 from .models import TrueOrFalseQuestion, FourChoicesQuestion
 
@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from core.models import Streak, Profile, Follower
 from category.models import Category
 from ads.models import PostAd
-
+from quiz.models import Quiz
 # celery tasks
 from core.tasks import StreakValidator, CoinsTransaction, CreatorCoins
 
@@ -37,11 +37,10 @@ from django.core import serializers
 from django.forms.models import model_to_dict
 
 import json
-
-
+from django.utils.text import slugify
 
 from core.services import ReferralService, get_user_ip
-from quiz.services import reverseStringCleaningService, stringCleaningService
+# from quiz.services import reverseStringCleaningService, stringCleaningService
 
 # Create your views here.
 """
@@ -57,13 +56,24 @@ Add all the documentation here
 Whenever a question is created, an option to go live or add to draft should be presented to the user.
 """
 
-@login_required(redirect_field_name='next' ,login_url='account_login')
+# @login_required(redirect_field_name='next' ,login_url='account_login')
 def Question(request):
     user = request.user
-    profile = Profile.objects.get(user=user)
+    number_of_registered_users = Profile.objects.all().count()
+    number_of_quizzes_created = Quiz.objects.all().count()
+    q1 = TrueOrFalseQuestion.objects.all().count()
+    q2 = FourChoicesQuestion.objects.all().count()
+
+    number_of_questions_created = q1 + q2
+    profile = None
+    if user.is_authenticated:
+        profile = Profile.objects.get(user=user)
     context={
         'nav': 'questions',
         'profile': profile,
+        'number_of_registered_users' : number_of_registered_users,
+        'number_of_quizzes_created' : number_of_quizzes_created,
+        'number_of_questions_created' : number_of_questions_created,
     }
 
     return render(request, 'question/questions.html', context)
@@ -85,7 +95,6 @@ def MyQuestionList(request):
 
     questions.sort(key=sortKey, reverse=True)
     # add reverse later
-    print(questions)
 
 
     p = Paginator(questions, 10)
@@ -122,7 +131,7 @@ def VisitorView(request, owner_id):
     questions = p.get_page(page)
 
     context={
-        'user':user,
+        'user':request.user,
         'nav': 'my-questions',
         'page_obj': questions,
         "viewer": "visitor",
@@ -135,136 +144,121 @@ def VisitorView(request, owner_id):
 
 
 def AnswerQuestion(request):
-    # try:
     user = request.user
-    
-    questions = request.session.get('OldTownRoad') or []
+    question_type = randomChoice(['fourChoices', 'trueOrFalse'])
 
-    if len(questions) > 0:
-        print(request.session.get("OldTownRoad"), "Worked!!!!")
+    if user.is_authenticated:
+        if question_type == 'fourChoices':
+            profile = Profile.objects.prefetch_related('categories', 'fourChoicesQuestionsMissed', 'fourChoicesQuestionsTaken', 'recommended_four_choices_questions').get(user=user)
+            if profile.recommended_four_choices_questions.count() < 1:
+                # use postgres search here 
+                age = profile.get_user_age
+                questionsList = (*profile.fourChoicesQuestionsTaken.all(), *profile.fourChoicesQuestionsMissed.all(),)
+                lookup = Q(categories__in=profile.categories.all()) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
 
-        question = randomChoice(questions)
-        questions.remove(question)
-        request.session['OldTownRoad'] = questions
-        score = (2 - question["avgScore"]) * 2
-        context = {
-        'question': question,
-        'score'  : score,
-        'questionType' : 'OldTownRoad',
+                questions = FourChoicesQuestion.objects.filter(lookup)
+                level1 = 0
+                level2 = 0
+                level3 = 0
+                level4 = 0
+                while questions.count() > 0:
+                    print('Four')
+                    print(questionsList, 'The questions list')
+                    q =  randomChoice(questions)
+                    print(q)
+                    questions.exclude(id=q.id)
+                    print('This is the question queryset!')
+                    print(questions)
+                    if q not in questionsList:
+                        print('Four 2')
+                        if q.relevance >= 0 and q.relevance <= 150 and level1 < 10:
+                            profile.recommended_four_choices_questions.add(q)
+                            level1 += 1
+                        elif q.relevance > 150 and q.relevance <= 500 and level2 < 20:
+                            profile.recommended_four_choices_questions.add(q)
+                            level2 += 1
+                        elif q.relevance > 500 and q.relevance <= 3000 and level3 < 30:
+                            profile.recommended_four_choices_questions.add(q)
+                            level3 += 1
+                        elif q.relevance > 3000 and level4 < 40:
+                            profile.recommended_four_choices_questions.add(q)
+                            level4 += 1
 
-        }
-        
-        if question["form"] == "fourChoicesQuestion":
-            ans = [1,2,3,4]
-            shuffle(ans)
-            context["ans"] = ans
-        return render(request, 'question/takequestion.html', context)
-    else:
-
-        questions = []
-        """
-        Research how to prefetch and select related.
-        And filters too 
-        """
-        if user.is_authenticated:
-            profile = Profile.objects.prefetch_related("categories","fourChoicesQuestionsMissed","fourChoicesQuestionsTaken","trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken").get(user=user)
-            categories = profile.categories.all()
-            age = profile.get_user_age
-
-
-            trueOrFalseQuestionsTaken = profile.trueOrFalseQuestionsTaken.all()
-            trueOrFalseQuestionsMissed = profile.trueOrFalseQuestionsMissed.all()
-            fourChoicesQuestionsTaken = profile.fourChoicesQuestionsTaken.all()
-            fourChoicesQuestionsMissed = profile.fourChoicesQuestionsMissed.all()
-            questionsList = (*trueOrFalseQuestionsTaken, *trueOrFalseQuestionsMissed, *fourChoicesQuestionsTaken, *fourChoicesQuestionsMissed,)
-            # filter by not in questionsList
-
-
+            if profile.recommended_four_choices_questions.count() > 0:
+                question = randomChoice(profile.recommended_four_choices_questions.all())
+                profile.recommended_four_choices_questions.remove(question)
+            else:
+                messages.info(request, _('The questions are insufficient!'))
+                return redirect("question:questions")
             # change the recommendation algorithm to bucket based
-            questions = []
-            lookup = Q(categories__in=categories) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
-            fqs = FourChoicesQuestion.objects.values("id", "form", "question", "answer1", "answer2", "answer3", "answer4", "solution", "duration_in_seconds", "attempts", "avgScore","relevance").filter(lookup).distinct()
-            tqs = TrueOrFalseQuestion.objects.values("id", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore","relevance").filter(lookup).distinct()
-
-            questions = []
-            level1 = 0
-            level2 = 0
-            level3 = 0
-            level4 = 0
-            while fqs.count() > 0:
-                q =  randomChoice(fqs)
-                fqs = fqs.exclude(id=q["id"])
-                if q not in questionsList:
-                    if q["relevance"] >= 0 and q["relevance"] <= 150 and level1 < 10:
-                        questions.append(q)
-                        level1 += 1
-                    elif q["relevance"] > 150 and q["relevance"] <= 500 and level2 < 20:
-                        questions.append(q)
-                        level2 += 1
-                    elif q["relevance"] > 500 and q["relevance"] <= 3000 and level3 < 30:
-                        questions.append(q)
-                        level3 += 1
-                    elif q["relevance"] > 3000 and level4 < 40:
-                        questions.append(q)
-                        level4 += 1
-
-
-
-            level1 = 0
-            level2 = 0
-            level3 = 0
-            level4 = 0
-            while tqs.count() > 0:
-                q =  randomChoice(tqs)
-                tqs = tqs.exclude(id=q["id"])
-                if q not in questionsList:
-                    if q["relevance"] >= 0 and q["relevance"] <= 150 and level1 < 10:
-                        questions.append(q)
-                        level1 += 1
-                    elif q["relevance"] > 150 and q["relevance"] <= 500 and level2 < 20:
-                        questions.append(q)
-                        level2 += 1
-                    elif q["relevance"] > 500 and q["relevance"] <= 3000 and level3 < 30:
-                        questions.append(q)
-                        level3 += 1
-                    elif q["relevance"] > 3000 and level4 < 40:
-                        questions.append(q)
-                        level4 += 1
-
-            if len(questions) > 0:
-                question = randomChoice(questions)
-                questions.remove(question)
-                request.session['OldTownRoad'] = questions
-            else:
-                messages.info(request, _('The questions are insufficient!'))
-                return redirect("question:questions")
-
-
-        else:
             
-            questions = []
 
-            questions += FourChoicesQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "answer3", "answer4", "solution", "duration_in_seconds", "attempts", "avgScore").filter(solution_quality__gte=0)[:5]
 
-            questions += TrueOrFalseQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore").filter(solution_quality__gte=0)[:5]
 
-            if len(questions) > 0:
-                question = randomChoice(questions)
-                questions.remove(question)
-                request.session['OldTownRoad'] = questions
+        elif question_type == 'trueOrFalse':
+            profile = Profile.objects.prefetch_related("categories","trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'recommended_true_or_false_questions').get(user=user)
+            if profile.recommended_true_or_false_questions.count() < 1:
+                age = profile.get_user_age
+                questionsList = (*profile.trueOrFalseQuestionsTaken.all(), *profile.trueOrFalseQuestionsMissed.all(),)
+                # The error is because the questions here are in form of querysets
+                lookup = Q(categories__in=profile.categories.all()) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
+                
+                questions = TrueOrFalseQuestion.objects.filter(lookup)
+                level1 = 0
+                level2 = 0
+                level3 = 0
+                level4 = 0
+                    
+                while questions.count() > 0:
+                    print('True')
+                    q =  randomChoice(questions)
+                    print(q)
+                    print(questionsList)
+                    print('This is the question queryset!')
+                    print(questions)
+                    questions.exclude(id=q.id)
+                    if q not in questionsList:
+                        print('True 2')
+                        if q.relevance >= 0 and q.relevance <= 150 and level1 < 10:
+                            profile.recommended_true_or_false_questions.add(q)
+                            level1 += 1
+                        elif q.relevance > 150 and q.relevance <= 500 and level2 < 20:
+                            profile.recommended_true_or_false_questions.add(q)
+                            level2 += 1
+                        elif q.relevance > 500 and q.relevance <= 3000 and level3 < 30:
+                            profile.recommended_true_or_false_questions.add(q)
+                            level3 += 1
+                        elif q.relevance > 3000 and level4 < 40:
+                            profile.recommended_true_or_false_questions.add(q)
+                            level4 += 1
+
+            if profile.recommended_true_or_false_questions.count() > 0:
+                question = randomChoice(profile.recommended_true_or_false_questions.all())
+                profile.recommended_true_or_false_questions.remove(question)
             else:
                 messages.info(request, _('The questions are insufficient!'))
                 return redirect("question:questions")
+            # change the recommendation algorithm to bucket based
+            
 
 
-    score = (2 - question["avgScore"]) * 2
+    else:
+        if question_type == 'fourChoices':
+            questions = FourChoicesQuestion.objects.filter(relevance_gte=0)
+            question = randomChoice(questions)
+
+        elif question_type == 'trueOrFalse':
+            questions = TrueOrFalseQuestion.objects.filter(relevance_gte=0)
+            question = randomChoice(questions)
+        
+    score = (2 - question.avgScore/100) * 2
     context = {
-        'question': question,
-        'score' : score,
-         'questionType' : 'OldTownRoad',
+    'question': question,
+    'score'  : score,
+    'questionType' : 'OldTownRoad',
     }
     
-    if question["form"] == "fourChoicesQuestion":
+    if question.form == "fourChoicesQuestion":
         ans = [1,2,3,4]
         shuffle(ans)
         context["ans"] = ans
@@ -282,12 +276,15 @@ def FollowingQuestion(request):
         question = randomChoice(questions)
         questions.remove(question)
         request.session['OldTownRoad'] = questions
-
+        
         context = {
         'question': question,
         'questionType' : 'Following',
-
         }
+        if question["form"] == "fourChoicesQuestion":
+            ans = [1,2,3,4]
+            shuffle(ans)
+            context["ans"] = ans
         return render(request, 'question/takequestion.html', context)
     else:
         user = request.user
@@ -314,8 +311,11 @@ def FollowingQuestion(request):
     context = {
         'question': question,
         'questionType' : 'Following',
-
     }
+    if question["form"] == "fourChoicesQuestion":
+        ans = [1,2,3,4]
+        shuffle(ans)
+        context["ans"] = ans
     return render(request, 'question/takequestion.html', context)
 
 
@@ -327,29 +327,10 @@ def CorrectionView(request, question_form, question_id, qtype, answer):
     elif question_form == 'trueOrFalseQuestion':
         question = TrueOrFalseQuestion.objects.prefetch_related("solution_validators").select_related("user").get(id=question_id)
 
-    # if answer == 'answer1':
-    #     answer = question.answer1
-    # elif answer == 'answer2':
-    #     answer = question.answer2
-    # elif answer == 'answer3':
-    #     answer = question.answer3
-    # elif answer == 'answer4':
-    #     answer = question.answer4
-
-
-
-    postAd = PostAd.objects.all()
-    postAd = randomChoice(postAd)
-    postAd.views += 1
-    postAd.correctionpageviews += 1
-    postAd.save()
-
-    
 
     context={
         'user': user,
         'question': question,
-        'postAd': postAd,
         'questionType': qtype,
         'answer' : answer,
     }
@@ -375,15 +356,14 @@ def FourChoicesQuestionCreate(request):
     if request.method == 'POST':
         form = NewFourChoicesQuestionForm(request.POST or None)
         if form.is_valid():
-            question= stringCleaningService(form.cleaned_data.get('question'))
-            answer1= stringCleaningService(form.cleaned_data.get('answer1'))
-            answer2= stringCleaningService(form.cleaned_data.get('answer2'))
-            answer3= stringCleaningService(form.cleaned_data.get('answer3'))
-            answer4= stringCleaningService(form.cleaned_data.get('answer4'))
+            question= form.cleaned_data.get('question')
+            answer1= form.cleaned_data.get('answer1')
+            answer2 = form.cleaned_data.get('answer2')
+            answer3= form.cleaned_data.get('answer3')
+            answer4= form.cleaned_data.get('answer4')
             correct=form.cleaned_data.get('correct')
-            points=form.cleaned_data.get('points')
             duration=form.cleaned_data.get('duration_in_seconds')
-            solution= stringCleaningService(form.cleaned_data.get('solution'))
+            solution= form.cleaned_data.get('solution')
             shuffleAnswers = form.cleaned_data.get('shuffleAnswers')
             age_from = form.cleaned_data.get('age_from')
             age_to = form.cleaned_data.get('age_to')
@@ -415,13 +395,10 @@ def TrueOrFalseQuestionCreate(request):
     if request.method == 'POST':
         form = NewTrueOrFalseQuestionForm(request.POST or None)
         if form.is_valid(): 
-            question= stringCleaningService(form.cleaned_data.get('question'))
-            answer1=form.cleaned_data.get('answer1')
-            answer2=form.cleaned_data.get('answer2')
+            question= form.cleaned_data.get('question')
             correct=form.cleaned_data.get('correct')
-            points=form.cleaned_data.get('points')
             duration=form.cleaned_data.get('duration_in_seconds')
-            solution= stringCleaningService(form.cleaned_data.get('solution'))
+            solution= form.cleaned_data.get('solution')
             age_from = form.cleaned_data.get('age_from')
             age_to = form.cleaned_data.get('age_to')
             question = TrueOrFalseQuestion.objects.create(user=user, question=question,
@@ -453,15 +430,12 @@ def CategoryCreate(request, question_id):
     elif question_id[0] == 'fourChoices':
         question = FourChoicesQuestion.objects.prefetch_related("categories").get(id=question_id[1])
 
-    form = NewCategoryForm()
     categories = Category.objects.all().order_by('question_number_of_times_taken')[:100]
 
     title = request.GET.get('newCategory') or ''
-    title = title.strip()
-    title = title.split(' ')
-    title = '-'.join(title)
+    title = slugify(title)
     if title:
-        if question.categories.all().count() < 5:
+        if question.categories.all().count() < 3:
             category = None
 
             try:
@@ -469,28 +443,20 @@ def CategoryCreate(request, question_id):
                 if not newCategory in question.categories.all():
 
                     question.categories.add(newCategory)
-                    question.save()
-                    newCategory.number_of_questions += 1
-                    newCategory.save()
                     if profile.categories.all().count() > 9:
                         removed = profile.categories.first()
                         profile.categories.remove(removed)
                     profile.categories.add(newCategory)
-                    profile.save()
                 else:
                     messages.warning(request, _(f"{newCategory.title} has already been added to the question!"))
                 # return a message that it is already created
             except:
                 newCategory = Category.objects.create(registered_by=user, title=title)
                 question.categories.add(newCategory)
-                question.save()
-                newCategory.number_of_questions += 1
-                newCategory.save()
                 if profile.categories.all().count() > 9:
                     removed = profile.categories.first()
                     profile.categories.remove(removed)
                 profile.categories.add(newCategory)
-                profile.save()
 
 
     # create pagination
@@ -501,12 +467,10 @@ def CategoryCreate(request, question_id):
         for category in questionCategories:
             if category not in addedCategories:
                 question.categories.remove(category)
-                category.number_of_questions -= 1
-                category.save()
 
         for cart in addedCategories:
             category = None
-            if question.categories.all().count() < 5:
+            if question.categories.all().count() < 3:
                 try:
                     category = Category.objects.get(title__iexact=cart)
                 except:
@@ -514,14 +478,10 @@ def CategoryCreate(request, question_id):
                 if category:
                     if category not in question.categories.all():
                         question.categories.add(category)
-                        question.save()
-                        category.number_of_questions += 1
-                        category.save()
                         if profile.categories.all().count() > 9:
                             removed = profile.categories.first()
                             profile.categories.remove(removed)
                         profile.categories.add(category)
-                        profile.save()
 
         
     questionCategories = question.categories.all()
@@ -529,8 +489,9 @@ def CategoryCreate(request, question_id):
 
     context= {
         'page_obj': categories,
-        'questionCategories' : questionCategories,
+        'objCategories' : questionCategories,
         'question': question,
+        'obj_type' : 'question',
 
     }
     # question:new-question
@@ -550,12 +511,6 @@ Add all the documentation here
 def FourChoicesQuestionUpdate(request, question_id):
     user = request.user
     question = get_object_or_404(FourChoicesQuestion, id=question_id)
-    question.question = reverseStringCleaningService(question.question)
-    question.answer1 = reverseStringCleaningService(question.answer1)
-    question.answer2 = reverseStringCleaningService(question.answer2)
-    question.answer3 = reverseStringCleaningService(question.answer3)
-    question.answer4 = reverseStringCleaningService(question.answer4)
-    question.solution = reverseStringCleaningService(question.solution)
     fourChoicesForm = NewFourChoicesQuestionForm(instance=question)
     if request.method == 'POST':
         form = NewFourChoicesQuestionForm(request.POST or None, instance=question)
@@ -576,8 +531,6 @@ def FourChoicesQuestionUpdate(request, question_id):
 def TrueOrFalseQuestionUpdate(request, question_id):
     user = request.user
     question = TrueOrFalseQuestion.objects.get(id=question_id)
-    question.question = reverseStringCleaningService(question.question)
-    question.solution = reverseStringCleaningService(question.solution)
     trueOrFalseForm = NewTrueOrFalseQuestionForm(instance=question)
     if request.method == 'POST':
         form = NewTrueOrFalseQuestionForm(request.POST or None, instance=question)
@@ -601,12 +554,15 @@ def TrueOrFalseQuestionUpdate(request, question_id):
 def DeleteQuestion(request,question_form, question_id):
     user =request.user
     if question_form == 'fourChoices':
-        question = FourChoicesQuestion.objects.get(id=question_id)
+        question = FourChoicesQuestion.objects.select_related('user').get(id=question_id)
     elif question_form == 'trueOrFalse':
-        question = TrueOrFalseQuestion.objects.get(id=question_id)
+        question = TrueOrFalseQuestion.objects.select_related('user').get(id=question_id)
     if request.method == 'POST':
-        question.delete()
-        return HttpResponse('Deleted!')
+        if question.user == user:
+            question.delete()
+            return HttpResponse('Deleted!')
+        else:
+            return HttpResponseForbidden()
 
     context={
         'obj': question,
@@ -615,28 +571,35 @@ def DeleteQuestion(request,question_form, question_id):
     return render(request, 'question/delete.html', context)
 
 
+
+
 """
 Each question will be submitted here
 value="{{question.form}}|{{question.id}}|answer1"
 """
 def SubmitQuestion(request):
 
-
-
     try:
         user = request.user
         if user.is_authenticated:
 
-            profile = Profile.objects.select_related("user").prefetch_related("fourChoicesQuestionsTaken", "trueOrFalseQuestionsTaken", "fourChoicesQuestionsMissed", "trueOrFalseQuestionsMissed", "trueOrFalseQuestionsWareHouse", "fourChoicesQuestionsWareHouse").get(user=user)
-            print(user)
+            profile = Profile.objects.select_related("user").prefetch_related("fourChoicesQuestionsTaken", "trueOrFalseQuestionsTaken",
+             "fourChoicesQuestionsMissed", "trueOrFalseQuestionsMissed", "trueOrFalseQuestionsWareHouse",
+              "fourChoicesQuestionsWareHouse").get(user=user)
 
         if request.method == 'POST':
             answer = request.POST.get('answer')
+            qtype = request.POST.get('questionType')
+
+            if answer is None and qtype == 'following':
+                return redirect('question:following-questions')
+            elif answer is None and qtype == 'oldTownRoad':
+                return redirect('question:answer-question')
+
             if user.is_authenticated:
                 # streak = Streak.objects.get(profile=profile)
                 profile.questionAttempts += 1
             combination = tuple(answer.split('-'))
-            # message = _('The answer is wrong!')
 
             if combination[0] == 'fourChoicesQuestion':
                 question = FourChoicesQuestion.objects.prefetch_related("categories").select_related("user").get(id=combination[1])
@@ -670,7 +633,7 @@ def SubmitQuestion(request):
                     if user.is_authenticated:
                         profile.fourChoicesQuestionsWareHouse.add(question)
                         if profile.fourChoicesQuestionsTaken.all().count() > 999:
-                            remove = profile.fourChoicesQuestionsTaken.first()
+                            removed = profile.fourChoicesQuestionsTaken.first()
                             profile.fourChoicesQuestionsTaken.remove(removed)
                         profile.fourChoicesQuestionsTaken.add(question)
                             
@@ -715,14 +678,14 @@ def SubmitQuestion(request):
                         profile.coins -= 1
                         profile.questionAvgScore = decimal.Decimal(round((profile.questionAvgScore * (profile.questionAttempts - 1)) / profile.questionAttempts ,1))
                         if profile.fourChoicesQuestionsMissed.all().count() > 999:
-                            remove = profile.fourChoicesQuestionsMissed.first()
+                            removed = profile.fourChoicesQuestionsMissed.first()
                             profile.fourChoicesQuestionsMissed.remove(removed)
                         profile.fourChoicesQuestionsMissed.add(question)
                         profile.save()
 
                         messages.warning(request, _("You've lost 1 coin"))
                     messages.error(request, _('WRONG!'))
-                    return redirect('question:correction', question_form=combination[0], question_id=combination[1], qtype=request.POST.get('questionType'), answer=pos)
+                    return redirect('question:correction', question_form=combination[0], question_id=combination[1], qtype=qtype, answer=pos)
 
 
 
@@ -756,7 +719,7 @@ def SubmitQuestion(request):
                         profile.trueOrFalseQuestionsWareHouse.add(question)
                         
                         if profile.trueOrFalseQuestionsTaken.all().count() > 999:
-                            remove = profile.trueOrFalseQuestionsTaken.first()
+                            removed = profile.trueOrFalseQuestionsTaken.first()
                             profile.trueOrFalseQuestionsTaken.remove(removed)
                         profile.trueOrFalseQuestionsTaken.add(question)
                             
@@ -803,14 +766,14 @@ def SubmitQuestion(request):
 
                         profile.coins -= 1
                         if profile.trueOrFalseQuestionsMissed.all().count() > 999:
-                            remove = profile.trueOrFalseQuestionsMissed.first()
+                            removed = profile.trueOrFalseQuestionsMissed.first()
                             profile.trueOrFalseQuestionsMissed.remove(removed)
                         profile.trueOrFalseQuestionsMissed.add(question)
                         profile.questionAvgScore = decimal.Decimal(round((profile.questionAvgScore * (profile.questionAttempts - 1)) / profile.questionAttempts ,1))
                         profile.save()
                         messages.warning(request, _("You've lost 1 coin"))
                     messages.error(request, _('WRONG!'))
-                    return redirect('question:correction', question_form=combination[0], question_id=combination[1], qtype=request.POST.get('questionType'), answer=pos)
+                    return redirect('question:correction', question_form=combination[0], question_id=combination[1], qtype=qtype, answer=pos)
 
     except:
         pass
@@ -820,12 +783,11 @@ def SubmitQuestion(request):
     elif qtype == 'following':
         return redirect('question:following-questions')
 
+    HttpResponse('An error occurred!')
 
 
 
 
-
-#  & Q(solution_quality__gt=0)
 def QuizGenerator(request):
     user = request.user
     if user.is_authenticated:
@@ -851,9 +813,7 @@ def QuizGenerator(request):
                 else:
                     age = 15
                 for category in categories:
-                    lookup = Q(categories__title__in=categories__title, solution_quality__gte=1, age_from__lte=age, age_to__gte=age)
-
-                    lookup = Q(categories__title=category, solution_quality__gt=1)
+                    lookup = Q(categories__title=category, solution_quality__gt=1, age_from__lte=age, age_to__gte=age)
                     trueOrFalseQuestions |= TrueOrFalseQuestion.objects.filter(lookup).distinct()[:1000]
                     fourChoicesQuestions |= FourChoicesQuestion.objects.filter(lookup).distinct()[:1000]
                 trueOrFalseQuestions = trueOrFalseQuestions.distinct()
@@ -1021,20 +981,12 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
     
     
         score = 0
-        postAd = PostAd.objects.all()
-        postAd = randomChoice(postAd)
-        postAd.views += 1
-        postAd.submitpageviews += 1
-        postAd.save()
-
-
         
         answers = request.POST.getlist('answer')
         reAttempt = request.POST.get('reAttempt')
         questionLength = request.POST.get('questionLength')
         questionType = request.POST.get('type')
 
-        print(reAttempt, 'This is reAttempt')
         questionsList = []
   
         for answer in answers:
@@ -1086,7 +1038,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
 
 
                             if profile.fourChoicesQuestionsTaken.all().count() > 999:
-                                remove = profile.fourChoicesQuestionsTaken.first()
+                                removed = profile.fourChoicesQuestionsTaken.first()
                                 profile.fourChoicesQuestionsTaken.remove(removed)
                             profile.fourChoicesQuestionsTaken.add(question)
                           
@@ -1153,7 +1105,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
 
 
                             if profile.trueOrFalseQuestionsTaken.all().count() > 999:
-                                remove = profile.trueOrFalseQuestionsTaken.first()
+                                removed = profile.trueOrFalseQuestionsTaken.first()
                                 profile.trueOrFalseQuestionsTaken.remove(removed)
                             profile.trueOrFalseQuestionsTaken.add(question)
                             
@@ -1201,9 +1153,9 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
                     # CoinsTransaction.delay(user, value)
 
             except ZeroDivisionError:
-                
+                pass
                 messages.error(request, _("You didn't answer any question."))
-                return redirect('quiz:take-quiz', quiz_id = quiz.id)
+                # return redirect('quiz:take-quiz', quiz_id = quiz.id)
         
 
         attempt_report = _(f"You answered {len(answers)} out of {questionLength} questions")
@@ -1213,7 +1165,6 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
             'user_avg_score': user_avg_score,
             'total_score': total_score,
             'questionsList': questionsList,
-            'postAd': postAd,
             'attempt_report': attempt_report,
             'questionLength': questionLength,
             'type': questionType,

@@ -13,7 +13,7 @@
     }
     h1{
         font-style: italic;
-        color: #373fff;
+        color: #f11;
     }
     p{
         margin-block: 1rem;
@@ -21,6 +21,13 @@
     }
     button{
         display: block;
+        color: #fff;
+        background: #f11;
+        border: none;
+        outline: none;
+        padding: 7px;
+        border-radius: 4px;
+
     }
 </style>
 <body>
@@ -49,10 +56,10 @@
             } catch {
 
             }
-            window.setTimeout(checkNetworkAndReload, 2500);
         }
+        window.setTimeout(checkNetworkAndReload, 5000);
 
-        checkNetworkAndReload();
+        // checkNetworkAndReload();
     </script>
 </body>
 </html>

@@ -19,7 +19,6 @@ Add a customized search elements to the part of the html template
 
     {% for obj in objects.following.all %}
     <div class="followers">
-
         {{obj}} 
         <a class="clickable" href="{% url 'follow-action' follower_id obj.id 'unfollow' %}"><button style="border-radius:4px; padding: 3px; border:none; color: #fff; background:#f11919;">Unfollow</button></a> 
     </div>

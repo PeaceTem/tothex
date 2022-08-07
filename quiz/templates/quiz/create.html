@@ -6,3 +6,94 @@
 <a href="{% url 'question:new-question' %}">
     create a question
 </a>
+
+<div class="copy-link-container">
+    <div class="label">
+        Copy link
+    </div>
+    <div class="copy-text">
+        <input id="copy-link" type="text" class="text" value="">
+        <button onclick="copyFunction()">Copy</button>
+    </div>
+</div>
+
+<div class="social-share">
+    <i style="font-size: 11px; color: #999;">
+        Refer To Earn More Coins (20 coins per click)
+    </i>
+    <div>
+        <a id="shareButton" href="#">Share to Social Media</a>
+    </div>
+<!-- {% post_to_facebook  object_or_url 'Post to Facebook' %}
+{% post_to_twitter "Take A Quiz: {{quiz.title}}" object_or_url "Post to Twitter" %}
+{% post_to_linkedin  object_or_url "Post to" %}
+{% send_email "ToTheX Quiz" "Take A Quiz: {{quiz.title}}" object_or_url "Share via email" %}
+{% post_to_reddit "Take A Quiz: {{quiz.title}}" object_or_url %}
+{% post_to_telegram "Take A Quiz: {{quiz.title}}" object_or_url %}
+{% post_to_whatsapp object_or_url "Share via WhatsApp" %}
+{% save_to_pinterest object_or_url %} -->
+</div>
+
+
+
+
+
+
+
+
+// console.log(document.querySelector('.social-share'))
+
+// const yourAnswer = document.getElementsByClassName('yourAnswer')
+//     const correctAnswer = document.getElementsByClassName('correctAnswer')
+//     const indicators = document.getElementsByClassName('indicator')
+//     for(let i = 0; i < yourAnswer.length; i++){
+//         console.log(yourAnswer[i].innerText)
+//         console.log(correctAnswer[i].innerText)
+//         if(yourAnswer[i].innerText  == correctAnswer[i].innerText){
+//             indicators[i].style.backgroundColor =  'green';
+//             console.log('correct!');
+//         }else{
+//             indicators[i].style.backgroundColor =  'red';
+//             console.log('wrong!');
+//         }
+//     }
+
+
+
+
+// function copyFunction(){
+    //     let copyText = document.getElementById('copy-link');
+    //     copyText.select();
+    //     copyText.setSelectionRange(0,99999);
+    //     // document.execCommand("copy")
+    //     navigator.clipboard.writeText(copyText.value);
+    //     alert("Copied the text: " + copyText.value);
+    
+    // }
+    
+    
+
+
+
+
+
+
+    <!-- 
+        {% if postAd.picture %}
+        <div>
+            <img src="{{postAd.picture.url}}">
+        </div>
+        {% endif %}
+        <div>
+            {{postAd.description|safe}}
+        </div>
+        {% if postAd.link %}
+        <div>
+            <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'correction' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
+        </div>
+        {% endif %}
+
+        -->
+        
+        
+<!-- </div> -->

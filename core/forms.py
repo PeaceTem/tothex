@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Profile, Link, Interest
+from .models import FeedBack, Profile, Link
 
 
 
@@ -29,7 +29,10 @@ class NewLinkForm(forms.ModelForm):
 
 
 
-class NewInterestReportForm(forms.ModelForm):
+class FeedBackForm(forms.ModelForm):
     class Meta:
-        model = Interest
-        fields = ['interest', 'modifier', 'dislike']
+        model = FeedBack
+        fields = ('title', 'feedback')
+
+
+        

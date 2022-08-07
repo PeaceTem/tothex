@@ -6,40 +6,15 @@
 {% endblock css %}
 
 {% block content %}
-    <header>   
-        <!-- <a href="{% url 'menu' %}">
-            <div class='menu' ><i class="fa fa-bars" aria-hidden="true">menu</i></div>
-        </a> -->
-        <div class="name">
-        <h3>ToTheX</h3>
-        </div>
-        <div id="profileUser">
-            {% if profile.user == request.user %}
-            <span>{{profile.streak.length}}</span>
-            <span><img src="{% static 'images/306890_20.png' %}">
-            {% if profile.streak.isActive %}
-            
-            <span class="streakActive"></span>
-            {% else %}
-            
-            <span class="streakInActive">
-            </span>
-            {% endif %}
-            </span>
-            <pre>    </pre>
-            <span>{{profile.coins}} 
-                
-                <img class='svg' src="{%static 'images/coin-svgrepo-com.svg' %}" alt="">
-            </span>
-            {% endif %}
-        </div>
-        
+    <header id="header">   
         <div class="top-navigation">
             <a href="{% url 'quiz:quizzes' %}" class="topNavigation"><i class="fa fa-address-book" aria-hidden="true"></i><div>PowerX</div></a>
-            <a href="{% url 'question:questions' %}" class="topNavigation"><i class="fa fa-home" aria-hidden="true">?</i><div>FindX</div></a>
-            <a href="{% url 'qxa:question-page' %}" class="topNavigation"><i class="fa fa-home" aria-hidden="true">?</i><div>QXA</div></a>
+            <a href="{% url 'question:questions' %}" class="topNavigation"><i class="fa fa-home" aria-hidden="true"></i><div>FindX</div></a>
+            <a href="{% url 'qxa:question-page' %}" class="topNavigation"><i class="fa fa-home" aria-hidden="true"></i><div>QXA</div></a>
             <a href="{% url 'leaderboard:leaderboard' %}" class="topNavigation"><i class="fa fa-sticky-note" aria-hidden="true"></i><div>XRace</div></a>
+            {% if profile %}
             <a href="{% url 'profile:profile' profile.user %}" class="topNavigation"><i class="fa fa-user" aria-hidden="true"></i><div>XFace</div></a>
+            {% endif %}
         </div>
     </header>
     <script src="{% static 'js/navbar.js' %}" type="text/javascript"></script>

@@ -11,17 +11,19 @@ class Q(models.Model):
     question = models.CharField(max_length=200, verbose_name=_("Question"), unique=True)
     description = models.TextField(max_length=1000)
     categories = models.ManyToManyField(Category, blank=True, related_name='qs')
-
+    views = models.PositiveIntegerField(default=0)
     upvoters = models.ManyToManyField(Profile, blank=True, related_name='upvoted_questions')
     downvoters= models.ManyToManyField(Profile, blank=True, related_name='downvoted_questions')
-
-    slug = models.SlugField(null=True, blank=True)
+    slug = models.SlugField(unique=True, null=True,blank=True)
     date = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
 
     def __str__(self):
         return f"{self.question}"
+
+    class Meta:
+        ordering=['-date','-date_updated']
 
 
 
@@ -50,7 +52,7 @@ class A(models.Model):
 class Reply(models.Model):
 	answer = models.ForeignKey(A, on_delete=models.CASCADE, related_name='replies')
 	profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='replies')
-	reply = models.TextField(max_length=1000)
+	reply = models.CharField(max_length=1000)
 	date = models.DateTimeField(auto_now_add=True)
 	date_updated = models.DateTimeField(auto_now=True)
 

@@ -11,21 +11,16 @@ Quiz Detail
 {% block quizCss %}
 <link rel="stylesheet" href="{% static 'quiz/css/quizdetail.css' %}">
 {% endblock quizCss %}
-{% include 'core/header.html' %}
 
 {% include 'messages.html' %}
 
-<div class="detail" id="blur">
+<div class="detail">
     
         <div>
-            <a href="{% url 'profile:profile' quiz.user.username %}">
-                
-                    @{{quiz.user.username}}
-                
+            <a href="{% url 'profile:profile' quiz.user %}">
+                    @{{quiz.user}}
             </a>
         </div>
-<div>Number Of Registered Users : {{number_of_registered_users}}</div>
-        
         <div class="categories">
                 Categories:
                 {% for category in quiz.categories.all %}
@@ -37,20 +32,22 @@ Quiz Detail
                 {% endfor %}
         </div>
         <div >Title: {{quiz.title|capfirst}}</div>
-        <div id="description">{{quiz.description|linebreaksbr|safe}}</div> 
-        <div >created by {{quiz.user|capfirst}}</div>
-        <div >It was created on {{quiz.date|date:"Y-M-d"}} {{quiz.date|time:"H:i"}}</div> 
-        <div > Attempts: {{quiz.attempts}}
-        </div>
-        <div class="questionLength">
-            Questions: <span id="questionLength">{{quiz.questionLength}}</span>  
-                    
-        </div>
-        <div class="average">
-                    {{quiz.average_score}}%
-        </div>
-        <div class="duration">
-                    {{quiz.get_quiz_duration}}
+        <div id="description">{{quiz.description|safe}}</div> 
+        <div>
+            <div >created by {{quiz.user|capfirst}}</div>
+            <div >It was created on {{quiz.date|date}} {{quiz.date|time}}</div> 
+            <div > Attempts: {{quiz.attempts}}
+            </div>
+            <div class="questionLength">
+                Questions: <span id="questionLength">{{quiz.questionLength}}</span>  
+                        
+            </div>
+            <div class="average">
+                        {{quiz.average_score}}%
+            </div>
+            <div class="duration">
+                        {{quiz.get_quiz_duration}}
+            </div>
         </div>
         <div>
             <form data-quiz="{{quiz.id}}" data-url="{% url 'quiz:post-like' %}" data-id="likeForm{{quiz.id}}" id="likeForm{{quiz.id}}" method="post" class="likeForm">
@@ -89,57 +86,26 @@ Quiz Detail
             <!-- <a id="deleteQuiz" href="{% url 'quiz:delete-quiz' quiz.id %}"><p>× Delete Quiz</p></a> -->
         </div>
         <div>
-            <a href="{% url 'quiz:new-question' quiz.id %}">+ Add More Questions</a>
+            <a id="openForm" href="{% url 'quiz:new-question' quiz.id %}">+ Add More Questions</a>
         </div>
         {% endif %}
         <div>
             <a href="{% url 'quiz:random-quiz-picker' %}">Take Another Quiz</a>
         </div>
-<div class="copy-link-container">
-    <div class="label">
-        Copy link
-    </div>
-    <div class="copy-text">
-        <input id="copy-link" type="text" class="text" value="">
-        <button onclick="copyFunction()">Copy</button>
-    </div>
-</div>
-
+ 
 <div class="social-share">
     <i style="font-size: 11px; color: #999;">
         Refer To Earn More Coins (20 coins per click)
     </i>
-{% post_to_facebook  object_or_url 'Post to Facebook' %}
-{% post_to_twitter "Take A Quiz: {{quiz.title}}" object_or_url "Post to Twitter" %}
-{% post_to_linkedin  object_or_url "Post to" %}
-{% send_email "ToTheX Quiz" "Take A Quiz: {{quiz.title}}" object_or_url "Share via email" %}
-{% post_to_reddit "Take A Quiz: {{quiz.title}}" object_or_url %}
-{% post_to_telegram "Take A Quiz: {{quiz.title}}" object_or_url %}
-{% post_to_whatsapp object_or_url "Share via WhatsApp" %}
-{% save_to_pinterest object_or_url %}
+    <div>
+        <a id="shareButton" href="#">Share to Social Media</a>
+    </div>
+
 </div>
 
 <div>
     <a href="{% url 'quiz:quizzes' %}">Go back to the home page</a>
 </div>
-
-
-<div>
-    <img src="{{postAd.picture.url}}">
-</div>
-
-<div>
-    {{postAd.description|linebreaks}}
-</div>
-
-
-<div>
-    <a style="padding: 3px 3px; border-radius: 4px; cursor:pointer;"  class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'detail' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
-</div>
-
-
-
-
 
 
 
@@ -189,7 +155,7 @@ Quiz Detail
     <div class="questions">
 
         <div class="quizItem">
-            {{question.question|truncatechars:80}}
+            {{question.question|truncatechars:80|safe}}
         </div>
         {% if quiz.user == user %}
         <div class="private-links">
@@ -213,26 +179,45 @@ Quiz Detail
     {% endif %}
         
     {% endfor %}
-</div>
-    <div id="popup">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum ut consequatur quas eligendi ullam quia itaque provident natus, consectetur, rem soluta cum aspernatur alias, repellendus aliquid dolor consequuntur at amet voluptas mollitia. Consequatur placeat illo optio quisquam obcaecati earum, rem eius totam vitae est eligendi quo sunt perferendis possimus dolores!
-    </div>
-</div>
 
+
+    <div class="contentBx inactive-bar">
+        <div class="formBx">
+            <h2>Create Question</h2>
+            <div class="question-info">You'll earn 0.1 coin per successful attempt</div>
+    <div>
+        <a class="create" href="{% url 'quiz:trueOrFalseQuestion' quiz.id %}">Create A True Or False Question</a>
+    </div>
+    <div>
+        <a class="create" href="{% url 'quiz:fourChoicesQuestion' quiz.id %}">Create A Four Choices Question</a>
+    </div>
+    
+    
+    </div>
+    <a href="{% url 'question:questions' %}">Go Back</a>
+    </div>
+    
+    
 
 {% include 'jquery.html' %}
 
 
 <script>
 
-function toggle(){
-    var pop = document.getElementById("blur");
-    blur.classList.toggle('active');
-    
-}
+const formContainer = document.querySelector('.contentBx');
+    const openForm = document.querySelector('#openForm');
+    openForm.addEventListener('click', function(e){
+        e.preventDefault()
+        formContainer.classList.toggle('inactive-bar');
+    });
 
+    formContainer.addEventListener('click', function(){
+        formContainer.classList.toggle('inactive-bar');
+        
+    });
 
-
+</script>
+<script>
 
 $('.deleteButton').click(function(e){
         e.preventDefault();
@@ -259,41 +244,13 @@ $('.deleteButton').click(function(e){
             });
         }
     });
-        
-
-function copyFunction(){
-    let copyText = document.getElementById('copy-link');
-    copyText.select();
-    copyText.setSelectionRange(0,99999);
-    // document.execCommand("copy")
-    navigator.clipboard.writeText(copyText.value);
-    alert("Copied the text: " + copyText.value);
-
-}
-
-
-
-function clickFunction(){
-        
-        $.ajax({
-            type: 'GET', 
-            url : $('a.postAd').data('url'),
-            data : {
-            },
-            success : function(response){
-                
-
-            },
-            error : function(){
-                alert('It falis silently!')
-            }
-
-        });
-
-    }
-
-
+</script>
     
+
+
+
+<script>
+
 $('.likeForm').submit(function(e){
     e.preventDefault();
 const serializeData = $(this).serialize()
@@ -322,8 +279,10 @@ $.ajax({
 
 });
 })
+</script> 
 
 
+<script>
 
 $('#deleteQuizForm').submit(function(e){
     e.preventDefault()
@@ -344,18 +303,25 @@ $('#deleteQuizForm').submit(function(e){
     }
 
 })
+</script>
 
+<script>
 
-
+const shareButton = document.querySelector('a#shareButton');
+const title = window.document.title;
+const url = window.document.location.href;
+shareButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(navigator.share){
+        navigator.share({
+            title: `${title}`,
+            url : `${url}`
+        }).catch(console.error);
+    }else{
+        alert('Use a default share button');
+    }
+});
 
 </script>
 
-<script src="{% static 'quiz/js/copy.js' %}" type="text/javascript"></script>
 {% endblock content %}
-
-
-
-
-
-
-http://localhost:8000/quiz/delete-quiz/9/

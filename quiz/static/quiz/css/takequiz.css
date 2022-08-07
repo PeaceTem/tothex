@@ -42,7 +42,8 @@ a div{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 1px 3px 4px #ccc;
+    /* box-shadow: 1px 3px 4px #ccc; */
+    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
     margin-bottom: 10px;
 
 }

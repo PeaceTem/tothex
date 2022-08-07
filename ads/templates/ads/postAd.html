@@ -13,18 +13,22 @@ Ads
 <div class="container">
 
     <div id="countdownbox"></div>
-
+    {% if postAd.picture %}
     <div>
         <img src="{{postAd.picture.url}}">
     </div>
-
+    {% endif %}
+    {% if postAd.description %}
     <div>
-        {{postAd.description|linebreaksbr}}
+        {{postAd.description|safe}}
     </div>
+    {% endif %}
     <div>
+    {% if postAd.link %}
     <div class="link-container">
         <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'banner' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
     </div>
+    {% endif %}
     </div>
 {% if nextpage == 'oldtownroad' %}
 <a id="nextButton" href="{% url 'question:answer-question' %}">Next</a>

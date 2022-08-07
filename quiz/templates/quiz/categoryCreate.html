@@ -1,35 +1,42 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% load social_share %}
 
-{% block quizTitle %}
+{% block title %}
 Categories
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
-<meta name="description" content="add categories to quiz or question">
-<meta name="keywords" content="categories,tothex,quiz,question">
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<meta name="author" content="ToTheX">
-{% endblock quizCss %}
+{% endblock css %}
 {% include 'core/header.html' %}
 
 <section>
-<div class="head">Step 2 of 3</div>
+    {% if obj_type == 'quiz' %}
+    <div class="head">Step 2 of 3</div>
+    {% else %}
+    <div class="head">Step 2 of 2</div>
+    {% endif %}
 
 <h3>Add Categories</h3>
+{% if obj_type == 'quiz' %}
+    <div class="top-info">
+        You can add up to 3 categories <br>Categories: <b>{{quizCategories.count}}</b>
+    </div>
+    <!-- <input type="hidden" name="quiz" id="quiz" value="{{quiz.id}}"> -->
+{% else %}
+<div class="top-info">
+    You can add up to 5 categories <br>Categories: {{questionCategories.count}}
+</div>
+{% endif %}
 
-<div class="top-info">You can add up to 5 categories <br>Categories: {{quizCategories.count}}</div>
-<input type="hidden" name="quiz" id="quiz" value="{{quiz.id}}">
 
 {% include 'messages.html' %}
 <div class="category-create" >
     <form action="" id="category-form" method="get">
-        <input class="search" type="text" name="newCategory" id="newCategory" placeholder="add title">
-        <input type="submit" value="create">
+        <input id="Search" value=""  type="text" name="newCategory" id="newCategory" placeholder="search or create">
+        <input type="submit" value="search">
     </form>
 </div>
 
@@ -39,92 +46,103 @@ Categories
     <fieldset>
         <legend>Bucket</legend>
         <div id="categoryBucket">
-
-            {% for category in quizCategories %}
-            <input type='text' id="{{category.title}}"  class="addedCategories" onclick="removeCategory(this.id)" name="addedCategories" value={{category.title}} readonly>
-        {% endfor %}
+            {% for category in objCategories %}
+                <input type='text' id="{{category.title}}"  class="addedCategories" onclick="removeCategory(this.id)" name="addedCategories" value={{category.title}} readonly>
+            {% endfor %}
         </div>
     </fieldset>
-    
-
-
-    <input type="submit" value="add all the categories in the bucket to the quiz">
+    add all the categories in the bucket to the quiz
+    <input type="submit" value="Add">
 </form>
 
 
 <!-- Add infinite scroll to the category with ajax -->
-<div class="infinite-container">
+<div class="info">
     Click on any of the categories below to add it to the bucket above<br>
+</div>
+
+
+<div id="infinite-container">
+
 {% for category in page_obj %}
 <span class="infinite-item">
     <input type="button" onclick="addClassCategory(this.value)" value="{{category.title}}">
 </span>
 {% endfor %}
 </div>
-
-<div class="row d-none">
-    <div class="col-12">
-        {% if page_obj.has_next %}
-        <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-        </span>
-    </div>
-</div>
-
 <div>
-    
+    {% if obj_type == 'quiz' %}
 <a href="{% url 'quiz:new-question' quiz.id %}">
     <button>Add more Questions</button>
 </a>
-
+    {% else %}
+    <a href="{% url 'question:new-question' %}">
+        Add more Questions
+    </a>
+    
+    {% endif %}
 </div>
 </section>
 
 
 {% include 'jquery.html' %}
 
-<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/infinite.min.js' %}"></script>
-<script>
-    var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
-
-        offset: 'bottom-in-view',
-
-        onBeforePageLoad: function () {
-            $('.loading').show();
-        },
-        onAfterPageLoad: function () {
-            $('.loading').hide();
-        }
-        
-    
-    });
-</script>
-
 <script type="text/javascript">
-
-function addClassCategory(obj_name){
         var bucket = document.getElementById('categoryBucket');
+function addClassCategory(obj_name){
 
         bucket.innerHTML += `
                                 <input type="text" class = "addedCategories" name="addedCategories" value=${obj_name} readonly>
                             `;
-
     }
 
-    function removeCategory(index){
-        var elem = document.getElementById(index);
-        elem.parentNode.removeChild(elem);
-    }
+function removeCategory(index){
+    let elem = document.getElementById(index);
+    elem.parentNode.removeChild(elem);
+}
+
+var search = document.querySelector('#Search').value;
+function checkSearchAndReload(){
+    let response = document.querySelector('#Search').value;
+        if (search != response){
+            search = response;
+
+            if(response != ''){
+            collectCategories(response);
+            };
+        };
 
 
+}
+
+setInterval(checkSearchAndReload, 2500);
+
+function collectCategories(searchData){
+    let categoriesContainer = document.getElementById('infinite-container');
+
+	$.ajax({
+	type : 'GET',
+	url : "{% url 'category:category-list' %}",
+	data : {text: searchData},
+	success : function(response){
+        categoriesContainer.innerHTML = '';
+        for(let res of response){
+            categoriesContainer.innerHTML += `
+            <span class="infinite-item">
+                <input type="button" onclick="addClassCategory(this.value)" value="${res.title}">
+            </span>
+                            `;
+        }
+		},
+	error : function(response){
+		alert('An error occurred!');
+		},
+});
+
+};
 
 </script>
    
 </body>
 </html>
-
-
-
 {% endblock content %}

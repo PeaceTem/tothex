@@ -7,5 +7,5 @@ const topNavigation = document.querySelectorAll('.topNavigation');
 
 
 if (navigation == 'profile'){
-    topNavigation[3].classList.add('active');
+    topNavigation[4].classList.add('active');
 }

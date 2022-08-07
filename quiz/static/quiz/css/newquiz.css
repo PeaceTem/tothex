@@ -24,7 +24,8 @@ section .contentBx{
     position: relative;
     /* border-top: 3px solid var(--link-button-background-color); */
     background: #fff;
-    box-shadow: 3px 3px 3px rgb(156, 163, 226);
+    /* box-shadow: 3px 3px 3px rgb(156, 163, 226); */
+    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
     border-radius: 4px;
     width: 500px;
     max-width: 95vw;

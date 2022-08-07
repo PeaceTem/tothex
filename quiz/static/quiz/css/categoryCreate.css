@@ -4,16 +4,22 @@
     margin: 0;
     padding: 0;
     color: #555;
-    background:#fff;
 
 }
 
 section{
     display: block;
-    background:#fff;
-
+    background:linear-gradient(60deg, rgba(235, 224, 224, 0.308), rgba(243, 232, 232, 0.3));
+    position: relative;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }
-
+fieldset{
+    width : 95vw;
+    max-width: 400px;
+}
 section >*{
     margin: 4px;
 }

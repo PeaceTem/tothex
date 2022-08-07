@@ -73,14 +73,15 @@ Create Four Choices Questions
 <input type="text"  onclick="copyFunction(this.id)" name="" id="harr" value="↔" class="copysymbol" readonly>
 <input type="text"  onclick="copyFunction(this.id)" name="" id="varr" value="↕" class="copysymbol" readonly>
 
-<input type="text"  onclick="copyFunction(this.id)" name="" id="hardsub" value="(sub)2(/sub)" class="copysymbol hard" readonly>
-<input type="text"  onclick="copyFunction(this.id)" name="" id="hardsup" value="(sup)2(/sup)" class="copysymbol hard" readonly>
+<!-- <input type="text"  onclick="copyFunction(this.id)" name="" id="hardsub" value="(sub)2(/sub)" class="copysymbol hard" readonly> -->
+<!-- <input type="text"  onclick="copyFunction(this.id)" name="" id="hardsup" value="(sup)2(/sup)" class="copysymbol hard" readonly> -->
 
 
 
 <div class="containerBx">
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {{fourChoicesForm.media}}
         {{fourChoicesForm|crispy}}
         <input type="submit" value="Create"  style="margin: 5px 0 5px 4px;background: #f11919; color: #fff;  width: 200px; max-width: 90vw; padding: 4px 4px;border-radius: 4px; border: none;">
     </form>
