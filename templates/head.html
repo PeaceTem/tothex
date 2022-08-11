@@ -30,45 +30,45 @@
     </div>
 
 <section >
-    <div class="icon"><i class="fa fa-cog" aria-hidden="true"></i>
-        <div>settings ...</div>
+    <div class="icon">
+        <div><i class="fa fa-cog" aria-hidden="true"></i> settings ...</div>
     </div>
 
-    <div class="icon"><i class="fa fa-info-circle" aria-hidden="true"></i>
+    <div class="icon">
         <div>
-        <a href="{% url 'feedback' %}">help & feedback</a>
+        <a href="{% url 'feedback' %}"><i class="fa fa-info-circle" aria-hidden="true"></i> help & feedback</a>
         </div>
     </div>
     
-    <div class="icon"><i class="fa fa-user-secret" aria-hidden="true"></i>
-        <div><a href="{% url 'privacy-policy' %}">privacy policy</a> </div>
+    <div class="icon">
+        <div><a href="{% url 'privacy-policy' %}"><i class="fa fa-user-secret" aria-hidden="true"></i> privacy policy</a> </div>
     </div>
     
-    <div class="icon"><i class="fa fa-check-square-o" aria-hidden="true"></i>
-        <div>     <a href="{% url 'terms-and-conditions' %}">terms & conditions</a> </div>
+    <div class="icon">
+        <div><a href="{% url 'terms-and-conditions' %}"><i class="fa fa-check-square-o" aria-hidden="true"></i> terms & conditions</a> </div>
     </div>  
         
-    <div class="icon"><i class="fa fa-gift" aria-hidden="true"></i>
+    <div class="icon">
         <div>
-            <a href="{% url 'donate' %}">Donate</a>
+            <a href="{% url 'donate' %}"><i class="fa fa-gift" aria-hidden="true"></i> Donate</a>
         </div>
     </div>
 
-    <div class="icon"><i class="fa fa-handshake-o" aria-hidden="true"></i>
-        <div> advertise with us ...</div>
+    <div class="icon">
+        <div><i class="fa fa-handshake-o" aria-hidden="true"></i> advertise with us ...</div>
     </div>
 
-    <div class="icon"><i class="fa fa-info" aria-hidden="true"></i>
-        <div>about ...</div>
+    <div class="icon">
+        <div><i class="fa fa-info" aria-hidden="true"></i> about ...</div>
     </div>    
 
- 
+    {% if user.is_authenticated %}
     <a href="{% url 'logout' %}">
-        <div class="icon"><i class="fa fa-sign-out" aria-hidden="true"></i>
-            <div>logout</div>
+        <div class="icon">
+            <div> <i class="fa fa-sign-out" aria-hidden="true"></i> logout</div>
         </div>
     </a>
-
+    {% endif %}
 
 </section>
 </div>

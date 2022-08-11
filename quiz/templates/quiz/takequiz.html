@@ -1,23 +1,22 @@
 
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 
 {% load static %}
 
-{% block quizTitle %}
+{% block title %}
 Take Quiz
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'quiz/css/takequiz.css' %}">
-{% endblock quizCss %}
+{% endblock css %}
 
 {% include 'core/header.html' %}
 
 
 <div class="container">
-<div>Number Of Registered Users : {{number_of_registered_users}}</div>
 
 {% include 'messages.html'%}
     <div class="minuteBx">
@@ -44,14 +43,14 @@ Take Quiz
         {% endif %}
     {% csrf_token %}
         <ol>
-        {% for question in questions %}
+        {% for index, question in questions %}
         <div class="question-box">        
             {% if question.form == 'fourChoicesQuestion' %}
             <li class="question">
                 <input type="hidden" name="points" value="{{question.points}}">
                 <div class="questionBx">
                     
-                    <div>{{question.question|safe}}
+                    <div><span>{{index|add:1}}</span> <span>{{question.question|safe}}</span>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -61,26 +60,27 @@ Take Quiz
                         </div>
                 </div>
                 <!-- Add the logic for if question.shuffleAnswers -->
+
                 {% for answer in question.shuffle_answers %}
                 {% if answer == 1 %}
                     <div class="answer">
-                        <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
-                        <label for="id_answer1">{{question.answer1|safe|linebreaksbr}}</label>
+                        <input class="option{{question.index}}"   type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
+                        <label for="id_{{question.index}}_answer1">{{question.answer1}}</label>
                     </div>
                 {% elif answer == 2 %}
                     <div class="answer">
-                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
-                        <label for="id_answer2">{{question.answer2|safe|linebreaksbr}}</label>
+                        <input class="option{{question.index}}"  type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
+                        <label for="id_{{question.index}}_answer2">{{question.answer2}}</label>
                     </div>
                 {% elif answer == 3 %}
                     <div class="answer">
-                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
-                        <label for="id_answer3">{{question.answer3|safe|linebreaksbr}}</label>
+                        <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
+                        <label for="id_{{question.index}}_answer3">{{question.answer3}}</label>
                     </div>
                 {% elif answer == 4 %}
                     <div class="answer">
-                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
-                        <label for="id_answer4">{{question.answer4|safe|linebreaksbr}}</label>
+                        <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
+                        <label for="id_{{question.index}}_answer4">{{question.answer4}}</label>
                     </div>
                 {% endif %}
                 {% endfor %}
@@ -90,7 +90,7 @@ Take Quiz
                 <input type="hidden" name="points" value="{{question.points}}">
                 <div class="questionBx">
                     <div>
-                        {{question.question|safe|linebreaksbr}} <br>
+                        <span>{{index|add:1}}</span> <span>{{question.question|safe}}</span>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -98,41 +98,41 @@ Take Quiz
                             {{question.points}} points
                         {% endif %}
                     </div>
-                    
+                      
                 </div>
                     <div class="answer">
-                        <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
-                        <label for="id_answer1">{{question.answer1|safe}}</label>
+                        <input class="option{{question.index}}"  type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
+                        <label for="id_{{question.index}}_answer1">{{question.answer1}}</label>
                     </div>
                     
                     <div class="answer">
-                        <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
-                        <label for="id_answer2">{{question.answer2|safe}}</label>
+                        <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
+                        <label for="id_{{question.index}}_answer2">{{question.answer2}}</label>
                     </div>
             </li>            
             {% endif %}
             </div>
         {% endfor %}
     </ol>
-    <input id ='timeTaken' type="hidden" name="timeTaken">
+        <input id ='timeTaken' type="hidden" name="timeTaken">
         <input id="submitButton" type="submit" value="Submit">
     </form>
 </div>
 
 <script>
 
-    function validateAnswer(option, target){
-        let answers = document.getElementsByClassName(option);
+    // function validateAnswer(option, target){
+    //     let answers = document.getElementsByClassName(option);
 
-        for(var i = 0; i < answers.length; i++){
-        if (answers[i].checked == 1){
-            answers[i].checked = 0;
-        };  
+    //     for(var i = 0; i < answers.length; i++){
+    //     if (answers[i].checked == 1){
+    //         answers[i].checked = 0;
+    //     };  
 
-        }
-        document.getElementById(target).checked = true;
+    //     }
+    //     document.getElementById(target).checked = true;
         
-    }
+    // }
 
     const minutes = document.getElementById('minute').textContent;
 

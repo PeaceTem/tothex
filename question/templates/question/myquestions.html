@@ -25,7 +25,7 @@ My Questions
 
         {% if question.form == 'trueOrFalseQuestion' %}
             <div class="quizItem">
-                {{question.question|safe|linebreaksbr|truncatechars:80}}
+                {{question.question|safe|truncatewords:80}}
             </div>
             <div class="inline">
     
@@ -65,7 +65,7 @@ My Questions
     {% elif question.form == 'fourChoicesQuestion' %}
     
             <div class="quizItem">
-                {{question.question|safe|truncatechars:80}}
+                {{question.question|safe|truncatewords:80}}
             </div>
             <div class="inline">
     

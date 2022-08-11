@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-Old Town Road
+{{section}}
 {% endblock title %}
 
 {% block content %}
@@ -46,7 +46,7 @@ Old Town Road
             {% csrf_token %}
                 {% if question.form == 'fourChoicesQuestion' %}
                     <div class="questionBx">
-                <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
+                <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>@{{question.user}}</div>
 
                         <div>
                             {{question.question|safe}}
@@ -57,34 +57,34 @@ Old Town Road
                         {% for a in ans %}
                         {% if a == 1 %}
                         <div class="answer">
-                            <label for="id_answer1">
-                            <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
-                            {{question.answer1|safe}}
+                            <label for="id_{{index}}_answer1">
+                            <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                            {{question.answer1}}
                         </label>
                         </div>
                         {% elif a == 2 %}
                         <div class="answer">
 
-                            <label for="id_answer2">
-                            <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
-                            {{question.answer2|safe}}
+                            <label for="id_{{index}}_answer2">
+                            <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                            {{question.answer2}}
                         </label>
 
                         </div>
                         {% elif a == 3 %}
 
                         <div class="answer">
-                            <label for="id_answer3">
-                            <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
-                            {{question.answer3|safe}}
+                            <label for="id_{{index}}_answer3">
+                            <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
+                            {{question.answer3}}
                         </label>
                         </div>
                         {% elif a == 4 %}
 
                         <div class="answer">
-                            <label for="id_answer4">
-                            <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
-                            {{question.answer4|safe}}
+                            <label for="id_{{index}}_answer4">
+                            <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
+                            {{question.answer4}}
                         </label>
                         </div>
                         {% endif %}
@@ -99,7 +99,7 @@ Old Town Road
                     
             {% elif question.form == 'trueOrFalseQuestion' %}
             <div class="questionBx">
-                <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>ToTheX</div>
+                <div style='text-align:left; color:#f11919; margin-left: 3px; font-size:20;'>@{{question.user}}</div>
 
                 <div>
                     {{question.question|safe}}
@@ -112,16 +112,16 @@ Old Town Road
 
 
                 <div class="answer">
-                    <input class="option{{question.index}}"  onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
-                    <label for="id_answer1"> 
-                            {{question.answer1|safe}}
+                    <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                    <label for="id_{{index}}_answer1"> 
+                            {{question.answer1}}
                     </label>
                 </div>
                 
                 <div class="answer">
-                    <input class="option{{question.index}}" onclick="validateAnswer(this.className, this.id)" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
-                    <label for="id_answer2"> 
-                            {{question.answer2|safe}}
+                    <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                    <label for="id_{{index}}_answer3"> 
+                            {{question.answer2}}
                     </label>
                 </div>
                 <div>
@@ -172,22 +172,23 @@ Old Town Road
         a.href = cvs.toDataURL();
         a.download = 'ToTheX-{{question.question}}.png'
     })
+    </script>
+
+<script>
 
 
+    // function validateAnswer(option, target){
+    //     let answers = document.getElementsByClassName(option);
 
+    //     for(var i = 0; i < answers.length; i++){
+    //     if (answers[i].checked == 1){
+    //         answers[i].checked = 0;
+    //     };  
 
-    function validateAnswer(option, target){
-        let answers = document.getElementsByClassName(option);
-
-        for(var i = 0; i < answers.length; i++){
-        if (answers[i].checked == 1){
-            answers[i].checked = 0;
-        };  
-
-        }
-        document.getElementById(target).checked = true;
+    //     }
+    //     document.getElementById(target).checked = true;
         
-    }
+    // }
 
 
     let seconds = document.getElementById('seconds').textContent;

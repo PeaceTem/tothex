@@ -37,12 +37,9 @@ a div{
 }
 .question-box > li, .container > div,  .question-card-container > div{
     margin-bottom: 10px;
-    /* border-top: 4px solid #f11919; */
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    /* box-shadow: 1px 4px 4px #ccc; */
-    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
 }
 ol{
     max-width: 100%;
@@ -102,8 +99,6 @@ button{
     width: 120px;
     max-width: 25vw;
     border-radius: 4px;
-    /* box-shadow: inset 1px 3px 10px rgb(173, 52, 52); */
-    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
 }
 
 ol.answers{
@@ -147,31 +142,6 @@ a.profile{
 }
 
 
-.answerGreen, .answerRed, .answerWhite{
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-    width: 100%;
-    grid-auto-rows: minmax(20px, auto);
-}
-
-
-.answerGreen div{
-    border: 2px solid rgb(0, 255, 55);
-    background: rgba(0, 255, 55, 0.1);
-    padding: 2px 4px;
-    border-radius: 4px;
-
-
-}
-
-.answerRed div{
-    border: 2px solid rgb(248, 13, 13);
-    background: rgba(248, 13, 13, 0.1);
-    padding: 2px 4px;
-    border-radius: 4px;
-    
-}
-
 
 ol.scores{
     display: flex;
@@ -184,6 +154,20 @@ ol.scores{
     height: 30px;
 }
 
+.answerGreen div{
+    border: 2px solid rgb(0, 255, 55);
+    background: rgba(0, 255, 55, 0.1);
+    border-radius: 4px;
+    padding: 2px 4px;
+
+}
+
+.answerRed div{
+    border: 1px solid rgba(248, 13, 13);
+    background: rgba(248, 13, 13, 0.1);
+    border-radius: 4px;
+    padding: 2px 4px;
+}
 
 @media (max-width:700px) {
     *{

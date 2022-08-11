@@ -26,6 +26,7 @@ from .utils import getSimplifiedNumber
 
 
 class Profile(models.Model):
+
     SEX =(
         ('male', 'male'),
         ('female', 'female'),
@@ -77,6 +78,8 @@ class Profile(models.Model):
     recommended_quizzes = models.ManyToManyField(Quiz, blank=True, related_name='recommended_quizzes_profiles')
     recommended_four_choices_questions = models.ManyToManyField(FourChoicesQuestion, blank=True, related_name='recommended_four_choices_questions_profiles')
     recommended_true_or_false_questions = models.ManyToManyField(TrueOrFalseQuestion, blank=True, related_name='recommended_true_or_false_questions_profiles')
+    following_four_choices_questions = models.ManyToManyField(FourChoicesQuestion, blank=True, related_name='following_four_choices_questions_profiles')
+    following_true_or_false_questions = models.ManyToManyField(TrueOrFalseQuestion, blank=True, related_name='following_true_or_false_questions_profiles')
     
 
 
@@ -141,7 +144,7 @@ class Profile(models.Model):
 
  
 class Follower(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='follower')
     followers = models.ManyToManyField(User, blank=True, related_name='followers')
     following = models.ManyToManyField(User, blank=True, related_name='following')
 
@@ -161,7 +164,7 @@ class Follower(models.Model):
     
 
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.user}"
 # create the streak in the app views and validate it thereafter
 
 
@@ -259,9 +262,14 @@ Change this place and use def clean instead
 Delete the instances of this model every month.
 """
 class Device(models.Model):
-    name = models.CharField(max_length=1000)
+    HTTP_USER_AGENT = models.CharField(max_length=1000)
+    HTTP_SEC_CH_UA = models.CharField(max_length=1000)
+    HTTP_SEC_CH_UA_PLATFORM = models.CharField(max_length=1000)
+
     date = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.HTTP_SEC_CH_UA}"
 
 
 class FeedBack(models.Model):

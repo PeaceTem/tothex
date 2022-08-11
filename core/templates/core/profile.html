@@ -88,7 +88,7 @@ Profile
 
         <form id='followForm' action="{% url 'follower' %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="following" value="{{follower.user.id}}" readonly>
+            <input type="hidden" name="following" value="{{follower.user}}" readonly>
             <input type="hidden" name="following_user" value="{{profile.user}}" readonly>
             <input type="hidden" name="following_username" value="{{profile.user.username}}" readonly>
 
@@ -192,6 +192,9 @@ Profile
         </div>
         <div>
             <a class="obj-link" href="{% url 'qxa:my-q' %}">{% trans "My Questions and Answers" %}</a>
+        </div>
+        <div>
+            <a class="obj-link" href="{% url 'chart' %}">{% trans "Chart" %}</a>
         </div>
     </div>
 

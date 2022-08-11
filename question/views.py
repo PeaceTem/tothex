@@ -24,6 +24,7 @@ from random import shuffle
 from quiz.utils import sortKey, randomCoin, adsRandom, randomChoice
 from question.utils import randomQuestions
 import decimal
+import math
 #Paginator
 
 from django.core.paginator import Paginator
@@ -149,92 +150,73 @@ def AnswerQuestion(request):
 
     if user.is_authenticated:
         if question_type == 'fourChoices':
-            profile = Profile.objects.prefetch_related('categories', 'fourChoicesQuestionsMissed', 'fourChoicesQuestionsTaken', 'recommended_four_choices_questions').get(user=user)
+            # the profile should only prefetch recommended questions alone
+            print('Entering the first step')
+            profile = Profile.objects.prefetch_related('recommended_four_choices_questions').get(user=user)
             if profile.recommended_four_choices_questions.count() < 1:
-                # use postgres search here 
+                print('Entering the funnel!')
+
+                profile = Profile.objects.prefetch_related('categories', 'fourChoicesQuestionsMissed', 'fourChoicesQuestionsTaken', 'recommended_four_choices_questions').get(user=user)
+
+                categories = profile.categories.all()
+                question = FourChoicesQuestion.objects.none()
                 age = profile.get_user_age
-                questionsList = (*profile.fourChoicesQuestionsTaken.all(), *profile.fourChoicesQuestionsMissed.all(),)
-                lookup = Q(categories__in=profile.categories.all()) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
-
-                questions = FourChoicesQuestion.objects.filter(lookup)
-                level1 = 0
-                level2 = 0
-                level3 = 0
-                level4 = 0
-                while questions.count() > 0:
-                    print('Four')
-                    print(questionsList, 'The questions list')
-                    q =  randomChoice(questions)
-                    print(q)
-                    questions.exclude(id=q.id)
-                    print('This is the question queryset!')
-                    print(questions)
-                    if q not in questionsList:
-                        print('Four 2')
-                        if q.relevance >= 0 and q.relevance <= 150 and level1 < 10:
+                lookup = Q(relevance__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
+                questionsList = (*profile.fourChoicesQuestionsMissed.all(), *profile.fourChoicesQuestionsTaken.all(),)
+                while categories.count() > 1 and profile.recommended_four_choices_questions.count() <= 150:
+                    category = randomChoice(categories)
+                    categories = categories.exclude(id=category.id)
+                    questions = (*category.fourChoicesQuestions.filter(lookup)[:200],)
+                    print(category)
+                
+                    for q in questions:
+                        print(q)
+                        if q not in questionsList:
                             profile.recommended_four_choices_questions.add(q)
-                            level1 += 1
-                        elif q.relevance > 150 and q.relevance <= 500 and level2 < 20:
-                            profile.recommended_four_choices_questions.add(q)
-                            level2 += 1
-                        elif q.relevance > 500 and q.relevance <= 3000 and level3 < 30:
-                            profile.recommended_four_choices_questions.add(q)
-                            level3 += 1
-                        elif q.relevance > 3000 and level4 < 40:
-                            profile.recommended_four_choices_questions.add(q)
-                            level4 += 1
-
+                            if profile.recommended_four_choices_questions.count() >= 150:
+                                break
+                
             if profile.recommended_four_choices_questions.count() > 0:
+                print('Entering the easier steps!')
+
                 question = randomChoice(profile.recommended_four_choices_questions.all())
                 profile.recommended_four_choices_questions.remove(question)
+                print('From recommended')
             else:
                 messages.info(request, _('The questions are insufficient!'))
                 return redirect("question:questions")
             # change the recommendation algorithm to bucket based
             
-
-
-
         elif question_type == 'trueOrFalse':
-            profile = Profile.objects.prefetch_related("categories","trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'recommended_true_or_false_questions').get(user=user)
+            profile = Profile.objects.prefetch_related('recommended_true_or_false_questions').get(user=user)
+            print('First step')
             if profile.recommended_true_or_false_questions.count() < 1:
+                print('entering the funnel')
+                profile = Profile.objects.prefetch_related("categories","trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'recommended_true_or_false_questions').get(user=user)
+
+                categories = profile.categories.all()
+                question = TrueOrFalseQuestion.objects.none()
                 age = profile.get_user_age
-                questionsList = (*profile.trueOrFalseQuestionsTaken.all(), *profile.trueOrFalseQuestionsMissed.all(),)
-                # The error is because the questions here are in form of querysets
-                lookup = Q(categories__in=profile.categories.all()) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
-                
-                questions = TrueOrFalseQuestion.objects.filter(lookup)
-                level1 = 0
-                level2 = 0
-                level3 = 0
-                level4 = 0
-                    
-                while questions.count() > 0:
-                    print('True')
-                    q =  randomChoice(questions)
-                    print(q)
-                    print(questionsList)
-                    print('This is the question queryset!')
-                    print(questions)
-                    questions.exclude(id=q.id)
-                    if q not in questionsList:
-                        print('True 2')
-                        if q.relevance >= 0 and q.relevance <= 150 and level1 < 10:
+                lookup = Q(relevance__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
+                questionsList = (*profile.trueOrFalseQuestionsMissed.all(), *profile.trueOrFalseQuestionsTaken.all(),)
+                while categories.count() > 1 and profile.recommended_true_or_false_questions.count() <= 150:
+                    category = randomChoice(categories)
+                    categories = categories.exclude(id=category.id)
+                    questions = (*category.trueOrFalseQuestions.filter(lookup)[:200],)
+                    print(category)
+                    print('This is the questions', questions)
+                    for q in questions:
+                        print(q)
+                        if q not in questionsList:
                             profile.recommended_true_or_false_questions.add(q)
-                            level1 += 1
-                        elif q.relevance > 150 and q.relevance <= 500 and level2 < 20:
-                            profile.recommended_true_or_false_questions.add(q)
-                            level2 += 1
-                        elif q.relevance > 500 and q.relevance <= 3000 and level3 < 30:
-                            profile.recommended_true_or_false_questions.add(q)
-                            level3 += 1
-                        elif q.relevance > 3000 and level4 < 40:
-                            profile.recommended_true_or_false_questions.add(q)
-                            level4 += 1
+                            if profile.recommended_true_or_false_questions.count() >= 150:
+                                break
 
             if profile.recommended_true_or_false_questions.count() > 0:
+                print('Entering the easier steps!')
                 question = randomChoice(profile.recommended_true_or_false_questions.all())
                 profile.recommended_true_or_false_questions.remove(question)
+                print('From recommended')
             else:
                 messages.info(request, _('The questions are insufficient!'))
                 return redirect("question:questions")
@@ -244,21 +226,23 @@ def AnswerQuestion(request):
 
     else:
         if question_type == 'fourChoices':
-            questions = FourChoicesQuestion.objects.filter(relevance_gte=0)
+            questions = FourChoicesQuestion.objects.filter(relevance__gte=0)[:100]
             question = randomChoice(questions)
 
         elif question_type == 'trueOrFalse':
-            questions = TrueOrFalseQuestion.objects.filter(relevance_gte=0)
+            questions = TrueOrFalseQuestion.objects.filter(relevance__gte=0)[:100]
             question = randomChoice(questions)
         
-    score = (2 - question.avgScore/100) * 2
+    score = round((2 - question.avgScore/100) * 2, 2)
     context = {
     'question': question,
     'score'  : score,
     'questionType' : 'OldTownRoad',
+    'section' : 'Old Town Road',
     }
     
     if question.form == "fourChoicesQuestion":
+        # check if you are to shuffle this question's answers
         ans = [1,2,3,4]
         shuffle(ans)
         context["ans"] = ans
@@ -269,50 +253,84 @@ def AnswerQuestion(request):
 
 @login_required(redirect_field_name='next' ,login_url='account_login')
 def FollowingQuestion(request):
-   
-    questions = request.session.get('FollowingQuestions') or []
+    user = request.user
+    question_type = randomChoice(['fourChoices', 'trueOrFalse'])
 
-    if len(questions) > 0:
-        question = randomChoice(questions)
-        questions.remove(question)
-        request.session['OldTownRoad'] = questions
-        
-        context = {
-        'question': question,
-        'questionType' : 'Following',
-        }
-        if question["form"] == "fourChoicesQuestion":
-            ans = [1,2,3,4]
-            shuffle(ans)
-            context["ans"] = ans
-        return render(request, 'question/takequestion.html', context)
-    else:
-        user = request.user
-        following = Follower.objects.prefetch_related('following').get(user=user)
-        followings = following.following.all()
-        questions = []
+    if question_type == 'fourChoices':
+        print('Entering the first step')
+        profile = Profile.objects.prefetch_related('following_four_choices_questions').get(user=user)
+        if profile.following_four_choices_questions.count() < 1:
+            print('Entering the funnel!')
 
-        lookup = Q(user__in=followings, standalone=True)
-        questions += FourChoicesQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "answer3", "answer4", "solution", "duration_in_seconds", "attempts", "avgScore").filter(lookup)[:5]
+            profile = Profile.objects.prefetch_related('fourChoicesQuestionsMissed', 'fourChoicesQuestionsTaken', 'following_four_choices_questions').get(user=user)
+            follower = Follower.objects.prefetch_related('following').get(user=user)
+            following = follower.following.prefetch_related('fourChoicesQuestions').all()#  filter this part of the code
 
-        questions += TrueOrFalseQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore").filter(lookup)[:5]
+            questionsList = (*profile.trueOrFalseQuestionsMissed.all(), *profile.trueOrFalseQuestionsTaken.all(),)
+            
+            while following.count() > 0 and profile.following_four_choices_questions.count() <= 150:
+                f = randomChoice(following)
+                following = following.exclude(id=f.id)
+                questions = f.fourChoicesQuestions.all()
+                for q in questions:
+                    if q not in questionsList:
+                        profile.following_four_choices_questions.add(q)
+                        if profile.following_four_choices_questions.count() >= 150:
+                            break
 
+        if profile.following_four_choices_questions.count() > 0:
+            print('Entering the easier steps!')
 
-        if len(questions) > 0:
-            question = randomChoice(questions)
-            questions.remove(question)
-            request.session['followingQuestions'] = questions
+            question = randomChoice(profile.following_four_choices_questions.all())
+            profile.following_four_choices_questions.remove(question)
+            print('From recommended')
         else:
             messages.info(request, _('The questions are insufficient!'))
             return redirect("question:questions")
+        # change the recommendation algorithm to bucket based
+        
+    elif question_type == 'trueOrFalse':
+        profile = Profile.objects.prefetch_related('following_true_or_false_questions').get(user=user)
+        print('First step')
+        if profile.following_true_or_false_questions.count() < 1:
+            print('entering the funnel')
+            profile = Profile.objects.prefetch_related("trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'following_true_or_false_questions').get(user=user)
+            follower = Follower.objects.prefetch_related('following').get(user=user)
+            following = follower.following.prefetch_related('trueOrFalseQuestions').all()
+            questionsList = (*profile.trueOrFalseQuestionsMissed.all(), *profile.trueOrFalseQuestionsTaken.all(),)
+
+            while following.count() > 0 and  profile.following_true_or_false_questions.count() <= 150:
+                f = randomChoice(following)
+                following = following.exclude(id=f.id)
+                questions = f.trueOrFalseQuestions.all()
+                for q in questions:
+                    if q not in questionsList:
+                        profile.following_true_or_false_questions.add(q)
+                        if profile.following_true_or_false_questions.count() >= 150:
+                            break
+
+        if profile.following_true_or_false_questions.count() > 0:
+            print('Entering the easier steps!')
+            question = randomChoice(profile.following_true_or_false_questions.all())
+            profile.following_true_or_false_questions.remove(question)
+            print('From recommended')
+        else:
+            messages.info(request, _('The questions are insufficient!'))
+            return redirect("question:questions")
+        # change the recommendation algorithm to bucket based
+        
+        
+    score = round((2 - question.avgScore/100) * 2, 2)
 
 
 
     context = {
+        'score': score,
         'question': question,
         'questionType' : 'Following',
+        'section' : 'The Bohemian Grove',
     }
-    if question["form"] == "fourChoicesQuestion":
+    if question.form == "fourChoicesQuestion":
         ans = [1,2,3,4]
         shuffle(ans)
         context["ans"] = ans
@@ -496,7 +514,7 @@ def CategoryCreate(request, question_id):
     }
     # question:new-question
 
-    return render(request, 'question/categoryCreate.html', context)
+    return render(request, 'quiz/categoryCreate.html', context)
 
 
 
@@ -589,6 +607,9 @@ def SubmitQuestion(request):
 
         if request.method == 'POST':
             answer = request.POST.get('answer')
+            if not answer:
+                messages.error(request, _("You didn't provide any anwser"))
+                return redirect(request.META['HTTP_REFERER'])
             qtype = request.POST.get('questionType')
 
             if answer is None and qtype == 'following':
@@ -646,7 +667,7 @@ def SubmitQuestion(request):
                             # StreakValidator.delay(profile, 1)
 
 
-                            value = (2 - question.avgScore) * 2
+                            value = round((2 - question.avgScore/100) * 2, 2)
                             profile.coins += value
                             profile.questionAvgScore = decimal.Decimal(round(((profile.questionAvgScore * (profile.questionAttempts - 1)) + 100) / profile.questionAttempts ,1))
                             
@@ -969,8 +990,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
     if request.method == 'GET':
         if not user.is_authenticated:
             code = str(kwargs.get('ref_code'))
-            device = get_user_ip(request)
-            ReferralService(device, code)   
+            ReferralService(request, code)   
         return redirect('question:quiz-generator')
 
     
@@ -983,6 +1003,9 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
         score = 0
         
         answers = request.POST.getlist('answer')
+        if not answers:
+            messages.error(request, _("You didn't provide any anwser"))
+            return redirect(request.META['HTTP_REFERER'])
         reAttempt = request.POST.get('reAttempt')
         questionLength = request.POST.get('questionLength')
         questionType = request.POST.get('type')
@@ -1133,6 +1156,8 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
 
         total_score = int(questionLength)
         user_score = score
+        user_avg_score = (user_score/total_score) * 100
+
         if user.is_authenticated:
             try:
                 """
@@ -1140,7 +1165,6 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
                 This is a celery task!
                 """
                 # StreakValidator.delay(profile, user_score)
-                user_avg_score = (user_score/total_score) * 100
                 if user_avg_score > 50 and reAttempt == 'no':
                     value = user_score / 2
                     profile.coins += decimal.Decimal(value)

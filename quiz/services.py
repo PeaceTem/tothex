@@ -85,7 +85,7 @@ def ScoreRange(value: int):
 
 
 def generateCoins(score, average_score, length, *args, **kwargs):
-    result = (2 - (score/100)) * (average_score/100) * length
+    result = (3 - (score/100)) * (average_score/100) * length
     return result
 
 

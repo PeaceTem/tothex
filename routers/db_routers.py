@@ -1,7 +1,15 @@
 
+
+from smtplib import _AuthObject
+
+
+AUTH_APPS = {'auth', 'contenttypes', 'admin','sessions'}
+OBJECT_APPS = {'q','leaderboard','quiz','question'}
+
+
 #,'ads','category','core'
 class AuthRouter:
-    route_app_labels = {'auth', 'contenttypes', 'admin','sessions'}
+    route_app_labels = AUTH_APPS
 
     def db_for_read(self, model, **hints):
         if model._meta_app_label in self.route_app_labels:
@@ -30,11 +38,16 @@ class AuthRouter:
         return None
         
 
-
+    def allow_syncdb(self, db, model):
+        if db == 'auth_db':
+            return model._meta.app_label in self.route_app_labels or model._meta.app_label in OBJECT_APPS
+        elif model._meta.app_label in self.route_app_labels:
+            return False
+        return True
 
 
 class ObjectRouter:
-    route_app_labels = {'q','leaderboard','quiz','question'}
+    route_app_labels = OBJECT_APPS
 
     def db_for_read(self, model, **hints):
         if model._meta_app_label in self.route_app_labels:
@@ -61,4 +74,27 @@ class ObjectRouter:
         if app_label in self.route_app_labels:
             return db == 'object_db'
         return None
+        
+
+
+    def allow_syncdb(self, db, model):
+        if db == 'auth_db':
+            return model._meta.app_label in self.route_app_labels or model._meta.app_label in AUTH_APPS
+        elif model._meta.app_label in self.route_app_labels:
+            return False
+        return True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         

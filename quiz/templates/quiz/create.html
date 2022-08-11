@@ -24,14 +24,14 @@
     <div>
         <a id="shareButton" href="#">Share to Social Media</a>
     </div>
-<!-- {% post_to_facebook  object_or_url 'Post to Facebook' %}
+{% post_to_facebook  object_or_url 'Post to Facebook' %}
 {% post_to_twitter "Take A Quiz: {{quiz.title}}" object_or_url "Post to Twitter" %}
 {% post_to_linkedin  object_or_url "Post to" %}
 {% send_email "ToTheX Quiz" "Take A Quiz: {{quiz.title}}" object_or_url "Share via email" %}
 {% post_to_reddit "Take A Quiz: {{quiz.title}}" object_or_url %}
 {% post_to_telegram "Take A Quiz: {{quiz.title}}" object_or_url %}
 {% post_to_whatsapp object_or_url "Share via WhatsApp" %}
-{% save_to_pinterest object_or_url %} -->
+{% save_to_pinterest object_or_url %}
 </div>
 
 
@@ -97,3 +97,46 @@
         
         
 <!-- </div> -->
+
+
+
+
+
+
+
+
+
+# if profile.recommended_quizzes.count() < 1:
+                
+            #     age = profile.get_user_age
+            #     categories = profile.categories.all()
+            #     lookup = Q(categories__in=categories) & Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
+            #     quizzes = Quiz.objects.filter(lookup).distinct()
+            #     takenQuiz = profile.quizTaken.all()
+            #     level1 = 0
+            #     level2 = 0
+            #     level3 = 0
+            #     level4 = 0
+            #     while quizzes.count() > 0:
+            #         quiz =  randomChoice(quizzes)
+            #         quizzes = quizzes.exclude(id=quiz.id)
+            #         if quiz not in takenQuiz:
+            #             if quiz.relevance >= 0 and quiz.relevance <= 50 and level1 < 10:
+            #                 profile.recommended_quizzes.add(quiz)
+            #                 level1 += 1
+            #             elif quiz.relevance > 50 and quiz.relevance <= 150 and level2 < 20:
+            #                 profile.recommended_quizzes.add(quiz)
+            #                 level2 += 1
+            #             elif quiz.relevance > 150 and quiz.relevance <= 300 and level3 < 30:
+            #                 profile.recommended_quizzes.add(quiz)
+            #                 level3 += 1
+            #             elif quiz.relevance > 300 and level4 < 40:
+            #                 profile.recommended_quizzes.add(quiz)
+            #                 level4 += 1
+            #     if profile.favoriteUser is not None:
+            #         lookup = Q(user=profile.favoriteUser) & Q(age_from__lte=age) & Q(age_to__gte=age)
+            #         liked_users_quizzes = Quiz.objects.filter(lookup)[:10]
+            #         for q in liked_users_quizzes:
+            #             profile.recommended_quizzes.add(quiz)
+
+            # quizzes = profile.recommended_quizzes.order_by('?')

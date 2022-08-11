@@ -53,3 +53,81 @@ git add -A
 git commit -m 'Added my project'
 git remote add origin git@github.com:sammy/my-new-project.git
 git push -u -f origin master
+
+
+
+
+
+
+
+
+
+
+ssh -i Lightsail-default-key.pem ubuntu@18.132.98.137
+ssh -i Lightsail-default-key.pem ubuntu@18.169.5.25
+
+ ssh -i LightsailDefaultKey-eu-west-2.pem ubuntu@18.169.5.25
+
+
+
+upstream django {
+    server unix:///home/ubuntu/myproj/myproj.sock;
+}
+# configuration of the server
+server {
+    listen      80;
+    server_name localhost:8000 18.169.5.25:8000;
+    charset     utf-8;
+    # max upload size
+    client_max_body_size 75M;
+    # Django media and static files
+    location /media  {
+        alias /home/ubuntu/myproj/media;
+    }
+    location /static {
+        alias /home/ubuntu/myproj/static;
+    }
+    # Send all non-media requests to the Django server.
+    location / {
+        uwsgi_pass  django;
+        include     /home/ubuntu/myproj/uwsgi_params;
+    }
+}
+
+172.26.15.102
+
+
+
+
+
+
+
+
+
+This is the list of topics i want to cover
+
+-linux operating system
+-advance javascript
+-advance python
+-django rest framework
+-react js
+-Next js
+-uWSGI
+-flask
+-php
+-laravel
+-XSS and start little ones from your localhost and your main website
+-CSRF
+-Chart Js
+-Vim
+-Payment Gateway in django with paypal paystack stripe cryptocurrency payment coinbase commerce (Numpy, Pandas, Matplotlib, Jupyter NoteBook)
+-Ansible
+-Docker
+-Docker Compose
+-Nginx
+-Apache
+-postgres
+-Node js
+-Express js
+-Bug Bounty
+-SVG and CANVAS for your website

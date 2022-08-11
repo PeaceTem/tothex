@@ -36,7 +36,7 @@ class FourChoicesQuestion(models.Model):
     SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
     DURATION_CHOICES = zip( range(15,181, 5), range(15,181, 5) )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fourchoicesquestions')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fourChoicesQuestions')
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, blank=True, related_name='fourChoicesQuestions')
     form = models.CharField(max_length=30, default='fourChoicesQuestion')
     index = models.PositiveSmallIntegerField(default=0)
@@ -51,7 +51,7 @@ class FourChoicesQuestion(models.Model):
     points = models.PositiveSmallIntegerField(choices=SCORE_CHOICES, default=1)
     solution = RichTextField(max_length=1000, null=True, blank=True, verbose_name=_('Solution'))
     duration_in_seconds = models.PositiveSmallIntegerField(choices=DURATION_CHOICES, default=30, verbose_name=_('Duration In Seconds'))
-    categories = models.ManyToManyField(Category, related_name='FourChoicesQuestioncategories', blank=True)
+    categories = models.ManyToManyField(Category, related_name='fourChoicesQuestions', blank=True)
     attempts = models.PositiveIntegerField(default=0)
     avgScore = models.FloatField(default=0.0)
     solution_quality = models.IntegerField(default=0)
@@ -221,7 +221,7 @@ class TrueOrFalseQuestion(models.Model):
 
     solution = RichTextField(max_length=1000, null=True, blank=True, verbose_name=_('Solution'))
     duration_in_seconds = models.PositiveSmallIntegerField(choices=DURATION_CHOICES, default=20, verbose_name=_('Duration In Seconds'))
-    categories = models.ManyToManyField(Category, related_name='trueOrFalseQuestioncategories', blank=True)
+    categories = models.ManyToManyField(Category, related_name='trueOrFalseQuestions', blank=True)
     attempts = models.PositiveIntegerField(default=0)
     avgScore = models.FloatField(default=0.0)
     solution_quality = models.IntegerField(default=0)

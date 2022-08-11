@@ -67,7 +67,7 @@ Create a page for only users that are not logged in to taste the fun of the app 
 class GeneratePDF(LoginRequiredMixin, View):
 
     def get(self, request, quiz_id, **kwargs):
-        user = self.request.user
+        # user = self.request.user
         number_of_registered_users = Profile.objects.all().count()
         template = get_template('quiz/takequiz.html')
         quiz = Quiz.objects.prefetch_related('fourChoicesQuestions', 'trueOrFalseQuestions').get(id=quiz_id)
@@ -130,8 +130,7 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
             profile = Profile.objects.get(user=user)
         if not user.is_authenticated:
             code = str(kwargs.get('ref_code'))
-            device = get_user_ip(request)
-            ReferralService(device, code)
+            ReferralService(request, code)
         
         postAd = PostAd.objects.all()
         if postAd.count() > 0:
@@ -183,6 +182,7 @@ Add all the documentation here
 def QuizList(request):
     user = request.user
     profile = None
+    page = request.GET.get('page') or 1
     
 
     search_input= request.GET.get('search-area') or ''
@@ -197,49 +197,28 @@ def QuizList(request):
         quizzes = quizzes.order_by('-relevance').distinct()[:100]
     else:
         if user.is_authenticated:
-            profile = Profile.objects.prefetch_related('categories', 'quizTaken', 'favoriteQuizzes').select_related('favoriteUser').get(user=user)
+            profile = Profile.objects.prefetch_related('categories', 'quizTaken').select_related('favoriteUser').get(user=user)
+            categories = profile.categories.all()
+            quizzes = Quiz.objects.none()
+            age = profile.get_user_age
+            lookup = Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
 
-            if profile.recommended_quizzes.count() < 1:
-                
-                age = profile.get_user_age
-                categories = profile.categories.all()
-                lookup = Q(categories__in=categories) & Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
-                quizzes = Quiz.objects.filter(lookup).distinct()
-                takenQuiz = profile.quizTaken.all()
-                level1 = 0
-                level2 = 0
-                level3 = 0
-                level4 = 0
-                while quizzes.count() > 0:
-                    quiz =  randomChoice(quizzes)
-                    quizzes = quizzes.exclude(id=quiz.id)
-                    if quiz not in takenQuiz:
-                        if quiz.relevance >= 0 and quiz.relevance <= 50 and level1 < 10:
-                            profile.recommended_quizzes.add(quiz)
-                            level1 += 1
-                        elif quiz.relevance > 50 and quiz.relevance <= 150 and level2 < 20:
-                            profile.recommended_quizzes.add(quiz)
-                            level2 += 1
-                        elif quiz.relevance > 150 and quiz.relevance <= 300 and level3 < 30:
-                            profile.recommended_quizzes.add(quiz)
-                            level3 += 1
-                        elif quiz.relevance > 300 and level4 < 40:
-                            profile.recommended_quizzes.add(quiz)
-                            level4 += 1
-                if profile.favoriteUser is not None:
-                    lookup = Q(user=profile.favoriteUser) & Q(age_from__lte=age) & Q(age_to__gte=age)
-                    liked_users_quizzes = Quiz.objects.filter(lookup)[:10]
-                    for q in liked_users_quizzes:
-                        profile.recommended_quizzes.add(quiz)
+            # use while loop to check for quiz length
 
-            quizzes = profile.recommended_quizzes.order_by('?')
+            while quizzes.count() < int(page):
+                category = randomChoice(categories)
+                quizzes = category.quizzes.filter(lookup)[:200]# add relevance to filter later
+                print(category)
+                categories = categories.exclude(id=category.id)
+
+
         else:
             lookup = Q(relevance__gte=0)
             quizzes = Quiz.objects.filter(lookup).order_by('?')[:100]
-
-    p = Paginator(quizzes, 5)
-    page = request.GET.get('page')
-    page = 1
+    # if you change this paginator constanct to 5 make sure to multiply page by 5
+    p = Paginator(quizzes, 1)
+    # page = request.GET.get('page')
+    # page = 1
     quizzes = p.get_page(page)
 
     context={
@@ -491,6 +470,9 @@ def PostLike(request):
             likeProfile.save()
             quiz.save()
             profile.save()
+
+            # following.save()
+            # follower.save()
             return HttpResponse('unliked')
 
         else:
@@ -502,7 +484,12 @@ def PostLike(request):
             quiz.save()
             profile.save()
             likeProfile.save()
-
+            following = Follower.objects.prefetch_related("followers").get(user=quiz.user)
+            # following_user = User.objects.get(username=following_user)
+            follower = Follower.objects.prefetch_related("following").get(user=user)
+            if user not in following.followers.all():
+                following.followers.add(user)
+                follower.following.add(quiz.user)
             return HttpResponse('liked')
 
 
@@ -514,7 +501,7 @@ def PostLike(request):
         # LikeQuiz.delay(quiz_id, user)
 
 
-
+    return HttpResponse('Error!')
 
 
 class RandomQuizPicker(LoginRequiredMixin, View):
@@ -539,7 +526,7 @@ class RandomQuizPicker(LoginRequiredMixin, View):
             messages.error(self.request, _('There is no quiz available'))
             return redirect('quiz:quizzes')
         return redirect('quiz:quiz-detail', quiz_id=quiz.id, quiz_slug=quiz.slug, ref_code=profile.code)
-
+        # return redirect('quiz:take-quiz', quiz_id=quiz.id)
 
 
 
@@ -640,8 +627,8 @@ def QuizUpdate(request, quiz_id):
         form = NewQuizForm(request.POST, instance=quiz)
         if form.is_valid():
             quiz = form.save()
-            quiz.description = mark_safe(quiz.description)
-            quiz.save()
+            # quiz.description = mark_safe(quiz.description)
+            # quiz.save()s
             for q in quiz.fourChoicesQuestions.all():
                 q.age_from = quiz.age_from
                 q.age_to = quiz.age_to
@@ -772,7 +759,7 @@ def FourChoicesQuestionCreate(request, quiz_id):
         'fourChoicesForm': form,
     }
 
-    return render(request, 'quiz/fourChoicesQuestionCreate.html', context)
+    return render(request, 'question/fourChoicesQuestionCreate.html', context)
 
 
 
@@ -818,7 +805,7 @@ def TrueOrFalseQuestionCreate(request, quiz_id):
         'trueOrFalseForm': form,
     }
  
-    return render(request, 'quiz/trueOrFalseQuestionCreate.html', context)
+    return render(request, 'question/trueOrFalseQuestionCreate.html', context)
 
 
 
@@ -856,7 +843,7 @@ def FourChoicesQuestionUpdate(request, quiz_id, question_id):
         'fourChoicesForm': fourChoicesForm,
     }
 
-    return render(request, 'quiz/fourChoicesQuestionCreate.html', context)
+    return render(request, 'question/fourChoicesQuestionCreate.html', context)
 
 
 @login_required(redirect_field_name='next', login_url='account_login')
@@ -890,7 +877,7 @@ def TrueOrFalseQuestionUpdate(request, quiz_id, question_id):
         'trueOrFalseForm': trueOrFalseForm,
     }
 
-    return render(request, 'quiz/trueOrFalseQuestionCreate.html', context)
+    return render(request, 'question/trueOrFalseQuestionCreate.html', context)
 
 
 
@@ -1012,8 +999,9 @@ def TakeQuiz(request, quiz_id):
     user = request.user
     quiz = Quiz.objects.prefetch_related('fourChoicesQuestions', 'trueOrFalseQuestions').get(id=quiz_id)
     profile = None
-    # if user.is_authenticated:
-    #     profile = Profile.objects.prefetch_related('quizTaken').get(user=user)
+    if user.is_authenticated:
+        profile = Profile.objects.get(user=user)
+        messages.info(request,_("3 coins will be removed after submitting this quiz!"))
         
     #     if quiz not in profile.quizTaken.all():
     #         if profile.coins < 5:
@@ -1040,6 +1028,8 @@ def TakeQuiz(request, quiz_id):
     
     if quiz.shuffleQuestions:
         shuffle(questions)
+
+    questions = enumerate(questions)
     context = {
         'user': user,
         'quiz': quiz,
@@ -1066,14 +1056,13 @@ The total score should be adjusted whenever the creator the quiz updates the poi
 
 def SubmitQuiz(request, quiz_id, *args, **kwargs):
     if request.method == 'GET':
-        return redirect('quiz:take-quiz', quiz_id=quiz.id)
+        return redirect('quiz:take-quiz', quiz_id=quiz_id)
     
     user = request.user
     quiz = Quiz.objects.select_related('user').prefetch_related("categories", "likes").get(id=quiz_id)
     if not user.is_authenticated:
         code = str(kwargs.get('ref_code'))
-        device = get_user_ip(request)
-        ReferralService(device, code)
+        ReferralService(request, code)
 
     
         
@@ -1194,12 +1183,11 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
         total_score = quiz.totalScore
         user_score = score
+        user_avg_score = (user_score/total_score) * 100
+
         if user.is_authenticated:
             try:
-
-                quiz.attempts += 1
-                user_avg_score = (user_score/total_score) * 100
-
+                quiz.attempts += 1 # add this back below user_avg_score when attempters are fully in use
 
                 if quiz.user != profile.user:
                     # StreakValidator.delay(profile, user_score)
@@ -1213,9 +1201,9 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                                 profile.categories.add(category)
 
                     if quiz not in profile.quizTaken.all():
-                        value = generateCoins(decimal.Decimal(user_avg_score), quiz.average_score, quiz.questionLength)
+                        value = generateCoins(decimal.Decimal(user_avg_score), quiz.average_score, quiz.questionLength  )
                         # value = round(((decimal.Decimal(user_avg_score)/100 + 1)**3) *(1 - (quiz.average_score/100)) * decimal.Decimal(user_score),0) + 5
-                        profile.coins += value
+                        profile.coins += value - 3
                         profile.save()
 
                         """
@@ -1227,12 +1215,14 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                         creator.coins += 1
                         creator.save()
                         # CreatorCoins.delay(creator.user, 1)
+
                         messages.success(request, f"You've won {value} coins!")
-                    else:
-                        value = 5
-                        profile.coins += value 
-                        profile.save()
-                        messages.success(request, f"You've won {value} coins!")
+                        messages.info(request, f"3 coins have been deducted from your bonus!")
+                    # else:
+                    #     value = 5
+                    #     profile.coins += value 
+                    #     profile.save()
+                    #     messages.success(request, f"You've won {value} coins!")
 
                         """
                         This is a celery tasks

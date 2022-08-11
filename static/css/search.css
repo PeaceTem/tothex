@@ -21,3 +21,8 @@ form .search{
     left: -30px;
 }
 
+input[type='search']{
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #333;
+}

@@ -9,18 +9,24 @@ from .tasks import ReferralTask
 #OS
 #HTTP_SEC_CH_UA_PLATFORM
 #HTTP_SEC_CH_UA
+# HTTP_USER_AGENT
 
 # try using get_or_create
-def ReferralService(device, code):
+# The cookie should only last for 7 days
+def ReferralService(request, code):
     try:
         try:
-            device = Device.objects.get(name=device)
+            device = Device.objects.get(HTTP_USER_AGENT=request.META['HTTP_USER_AGENT'],
+            HTTP_SEC_CH_UA=request.META['HTTP_SEC_CH_UA'],
+            HTTP_SEC_CH_UA_PLATFORM=request.META['HTTP_SEC_CH_UA_PLATFORM'])
             return
         except:
             pass
-
-        Device.objects.create(name=device)
-        profile = Profile.objects.select_related('user').get(code=code)
+        
+        Device.objects.create(HTTP_USER_AGENT=request.META['HTTP_USER_AGENT'],
+            HTTP_SEC_CH_UA=request.META['HTTP_SEC_CH_UA'],
+            HTTP_SEC_CH_UA_PLATFORM=request.META['HTTP_SEC_CH_UA_PLATFORM'])
+        profile = Profile.objects.get(code=code)
         profile.coins += 20
         profile.refercount += 1
         profile.save()
@@ -31,6 +37,9 @@ def ReferralService(device, code):
         pass    
 
     return
+
+
+
 
 
 def get_user_ip(request):

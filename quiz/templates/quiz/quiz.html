@@ -50,7 +50,7 @@
                     {% else %}
                     <a class="link" href="{% url 'quiz:quiz-detail' quiz.id quiz.slug None %}">
                     {% endif %}
-                        <img src="https://picsum.photos/300/180" alt="">
+                        <img src="https://picsum.photos/600/360" alt="">
                         <div class="title">
                             {{quiz.title|capfirst}}
                         </div>
@@ -86,7 +86,6 @@
                     <div style="color:#999;">
                         {{quiz.age_from}} to {{quiz.age_to}} years
                     </div>
-
                 </div>
                        <div class="linkBx">
                         <div id="likes">

@@ -37,7 +37,6 @@ a div{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
 
 }
 
@@ -59,7 +58,6 @@ div#explanation{
     margin: 5px auto;
     padding:4px;
     border-radius: 4px;
-    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
 }
 
 div#openForm{

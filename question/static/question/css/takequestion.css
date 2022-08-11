@@ -34,7 +34,6 @@ a{
     margin:auto;
     width: 500px;
     max-width: 95vw;
-    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211)
 }
 .questionBx > *{
     margin: 4px 4px;
@@ -45,7 +44,6 @@ a{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211)
 }
 
 .container .inline{
@@ -130,7 +128,6 @@ input[type="submit"]{
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
-    /* display: */
 }
 
 @media (max-width:700px) {

@@ -1,87 +1,11 @@
-{% extends 'quiz/base.html' %}
-{% load static %}
+{% extends 'question/form.html' %}
 {% load crispy_forms_tags %}
 
-{% block quizTitle %}
+{% block title %}
 Create A New Quiz
-{% endblock quizTitle %}
+{% endblock title %}
 
-{% block content %}
-
-{% block quizCss %}
-<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
-<style>
-    .copysymbol{
-        width: 25px;
-        margin: 3px;
-    }
-    .hard{
-        width: 90px;
-    }
-    .quiz-info{
-        color: #aaa;
-        font-size: 11px;
-    }
-</style>
-{% endblock quizCss %}
-
-
-{% include 'core/header.html' %}
-
-{% include 'messages.html' %}
-
-<div class="head">Step 1 of 3</div>
-    <div>
-        <i style="font-size:14px;">Click to copy to clipboard</i>
-    </div>
-
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="copy" value="&copy" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="times" value="×" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="divide" value="÷" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="ne" value="≠" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="plusmn" value="±" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="elt" value="⋜" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="glt" value="⋝" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="deg" value="°" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="fnof" value="ƒ" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="part" value="∂" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="empty" value="∅" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="isin" value="∈" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="notin" value="∉" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="sum" value="∑" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="mnplus" value="∓" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="radic" value="√" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="radic3" value="∛" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="radic4" value="∜" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="infin" value="∞" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="cap" value="∩" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="cup" value="∪" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="int" value="∫" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="sub" value="⊂" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="sup" value="⊃" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="nsub" value="⊄" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="nsup" value="⊅" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="sube" value="⊆" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="supe" value="⊇" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="nsube" value="⊈" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="nsupe" value="⊉" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="larr" value="←" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="uarr" value="↑" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="rarr" value="→" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="darr" value="↓" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="harr" value="↔" class="copysymbol" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="varr" value="↕" class="copysymbol" readonly>
-
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="hardsub" value="(sub)2(/sub)" class="copysymbol hard" readonly>
-    <input type="text"  onclick="copyFunction(this.id)" name="" id="hardsup" value="(sup)2(/sup)" class="copysymbol hard" readonly>
-    <br>
-    <b style="font-size:12px; color: #777">log<sub>x</sub>2<sup>y</sup> → log(sub)x(/sub)2(sup)y(/sup)</b> 
-    <br>
-    <b style="font-size:12px; color: #777">x<sup>2</sup> → x(sup)2(/sup)</b>    
-
-
-  <div class="containerBx">
-
+{% block form_block %}
 <form action="" method="post" enctype="multipart/form-data">
     <div class="quiz-info">You'll earn 1 coin per successful(score >= 50%) attempt <br> Add more than 5 questions to this quiz!</div>
     {% csrf_token %}
@@ -89,20 +13,5 @@ Create A New Quiz
     {{form|crispy}}
     <input type="submit" value="Create Quiz" style="background: #f11919; color: #fff;  width: 500px; max-width: 90vw;">
 </form>
-</div>  
 
-
-    <script>
-        function copyFunction(base){
-            console.log(base)
-        let copyText = document.getElementById(base);
-        console.log(copyText);
-        copyText.select();
-        copyText.setSelectionRange(0,99999);
-        // document.execCommand("copy")
-        navigator.clipboard.writeText(copyText.value)
-        alert("Copied the text: " + copyText.value)
-    }
-    </script>
-
-{% endblock content %}
+{% endblock form_block %}

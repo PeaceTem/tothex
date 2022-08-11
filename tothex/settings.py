@@ -178,6 +178,16 @@ DATABASES = {
 
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('NAME'),
+#         'USER': config('USER'),
+#         'PASSWORD': config('PASSWORD'), 
+#         'HOST': config('HOST'),
+#         'PORT': config('PORT', cast=int),
+#     }
+# }
 
 # DATABASES = {
 #     'default' : {},
@@ -233,10 +243,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/' 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'static' / 'quiz' ,
-    BASE_DIR / 'static' / 'question' ,
-    BASE_DIR / 'static' / 'core' ,
-    BASE_DIR / 'static' / 'ads' ,
+    BASE_DIR  / 'quiz' / 'static',
+    BASE_DIR / 'question' / 'static',
+    BASE_DIR / 'core'/ 'static',
+    BASE_DIR /'ads' / 'static',
 ]
 
 # media files configuration
@@ -357,3 +367,99 @@ CELERY_BEAT_SCHEDULE = {
 # celery tasks
 CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
 CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+
+
+
+
+
+
+
+
+
+
+
+
+# ckeditor configurations
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_RESTRICT_BY_DATE = True
+AWS_QUERYSTRING_AUTH = False
+CKEDITOR_ALLOW_NONIMAGE_FILES = False # change this settings to True if you want other file formats other than image only
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
+
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'moono',
+        # 'skin': 'office2013',
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic']
+        ],
+        'toolbar_YourCustomToolbarConfig': [
+            # you can use all these settings in your ads section.
+            # {'name': 'document', 'items': ["""'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-',""" 'Templates']},
+            # {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+            # {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+            # {'name': 'forms',
+            #  'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                    #    'HiddenField']},
+            '/',
+            {'name': 'basicstyles',
+             'items': ["""'Bold', 'Italic', 'Underline', 'Strike',""", 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+            '/',
+            # {'name': 'paragraph',
+            #  'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                    #    'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                    #    'Language']},
+            # '/',
+
+            # {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            # {'name': 'insert',
+            #  'items': ['Image', 'Flash', 'Table', 'Smiley', 'SpecialChar', """ 'HorizontalRule', 'PageBreak', 'Iframe'"""]},
+            # '/',
+            # {'name': 'styles', 'items': ['Styles',""" 'Format',""" 'Font', 'FontSize']},
+            # {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            # {'name': 'tools', 'items': ['Maximize', """'ShowBlocks'"""]},
+            # {'name': 'about', 'items': ['About']},
+            # '/',  # put this to force next toolbar on new line
+            # {'name': 'yourcustomtools', 'items': [
+                # put the name of your editor.ui.addButton here
+                # 'Preview',
+                # 'Maximize',
+
+            # ]},
+        ],
+        # 'toolbar': 'Basic',  # put selected toolbar config here
+
+        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
+        # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
+        'height': '20vh',
+        'width': '98%',
+        # 'filebrowserWindowHeight': 725,
+        # 'filebrowserWindowWidth': 940,
+        # 'toolbarCanCollapse': True,
+        'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+        'tabSpaces': 4,
+        'extraPlugins': ','.join([
+            'uploadimage', # the upload image feature
+            # your extra plugins here
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            # 'devtools',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+    }
+}
+

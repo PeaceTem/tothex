@@ -54,10 +54,7 @@ div.fixed{
 .card{
     display: block;
     position: relative;
-    /* border-top: 3px solid var(--theme-color); */
     background: #fff;
-    /* box-shadow: 3px 3px 3px #ccc, -3px -3px 3px #ccc; */
-    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
     border-radius: 4px;
     max-width: 95%;
     margin: auto;

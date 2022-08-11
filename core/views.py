@@ -48,7 +48,8 @@ def Donate(request):
     return HttpResponseRedirect('https://paystack.com/pay/tothex-donation')
 
 
-
+def Chart(request):
+    return render(request, 'core/chart.html')
 
 
 class FeedBack(FormView):
@@ -81,8 +82,7 @@ def main_view(request, *args, **kwargs):
     user = request.user
     if not user.is_authenticated:
         code = str(kwargs.get('ref_code'))
-        device = get_user_ip(request)
-        ReferralService(device, code)
+        ReferralService(request, code)
     return redirect('question:answer-question')
 
 
@@ -245,10 +245,10 @@ def FollowView(request):
         following = request.POST.get('following') or None
         following_user = request.POST.get('following_user') or None
         following_username = request.POST.get('following_username') or None
-        if user.id is not following:
+        if user is not following:
             if following:
                 following = Follower.objects.prefetch_related("followers").get(user=following)
-                following_user = User.objects.get(username=following_user)#new
+                # following_user = User.objects.get(username=following_user)#new
                 follower = Follower.objects.prefetch_related("following").get(user=user)#new
                 following.followers.add(user)
                 follower.following.add(following_user)#new
@@ -270,10 +270,10 @@ def UnfollowView(request):
         following = request.POST.get('following') or None
         following_user = request.POST.get('following_user') or None
         following_username = request.POST.get('following_username') or None
-        if user.id is not following:
+        if user is not following:
             if following:
                 following = Follower.objects.prefetch_related("followers").get(user=following)
-                following_user = User.objects.get(username=following_user)#new
+                # following_user = User.objects.get(username=following_user)#new
                 follower = Follower.objects.prefetch_related('following').get(user=user)#new
                 following.followers.remove(user)
                 follower.following.remove(following_user)#new

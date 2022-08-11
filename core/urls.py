@@ -17,6 +17,7 @@ urlpatterns = [
     path('terms-and-conditions/', views.TermsAndConditions, name='terms-and-conditions'),
     path('donate', views.Donate, name='donate'),
     path('feedback', views.FeedBack.as_view(), name='feedback'),
+    path('chart/', views.Chart, name='chart'),
     #referral
     path('', views.Home, name='home'),
     path('menu/', views.Menu, name='menu'),

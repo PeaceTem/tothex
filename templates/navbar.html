@@ -8,12 +8,12 @@
 {% block content %}
     <header id="header">   
         <div class="top-navigation">
-            <a href="{% url 'quiz:quizzes' %}" class="topNavigation"><i class="fa fa-address-book" aria-hidden="true"></i><div>PowerX</div></a>
-            <a href="{% url 'question:questions' %}" class="topNavigation"><i class="fa fa-home" aria-hidden="true"></i><div>FindX</div></a>
-            <a href="{% url 'qxa:question-page' %}" class="topNavigation"><i class="fa fa-home" aria-hidden="true"></i><div>QXA</div></a>
-            <a href="{% url 'leaderboard:leaderboard' %}" class="topNavigation"><i class="fa fa-sticky-note" aria-hidden="true"></i><div>XRace</div></a>
+            <a href="{% url 'quiz:quizzes' %}" class="topNavigation"><div>PowerX</div></a>
+            <a href="{% url 'question:questions' %}" class="topNavigation"><div>FindX</div></a>
+            <a href="{% url 'qxa:question-page' %}" class="topNavigation"><div>QXA</div></a>
+            <a href="{% url 'leaderboard:leaderboard' %}" class="topNavigation"><div>XRace</div></a>
             {% if profile %}
-            <a href="{% url 'profile:profile' profile.user %}" class="topNavigation"><i class="fa fa-user" aria-hidden="true"></i><div>XFace</div></a>
+            <a href="{% url 'profile:profile' profile.user %}" class="topNavigation"><div>XFace</div></a>
             {% endif %}
         </div>
     </header>

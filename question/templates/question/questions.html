@@ -15,13 +15,12 @@ Questions
 {% include 'navbar.html' %}
 
 {% include 'messages.html' %}
-
 <div class="container">
     <input type="hidden" id="navActive" name="nav" value="{{nav}}">
     <div>
         <a class="question" href="{% url 'question:my-questions' %}">
             <div>
-                My questions
+                My Coven
             </div>
         </a>
     </div>
@@ -31,7 +30,7 @@ Questions
         <a class="question" href="{% url 'question:following-questions' %}">
 
             <div>
-                Following
+                The Bohemian Grove
             </div>
         </a>
     </div>
@@ -96,16 +95,20 @@ Questions
 <div id="explanation">
 <p>
     Dear user, this is to inform you that this app is still in testing phase.<br>
-    Feel free to give me any feedback on your profile page(XFace)<br>
+    Feel free to give me any feedback(click the menu link at the top left of your device screen<br>
     Create quizzes, questions, qxas(Question and Answers) as many as you can because this is how money will be generated from this app very soon.
     <br>
-    This app is not meant to be addictive. Only 200 quizzes and questions will be recommeded to each user daily.<br>
+    This app is not meant to be addictive. <br>
     I'm hopeful, by the end of november 2022, this app will be fully functional.
     <br>
-    And last but not the least, you can donate some token as low as #100 as a gesture of good will.
+    As we all know that the current state of tertiary institutions in Nigeria is fucked up, 
+    I'm planning to brush up on my skills in IT security and web development but I'm penniless right now.
+    And last but not the least, you can donate some token as low as #100(approx. 20 cents) as a gesture of good will.
     <div>
         <a id="paystack" href="https://paystack.com/pay/tothex-donation" target="self">Donate</a>
     </div>
+    Your Donation helps to improve the user experience of this page.
+    
 </p>
 
 <p style="display:none;">
@@ -121,9 +124,9 @@ Questions
 </p>
 </div>
 
-<div style='text-align: center; font-size: 10px; '>Total Number Of Registered Users : {{number_of_registered_users}}</div>
-<div style='text-align: center; font-size: 10px;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
-<div style='text-align: center; font-size: 10px;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
+<div style='text-align: center; font-size: 16px; '>Total Number Of Registered Users : {{number_of_registered_users}}</div>
+<div style='text-align: center; font-size: 16px;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
+<div style='text-align: center; font-size: 16px;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
 
 
 <script src="{% static 'question/js/questions.js' %}"></script>
