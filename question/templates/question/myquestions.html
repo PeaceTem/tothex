@@ -39,13 +39,16 @@ My Questions
                 <div class="average">
                     {{question.avgScore}}%
                 </div>
-                <span id="seconds" class="duration">
-                    {{question.duration_in_seconds}}
-                </span>
-                <span class="secondsName">
-                    seconds            
-                </span>
-            
+                <div>
+                    <span id="seconds" class="duration">
+                        {{question.duration_in_seconds}}
+                    </span>
+                    <span class="secondsName">
+                        sec           
+                    </span>
+                
+                </div>
+                
             </div>
             {% if question.index is 0 and user == question.user %}
             <div class="linkTab">
@@ -79,13 +82,16 @@ My Questions
                 <div class="average">
                     {{question.avgScore}}%
                 </div>
-                <span id="seconds" class="duration">
-                    {{question.duration_in_seconds}}
-                </span>
-                <span class="secondsName">
-                    seconds            
-                </span>
-            
+                <div>
+                    <span id="seconds" class="duration">
+                        {{question.duration_in_seconds}}
+                    </span>
+                    <span class="secondsName">
+                        sec            
+                    </span>
+                
+                </div>
+                
             </div>
             {% if question.index is 0 and user == question.user %}
             <div class="linkTab">

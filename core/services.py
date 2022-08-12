@@ -1,6 +1,4 @@
 
-
-
 from .models import Profile, Device
 from .tasks import ReferralTask
 

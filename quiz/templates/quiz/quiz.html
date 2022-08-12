@@ -3,6 +3,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'quiz/css/quizzes_list.css' %}">
+<meta name="description" content="Quizzes">
 {% endblock css %}
 {% include 'navbar.html' %}
 
@@ -96,6 +97,7 @@
                             <a class="link" href="{% url 'quiz:take-quiz' quiz.id %}"><div>Take Quiz →</div></a>
                         </div>
                        </div>
+                       
             </div>
         </div>
     {% endfor %}
@@ -122,6 +124,8 @@
 
 
 {% include 'jquery.html' %}
+
+
 
 <script>
 

@@ -1,6 +1,6 @@
 from django.db import models
 from core.managers import ProfileQuerySet
-
+from quiz.utils import randomChoice
 class QuizQuerySet(models.QuerySet):
     def get_smaller_than(self, size):
         return self.filter(attempts__lt=size)

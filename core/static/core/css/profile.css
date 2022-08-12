@@ -42,10 +42,11 @@ a div{
 .otherInfo > div{
     margin-bottom: 10px;
     /* border-top: 4px solid #f11919; */
+    border-left: 3px solid #f11919b2;
+    box-shadow: 1px 1px 4px #b5ababb9;
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-    box-shadow: 3px 3px 3px rgb(235, 207, 207), -3px -3px 3px rgb(235, 211, 211);
 
 }
 
@@ -174,7 +175,7 @@ button, input[type="submit"]{
 
 a.profile-link, .edit.link{
     background: rgba(241, 25, 25, .05);
-    border: .5px solid #f11919;
+    border: 1px solid #f11919;
     height: 30px;
     display: flex;
     justify-content: center;

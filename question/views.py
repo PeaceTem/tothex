@@ -151,10 +151,10 @@ def AnswerQuestion(request):
     if user.is_authenticated:
         if question_type == 'fourChoices':
             # the profile should only prefetch recommended questions alone
-            print('Entering the first step')
+            # print('Entering the first step')
             profile = Profile.objects.prefetch_related('recommended_four_choices_questions').get(user=user)
             if profile.recommended_four_choices_questions.count() < 1:
-                print('Entering the funnel!')
+                # print('Entering the funnel!')
 
                 profile = Profile.objects.prefetch_related('categories', 'fourChoicesQuestionsMissed', 'fourChoicesQuestionsTaken', 'recommended_four_choices_questions').get(user=user)
 
@@ -167,21 +167,21 @@ def AnswerQuestion(request):
                     category = randomChoice(categories)
                     categories = categories.exclude(id=category.id)
                     questions = (*category.fourChoicesQuestions.filter(lookup)[:200],)
-                    print(category)
+                    # print(category)
                 
                     for q in questions:
-                        print(q)
+                        # print(q)
                         if q not in questionsList:
                             profile.recommended_four_choices_questions.add(q)
                             if profile.recommended_four_choices_questions.count() >= 150:
                                 break
                 
             if profile.recommended_four_choices_questions.count() > 0:
-                print('Entering the easier steps!')
+                # print('Entering the easier steps!')
 
                 question = randomChoice(profile.recommended_four_choices_questions.all())
                 profile.recommended_four_choices_questions.remove(question)
-                print('From recommended')
+                # print('From recommended')
             else:
                 messages.info(request, _('The questions are insufficient!'))
                 return redirect("question:questions")
@@ -189,9 +189,9 @@ def AnswerQuestion(request):
             
         elif question_type == 'trueOrFalse':
             profile = Profile.objects.prefetch_related('recommended_true_or_false_questions').get(user=user)
-            print('First step')
+            # print('First step')
             if profile.recommended_true_or_false_questions.count() < 1:
-                print('entering the funnel')
+                # print('entering the funnel')
                 profile = Profile.objects.prefetch_related("categories","trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'recommended_true_or_false_questions').get(user=user)
 
                 categories = profile.categories.all()
@@ -203,20 +203,20 @@ def AnswerQuestion(request):
                     category = randomChoice(categories)
                     categories = categories.exclude(id=category.id)
                     questions = (*category.trueOrFalseQuestions.filter(lookup)[:200],)
-                    print(category)
-                    print('This is the questions', questions)
+                    # print(category)
+                    # print('This is the questions', questions)
                     for q in questions:
-                        print(q)
+                        # print(q)
                         if q not in questionsList:
                             profile.recommended_true_or_false_questions.add(q)
                             if profile.recommended_true_or_false_questions.count() >= 150:
                                 break
 
             if profile.recommended_true_or_false_questions.count() > 0:
-                print('Entering the easier steps!')
+                # print('Entering the easier steps!')
                 question = randomChoice(profile.recommended_true_or_false_questions.all())
                 profile.recommended_true_or_false_questions.remove(question)
-                print('From recommended')
+                # print('From recommended')
             else:
                 messages.info(request, _('The questions are insufficient!'))
                 return redirect("question:questions")
@@ -257,10 +257,10 @@ def FollowingQuestion(request):
     question_type = randomChoice(['fourChoices', 'trueOrFalse'])
 
     if question_type == 'fourChoices':
-        print('Entering the first step')
+        # print('Entering the first step')
         profile = Profile.objects.prefetch_related('following_four_choices_questions').get(user=user)
         if profile.following_four_choices_questions.count() < 1:
-            print('Entering the funnel!')
+            # print('Entering the funnel!')
 
             profile = Profile.objects.prefetch_related('fourChoicesQuestionsMissed', 'fourChoicesQuestionsTaken', 'following_four_choices_questions').get(user=user)
             follower = Follower.objects.prefetch_related('following').get(user=user)
@@ -279,11 +279,11 @@ def FollowingQuestion(request):
                             break
 
         if profile.following_four_choices_questions.count() > 0:
-            print('Entering the easier steps!')
+            # print('Entering the easier steps!')
 
             question = randomChoice(profile.following_four_choices_questions.all())
             profile.following_four_choices_questions.remove(question)
-            print('From recommended')
+            # print('From recommended')
         else:
             messages.info(request, _('The questions are insufficient!'))
             return redirect("question:questions")
@@ -291,9 +291,9 @@ def FollowingQuestion(request):
         
     elif question_type == 'trueOrFalse':
         profile = Profile.objects.prefetch_related('following_true_or_false_questions').get(user=user)
-        print('First step')
+        # print('First step')
         if profile.following_true_or_false_questions.count() < 1:
-            print('entering the funnel')
+            # print('entering the funnel')
             profile = Profile.objects.prefetch_related("trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'following_true_or_false_questions').get(user=user)
             follower = Follower.objects.prefetch_related('following').get(user=user)
             following = follower.following.prefetch_related('trueOrFalseQuestions').all()
@@ -310,10 +310,10 @@ def FollowingQuestion(request):
                             break
 
         if profile.following_true_or_false_questions.count() > 0:
-            print('Entering the easier steps!')
+            # print('Entering the easier steps!')
             question = randomChoice(profile.following_true_or_false_questions.all())
             profile.following_true_or_false_questions.remove(question)
-            print('From recommended')
+            # print('From recommended')
         else:
             messages.info(request, _('The questions are insufficient!'))
             return redirect("question:questions")
@@ -966,9 +966,9 @@ def PastQuestions(request):
         for question in questions:
             duration += question[1].duration_in_seconds
     except:
-        messages.error(request, _('There are no questions available!'))
+        messages.error(request, _('You don\'t have any past questions available!'))
         return redirect('question:questions')
-    print(duration, "durations")
+
     context = {
         'questions': questions,
         'duration': duration,
@@ -1148,7 +1148,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
 
 
                         if profile.trueOrFalseQuestionsMissed.all().count() > 999:
-                                remove = profile.trueOrFalseQuestionsMissed.first()
+                                removed = profile.trueOrFalseQuestionsMissed.first()
                                 profile.trueOrFalseQuestionsMissed.remove(removed)
                         profile.trueOrFalseQuestionsMissed.add(question)
                    
@@ -1235,7 +1235,7 @@ def TestQuestion(request):
     question2 = TrueOrFalseQuestion.objects.values("id", "user", "form", "question", "answer1", "answer2", "solution", "duration_in_seconds", "attempts", "avgScore")
 
     questions = [*question1, *question2]
-    print(questions)
+    # print(questions)
     context = {
         'questions': questions,
     }
@@ -1250,17 +1250,17 @@ def TestQuestion(request):
 def TCorrectionView(request, question_form, question_id, answer):
     if question_form == 'fourChoicesQuestion':
         question = FourChoicesQuestion.objects.get(id=question_id)
-        print(question_form)
+        # print(question_form)
     elif question_form == 'trueOrFalseQuestion':
         question = TrueOrFalseQuestion.objects.get(id=question_id)
-        print(question_form)
+        # print(question_form)
 
 
     answer = question.getAnswer(answer)
     
     postAd = PostAd.objects.all()
     postAd = randomChoice(postAd)
-    print(postAd)
+    # print(postAd)
 
     
 

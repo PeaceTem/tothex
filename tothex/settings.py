@@ -88,14 +88,14 @@ INSTALLED_APPS = [
 # PROGRESSIVE WEB APP
 PWA_SERVICE_WORKER_PATH = BASE_DIR / 'static/js' / 'serviceworker.js'
 
-PWA_APP_NAME = 'ToTheX Lite'
-PWA_APP_DESCRIPTION = "ToTheX Lite"
-PWA_APP_THEME_COLOR = '#f11919'
-PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_NAME = 'NeuGott Lite'
+PWA_APP_DESCRIPTION = "NeuGott Lite"
+PWA_APP_THEME_COLOR = '#fff'
+PWA_APP_BACKGROUND_COLOR = '#fff'
 PWA_APP_DISPLAY = 'standalone'
 PWA_APP_SCOPE = '/' # change it to / if it gives an error
 PWA_APP_ORIENTATION = 'portrait'
-PWA_APP_START_URL = '/quiz/' #change to /quiz/
+PWA_APP_START_URL = '/question/' #change to /quiz/
 PWA_APP_STATUS_BAR_COLOR = '#fff' #'default'
 PWA_APP_ICONS = [
 	{

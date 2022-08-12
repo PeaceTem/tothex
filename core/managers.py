@@ -27,7 +27,6 @@ class ProfileQuerySet(models.QuerySet):
         elif selected and not prefetched:
             return self.select_related(*selected).get(user=user)
         elif prefetched and not selected:
-            print(*prefetched)
             return self.prefetch_related(*prefetched).get(user=user)
         else:
             return self.get(user=user)

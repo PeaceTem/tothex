@@ -1,0 +1,75 @@
+pwd
+cd
+cd ~ home directory
+cd / root directory
+ls
+ls -R recursive
+ls -al with details
+    File types & Access Permissions   Memory Blocks   Owner of File   User Group  Size[Bytes]   Date&Time of Creation  
+
+ls -a  To view hidden files  
+cat > file1  To crate a new file   CTRL+D to return to the command prompt
+cat file1   To display the file
+cat file1 file2 > newfile    To combine files into a new file
+rm filename    To delete file
+sudo mv test /home/../Files To move a file
+mv test test1   To rename files
+mkdir directory  To create a new directory
+mkdir dir1 dir2 dir3  To create multiple directories
+rmdir dir  To remove a directory
+rmdir -r dir  To remove a directory recursively(deleting the files and directories it contains)
+mv dir1 dir2  To rename a directory
+man <command>  To get help, just like --help
+history   shows all the commands you've used
+clear  clears all the clutter on the terminal to get a clean one
+ctrl+shift+V, shift+insert   To paste a line to the terminal
+GenBTR
+    User u/
+    Group g/
+    Other o/
+    All   a/
+
+r - read, w - write, x - execute, - - no Permission
+chmod  change mode using absolute(numeric) and symbolic mode
+0  No permission  ---
+1  Execute        --x
+2 Write -w-
+3 Execute + Write -wx
+4 Read r--
+5 Read + execute r-x
+6 Read + write rw-
+7 read + write + execute rwx
+
+
+chmod 764 filename  Changes the permission of the file
+Symbolic modifies permission for a specific group only
+use +,  -,  =
+
+chmod o=rwx test,  chmod g+x test, chmod u-r text 
+
+
+sudo chown user <filename> To change the ownership of a file
+
+sudo chown user:group <filename> To change the ownership and group of a file
+
+sudo chgrp root <filename> To change the group of a file
+
+/etc/group   contains all the groups in the filesystem
+
+
+groups    log all the groups you are a member of
+
+newgrp <newgroup>    to change the group you are currently working with.
+grep
+    cat fruits | grep avocado    prints all the avocado presents in the file
+    cat fruits | grep -i a   prints all the lines that contain 'a'
+
+
+    sort fruits   sorts alphabetically  sort -r  reverse, sort -n numerical, sort -f case insensitive
+    cats fruits
+
+cat fruits | grep -v a | sort -r   prints all the lines that don't contain 'a' in reverse order
+
+
+
+

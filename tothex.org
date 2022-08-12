@@ -17,63 +17,48 @@ server {
 
 sudo tail -f /var/log/nginx/error.log
 
-
-start flask app
-finish rec alg
-use postgres for search in django.
-
-use the available categories to generate quizzes and questions to the user
-
-categories = profile.categories.prefetch_related('quizzes').filter()[:2000]
-
-or just pick a random category at request and fetch the quizzes form there
-you can check if the quizzes has been watched before 
-the category picked should only last for 5 minutes
-
-
-
+After linux tutorials 
+use postgres for search in django.[Saturday]
+And Vim tutorials [today or tomorrow]
 verify zoho mail
-
-
-
-Write the about.html to explain each part of the app visible to the user
-Add a href #quiz to the top for users to jump to any part they want to read.
-
-
 
 pip install flask flask-script flask-bootstrap flask-moment flask-wtf flask-sqlalchemy flask-migrate flask-mail 
 
+use the available categories to generate quizzes and questions to the user
 
-
-
-
-
-
-[DONE]write the about page
-[DONE]do some basic flask
-[DONE]finish rec alg for the behemain grove
-[DONE]buy domain name
-download wps
-learn chart js and push code to heroku. Get the chart js source code
+------------------[DONE-TODAY]write the about page
+[DONE-TODAY]do some basic flask
 verify zoho mail
-Try Chart-Js and integrate it in your code
-
 learn async view in django view and learn how it works
 
+searches should be shown in another page[AP]
 
-after learning chart js, 
-	add a pie chart to each quiz to display the average score of users
-	e.g 75% green and 25% red
- 
-	create a curve chart of the weekly questions and quizzes taken missed and correct
+add SSL listen 443;[Today]
+server_name neugott.com www.neugott.com;
+use multiple database
+add allauth view
+add environment variable to nginx
+paystack verification
 
-	add chart js to coven
-Add all the basics of SEO
-Add select related user to questions in old town road and the bohemian grove
-Add box shadow < #eee less than in opacity(0.3)
+learn how to use zoho mail with django
 
-Remove the categories add to profile and add search for a quiz if there are no quiz to show the users
+add proxy_pass / to /question/[Today]
 
-design the delete button on the coven page
+get the ssh keys to use termux[Today]------------------------
+ use [::]:80 too to allow ipv6
 
-remove all the leaderboards from signal
+
+create a production.txt file and copy the tonyteachestech web page to it.[today]
+buy a new glo sim and use the remaining 500 to buy a one week plan to it.
+
+
+
+Try to add a subdomain to your app
+	use blog.neugott.com 
+
+
+
+
+
+
+Design your app like instragam [AP]

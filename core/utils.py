@@ -7,15 +7,8 @@ def generate_ref_code():
 
 
 """
-
-
-
 Create the referral function here
 """
-
-
-
-
 
 def getSimplifiedNumber(num):
     if num < 1000:
@@ -33,7 +26,3 @@ def getSimplifiedNumber(num):
         num = round(num, 1)
         return f"{num}B"
     return num
-
-
-
-

@@ -1,5 +1,5 @@
 *{
-    text-align: center;
+    /* text-align: center; */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -35,15 +35,19 @@ a div{
     width: 500px;
     max-width: 100%;
     margin-top: 10px;
+    padding: 7px;
 }
 
 
 .container > div{
     margin-bottom: 10px;
-    /* border-top: 4px solid #f11919; */
+    /* border-top: 16px solid #f1191960; */
+    border-left: 3px solid #f11919b2;
+    box-shadow: 1px 1px 4px #b5ababb9;
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
+    padding-left: 3px;
 }
 .linkTab{
     display: flex;
@@ -72,32 +76,24 @@ img{
 *{
     font-size: 16px;
 }
-
-.messageContainer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    z-index: 10;
-    top: 20;
-    left: auto;
-    width: 100vw;
-    visibility: hidden;
+div.quizItem{
+    text-align: left;
+    margin-bottom: 10px;
 }
 
-.messageText{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background:#f11919;
+input[type='submit']{
+    background: #f11919;
     color: #fff;
-    width: 200px;
-    border-radius: 20px;
-    height: 40px;
-    font-size: 20px;
-
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    padding: 4px;
 }
 
 
 
-
+.inline{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

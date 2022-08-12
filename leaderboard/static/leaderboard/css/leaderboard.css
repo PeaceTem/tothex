@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 a.leaderboard{
@@ -26,7 +27,7 @@ p#info{
     margin: 4px;
 }
 
-.container{
+#container{
     display: block;
     position: relative;
     margin:auto;
@@ -36,12 +37,14 @@ p#info{
 }
 
 
-.container > div{
+#container > div{
     margin-bottom: 10px;
     /* border-top: 4px solid #f11919; */
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
+    border-left: 3px solid #f11919b2;
+    box-shadow: 1px 1px 4px #b5ababb9;
 
 }
 

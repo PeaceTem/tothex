@@ -10,14 +10,13 @@ class LoggingMiddleware:
 
     def __call__(self, request):
         print('This is a request!')
-        response = self.get_response(request)
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         if (view_func.__name__ != 'manifest' and view_func.__name__ != 'service_worker'):
-            print(f"view name: {view_func.__name__} being accessed by {request.user}")
+            # print(f"view name: {view_func.__name__} being accessed by {request.user}")
             self.request_count += 1
-            print(self.request_count)
+            # print(self.request_count)
         
         pass
 
@@ -25,14 +24,14 @@ class LoggingMiddleware:
         pass
 
     def process_template_response(self, request, response):
-        print('This is a template response!')
+        # print('This is a template response!')
         response.context_data['template_data'] = 'this is the message gotten from the middleware'
         return response
 
     def process_response(self, request, response):
-        print(f"being accessed by {request.user}")
+        # print(f"being accessed by {request.user}")
 
-        print(response)
+        # print(response)
         return response
 
 

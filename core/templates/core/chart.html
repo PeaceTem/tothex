@@ -6,13 +6,7 @@
 
 
 {% block content %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-<!-- <script src="/static/js/chart.min.js"></script> -->
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.css">
-<!-- <link rel="stylesheet" href="/static/css/chart.min.css"> -->
-
+{% include 'chartjs.html' %}
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.bundle.min.js"></script> -->
 
@@ -24,8 +18,9 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.js"></script> -->
 
 
-
-<canvas id="myChart" width="90vw" height="40vh"></canvas>
+<div style="width: 250px;">
+  <canvas id="myChart" width="3vw" height="3vh"></canvas>
+</div>
 
 <!-- 
 
@@ -95,7 +90,6 @@ const myChart = new Chart(ctx, {
       options: {}
     };
   </script>
-
 
 <script>
     const myChart = new Chart(

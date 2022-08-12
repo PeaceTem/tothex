@@ -37,7 +37,8 @@ a div{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
-
+    border-left: 3px solid #f11919b2;
+    box-shadow: 1px 1px 4px #b5ababb9;
 }
 
 img{

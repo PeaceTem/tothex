@@ -208,7 +208,7 @@ def QuizList(request):
             while quizzes.count() < int(page):
                 category = randomChoice(categories)
                 quizzes = category.quizzes.filter(lookup)[:200]# add relevance to filter later
-                print(category)
+                # print(category)
                 categories = categories.exclude(id=category.id)
 
 
@@ -260,7 +260,7 @@ def FollowerQuizList(request):
         randomQuizzes = []
         while len(randomQuizzes) < 100 and quizzes.count() > 0:
             quiz = randomChoice(quizzes)
-            print(quiz)
+            # print(quiz)
             quizzes = quizzes.exclude(id=quiz.id)
             if quiz not in takenQuiz:
                 randomQuizzes.append(quiz)
@@ -890,8 +890,8 @@ def CategoryCreate(request, quiz_id):
     user = request.user
     profile = Profile.objects.prefetch_related("categories").get(user=user)
     quiz = Quiz.objects.prefetch_related("categories").get(id=quiz_id)
-    categories = Category.objects.all().order_by('quiz_number_of_times_taken')
-
+    categories = Category.objects.all().order_by('quiz_number_of_times_taken')[:20]
+    #make this part more efficient
     title = request.GET.get('newCategory') or ''
     title = slugify(title)
     if title:

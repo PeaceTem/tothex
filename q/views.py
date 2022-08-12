@@ -316,9 +316,9 @@ class CategoryList(View):
     def get(self, request):
         text = self.request.GET.get('text')
         categories = Category.objects.filter(title__icontains=text).values('title')
-        print(categories)
+        # print(categories)
         categories = CategorySerializer(categories).data
-        print(categories)
+        # print(categories)
 
         return JsonResponse(json.dumps(dict(categories)))
 

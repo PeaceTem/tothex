@@ -10,6 +10,8 @@ Quiz Detail
 
 {% block quizCss %}
 <link rel="stylesheet" href="{% static 'quiz/css/quizdetail.css' %}">
+{% include 'chartjs.html' %}
+
 {% endblock quizCss %}
 
 {% include 'messages.html' %}
@@ -48,6 +50,11 @@ Quiz Detail
             <div class="duration">
                         {{quiz.get_quiz_duration}}
             </div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="width: 250px;">
+                    <canvas id="myChart{{quiz.id}}" width="3vw" height="3vh"></canvas>
+                </div>
+            </div>
         </div>
         <div>
             <form data-quiz="{{quiz.id}}" data-url="{% url 'quiz:post-like' %}" data-id="likeForm{{quiz.id}}" id="likeForm{{quiz.id}}" method="post" class="likeForm">
@@ -66,14 +73,15 @@ Quiz Detail
         </div>
         
         <div class="linkBx likes">
-            <!-- assign this value to a variable -->{{quiz.likeCount}}
-            likes: <span class="likeCounter">3</span>
+            <!-- assign this value to a variable -->
+            likes: <span class="likeCounter">{{quiz.likeCount}}</span>
         </div>
         <div>
             <a href="{% url 'quiz:take-quiz' quiz.id %}">
                     Take Quiz
             </a>
         </div>
+
         {% if quiz.user == user %}
         <div>
             <a href="{% url 'quiz:quiz-update' quiz.id %}">Edit Quiz</a>
@@ -201,6 +209,47 @@ Quiz Detail
 
 {% include 'jquery.html' %}
 
+<script>
+    let avgScore = parseFloat('{{quiz.average_score}}')
+    let wrong = 100 - avgScore
+    let ctx = document.getElementById('myChart{{quiz.id}}').getContext('2d');
+    let myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['avgScore', 'wrong'],
+            datasets: [{
+                label: '# of Attmepts',
+                data: [avgScore, wrong],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    // 'rgba(255, 206, 86, 0.2)',
+                    // 'rgba(75, 192, 192, 0.2)',
+                    // 'rgba(153, 102, 255, 0.2)',
+                    // 'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    // 'rgba(255, 206, 86, 1)',
+                    // 'rgba(75, 192, 192, 1)',
+                    // 'rgba(153, 102, 255, 1)',
+                    // 'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+
+
 
 <script>
 
@@ -266,23 +315,23 @@ $.ajax({
         
         if (response == 'liked'){
             $(`#likeButton${quiz_id}`).text('unlike');
-            // $('.likeCounter').text('{{quiz.likeCount|add:1}}')
+            $('.likeCounter').text('{{quiz.likeCount|add:1}}')
             // var like_count = parseInt(like_count) + 1
             // console.log(like_count)
 
-            let no_of_likes = $('.likeCounter').val()
-            $('.likeCounter').text(String(no_of_likes + 1))
+            // let no_of_likes = $('.likeCounter').val()
+            // $('.likeCounter').text(String(no_of_likes + 1))
             
         }else if (response == 'unliked'){
             $(`#likeButton${quiz_id}`).text('like');
             // var like_count = parseInt(like_count) - 1
             // console.log(like_count)
 
-            // // $('.likeCounter').text('{{quiz.likeCount|add:-1}}')
+            $('.likeCounter').text('{{quiz.likeCount|add:-1}}')
             // $('.likeCounter').text(String(like_count))
 
-            let no_of_likes = $('.likeCounter').val()
-            $('.likeCounter').text(String(no_of_likes - 1))
+            // let no_of_likes = $('.likeCounter').val()
+            // $('.likeCounter').text(String(no_of_likes - 1))
   
 
         }

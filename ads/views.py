@@ -28,7 +28,6 @@ def PostAdView(request,nextpage):
 def PostAdClick(request, post_id, location):
     # link_id = request.GET.get('link_id')
     user = request.user
-    print(location)
     postAd = PostAd.objects.prefetch_related("clickers").get(id=post_id)
 
     postAd.clicks += 1
@@ -42,6 +41,5 @@ def PostAdClick(request, post_id, location):
     elif location == "correction":
         postAd.correctionpageclicks += 1
     postAd.save()
-    print(postAd.clicks)
 
     return HttpResponse('clicked')

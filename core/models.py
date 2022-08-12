@@ -92,17 +92,6 @@ class Profile(models.Model):
 
     @property
     def get_user_age(self):
-        # dob = self.date_of_birth
-        # if dob:
-        #     # dob = pytz.utc.localize(self.date_of_birth)
-
-        #     # dob_aware = tz.localize(dob)
-        #     days_length = timezone.now().date() - dob
-        #     days = days_length.days
-        #     years = days//365
-        #     print(years)
-        #     return years
-        # return 15
         return self.preferred_age
 
 

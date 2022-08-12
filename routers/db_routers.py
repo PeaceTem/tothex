@@ -1,6 +1,6 @@
 
 
-from smtplib import _AuthObject
+# from smtplib import _AuthObject
 
 
 AUTH_APPS = {'auth', 'contenttypes', 'admin','sessions'}
@@ -96,5 +96,3 @@ class ObjectRouter:
 
 
 
-
-        

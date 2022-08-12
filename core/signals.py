@@ -21,16 +21,16 @@ def create_profile(sender, instance, created, *args, **kwargs):
     if created:
         profile = Profile.objects.create(user=instance)
         quizCategories = Category.objects.all().order_by('-quiz_number_of_times_taken')[:5]
-        questionCategories = Category.objects.all().order_by('-question_number_of_times_taken')[:5]
+        # questionCategories = Category.objects.all().order_by('-question_number_of_times_taken')[:5]
         for category in quizCategories:
             profile.categories.add(category)
             profile.save()
-        for category in questionCategories:
-            profile.categories.add(category)
-            profile.save()
-        CoinsEarnerLeaderBoard.objects.create(leader=instance)
-        CreatorLeaderBoard.objects.create(leader=instance)
-        ReferralLeaderBoard.objects.create(leader=instance)
+        # for category in questionCategories:
+            # profile.categories.add(category)
+            # profile.save()
+        # CoinsEarnerLeaderBoard.objects.create(leader=instance)
+        # CreatorLeaderBoard.objects.create(leader=instance)
+        # ReferralLeaderBoard.objects.create(leader=instance)
         Follower.objects.create(user=instance)
 
 
@@ -42,7 +42,7 @@ def update_profile(sender, instance, created, *args, **kwargs):
         username = instance.username
         profile.code = username
         profile.save()
-        print('profile updated!')
+        # print('profile updated!')
 
 # post_save.connect(create_profile, sender=User)
 
@@ -59,7 +59,7 @@ def create_streak(sender, instance, created, *args, **kwargs):
     if created:
         # add the referral code here
         Link.objects.create(profile=instance)
-        Streak.objects.create(profile=instance)
+        # Streak.objects.create(profile=instance)
 
 
 # This should be called update_streak
