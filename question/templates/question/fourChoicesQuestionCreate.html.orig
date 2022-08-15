@@ -1,0 +1,23 @@
+
+{% extends 'question/form.html' %}
+{% block title %}
+Create Four Choices Question
+{% endblock title %}
+{% load crispy_forms_tags %}
+<<<<<<< HEAD
+
+=======
+>>>>>>> dbab7354a650947d9b0cab1106860710b658effd
+{% block form_block %}
+<div class="head">Step 1 of 2</div>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{fourChoicesForm.media}}
+        {{fourChoicesForm|crispy}}
+        <input type="submit" value="Create">
+    </form>
+    
+{% endblock form_block %}
+
+
