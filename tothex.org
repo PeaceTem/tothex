@@ -33,8 +33,6 @@ learn async view in django view and learn how it works
 
 searches should be shown in another page[AP]
 
-add SSL listen 443;[Today]
-server_name neugott.com www.neugott.com;
 use multiple database
 add allauth view
 add environment variable to nginx
@@ -44,17 +42,12 @@ learn how to use zoho mail with django
 
 add proxy_pass / to /question/[Today]
 
-get the ssh keys to use termux[Today]------------------------
- use [::]:80 too to allow ipv6
-
-
-create a production.txt file and copy the tonyteachestech web page to it.[today]
 buy a new glo sim and use the remaining 500 to buy a one week plan to it.
 
 
 
 Try to add a subdomain to your app
-	use blog.neugott.com 
+	use blog.neugott.com  like the www own, and attach a new ip to it
 
 
 
@@ -62,3 +55,51 @@ Try to add a subdomain to your app
 
 
 Design your app like instragam [AP]
+if user is authenticate add the home page link to the sign up page
+
+
+
+
+ listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/neugott.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/neugott.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+
+server {
+    if ($host = www.neugott.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = neugott.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen      80;
+    server_name neugott.com www.neugott.com;
+    return 404; # managed by Certbot
+
+
+
+
+}
+
+sudo apt-get install certbot python-certbot-nginx
+sudo certbot certonly --nginx
+sudo certbot install --nginx
+
+
+
+
+
+
+
+certbot renew   or certbot again    to renew let encrypt
+
+
+https://pubdash.ezoic.com/setup

@@ -66,6 +66,9 @@ git push -u -f origin master
 ssh -i Lightsail-default-key.pem ubuntu@18.132.98.137
 ssh -i Lightsail-default-key.pem ubuntu@18.169.5.25
 
+
+
+
 ssh -i LightsailDefaultKey-eu-west-2.pem ubuntu@18.169.5.25
 
 

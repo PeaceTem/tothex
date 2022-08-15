@@ -22,12 +22,12 @@ Categories
 <h3>Add Categories</h3>
 {% if obj_type == 'quiz' %}
     <div class="top-info">
-        You can add up to 3 categories <br>Categories: <b>{{quizCategories.count}}</b>
+        You can add up to 3 categories <br>Categories: <b>{{objCategories.count}}</b>
     </div>
     <!-- <input type="hidden" name="quiz" id="quiz" value="{{quiz.id}}"> -->
 {% else %}
 <div class="top-info">
-    You can add up to 5 categories <br>Categories: {{questionCategories.count}}
+    You can add up to 5 categories <br>Categories: {{objCategories.count}}
 </div>
 {% endif %}
 

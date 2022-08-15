@@ -201,7 +201,28 @@ DATABASES = {
 #     },
 # }
 
+
+
+# DATABASES = {
+#     'default' : {},
+#     'primary_db':{
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'primary.db.sqlite3',  
+#     },
+#     'replica1_db':{
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'replica1.db.sqlite3',  
+#     },
+#      'replica2_db':{
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'replica2.db.sqlite3',  
+#     },
+# }
+
+
 # DATABASE_ROUTERS = ['routers.db_routers.AuthRouter','routers.db_routers.ObjectRouter']
+# DATABASE_ROUTERS = ['routers.db_routers.ReplicaRouter']
+
 
 
 # Password validation

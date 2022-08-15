@@ -94,7 +94,6 @@ class GeneratePDF(LoginRequiredMixin, View):
             'number_of_registered_users': number_of_registered_users,
         }
 
-        html = template.render(context)
         pdf = render_to_pdf('quiz/quizPdf.html', context)
 
         if pdf:
@@ -133,11 +132,11 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
             ReferralService(request, code)
         
         postAd = PostAd.objects.all()
-        if postAd.count() > 0:
-            postAd = randomChoice(postAd)
-            postAd.views += 1
-            postAd.detailpageviews += 1
-            postAd.save()
+        # if postAd.count() > 0:
+        #     postAd = randomChoice(postAd)
+        #     postAd.views += 1
+        #     postAd.detailpageviews += 1
+        #     postAd.save()
     except:
         return redirect('quiz:my-quizzes')    
     context = {

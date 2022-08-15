@@ -73,3 +73,52 @@ cat fruits | grep -v a | sort -r   prints all the lines that don't contain 'a' i
 
 
 
+Print Email and Install Software on linux
+pr   for printing in linux, teh original file is not affected
+pr -x(int) filename,  is the number of columns the files will be divided into.
+pr -h header filename,  defines and header for the file to be printed to the screen
+pr -n filename,  adds numbers to the beginning of each line
+lp filename (or)  lpr filename,   to print the hardcopy of the file
+lp -nN filename (or) lpr n filename,  to print N copies of file
+lp -dPrintername Filename (or) lpr -PPrintername Filename,  to specify a specific printer on the system
+
+
+apt-get to install a remote package
+
+sudo apt-get install vlc,  to install a video player
+
+
+
+Redirection in linux
+<stdin>  is the standard input(keyboard)
+<stdout> is the standard output(monitor)
+redirecting the output of the commands
+ls -al > listings
+cat listings,  all the details of the files in the directory will be display on the screen via the listings File
+
+echo This is Olumide > listings
+cat listings
+
+to add more content e.g append
+
+echo This is an error >> listings,  this line will be appended to the File
+
+
+mail -s "News Today" abc@gmail.com < NewsFlash(The file name), sending an email containing the content of the file NewsFlash
+
+
+Everything is a file in linux
+every file has a number called FD(file descriptor)
+Three files are always open whenever a program is executing in linux, the standard input(stdin, FD0),
+    the standard output(stdout, FD1), and the standard error(stderr, FD2)
+
+--- redirecting error messages to a file
+telnet localhost 2> errorfile, redirect all the error messages to errorfile to prevent cluttering,
+    the 2 stands for the (FD2) file descriptor
+
+find . -name 'my*', searches the current directory for a file name that start with 'my'
+find . -name 'my*' 2> error.log,  redirecting the error messasges to error.log file
+2>&1 , writes the output from one file to the input of another file
+* error output is redirected to standartd output whichh in turn is being re-directed to file dirlist
+ls Documents ABC > dirlist 2>&1
+both the error and the output will be sent to dirlist

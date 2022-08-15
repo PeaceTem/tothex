@@ -45,7 +45,7 @@ def TermsAndConditions(request):
 
 
 def Donate(request):
-    return HttpResponseRedirect('https://paystack.com/pay/tothex-donation')
+    return HttpResponseRedirect('https://paystack.com/pay/neugott-donation-for-the-developer')
 
 
 def Chart(request):
