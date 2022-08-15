@@ -1,5 +1,7 @@
 # your own files
 *.sock
+uwsgi_myproj.ini
+uwsgi_params/
 
 
 
