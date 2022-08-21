@@ -1,18 +1,17 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% load social_share %}
 
-{% block quizTitle %}
+{% block title %}
 Quiz Detail
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'quiz/css/quizdetail.css' %}">
 {% include 'chartjs.html' %}
 
-{% endblock quizCss %}
+{% endblock css %}
 
 {% include 'messages.html' %}
 
@@ -34,7 +33,11 @@ Quiz Detail
                 {% endfor %}
         </div>
         <div >Title: {{quiz.title|capfirst}}</div>
-        <div id="description">{{quiz.description|safe}}</div> 
+        <div id="description">
+            <math>
+                {{quiz.description|safe}}
+            </math>
+        </div> 
         <div>
             <div >created by {{quiz.user|capfirst}}</div>
             <div >It was created on {{quiz.date|date}} {{quiz.date|time}}</div> 
@@ -115,7 +118,7 @@ Quiz Detail
     <a href="{% url 'quiz:quizzes' %}">Go back to the home page</a>
 </div>
 
-
+{% include 'ads/adSection.html' %}
 
 {% if quizLink %}
 <div>
@@ -210,8 +213,29 @@ Quiz Detail
 <!-- End Ezoic - bottom_of_page - bottom_of_page -->    
 <div> An Ezoic Ad is being shown here </div> 
 
->>>>>>> dbab7354a650947d9b0cab1106860710b658effd
 {% include 'jquery.html' %}
+
+
+<script>
+    $(document).ready(function(){
+        function QuizLinkClickFunction(){
+            const objBx = $(this);
+            $.ajax({
+                url: objBx.data('url'),
+                type: 'GET',
+                data: {},
+                success: function(response){
+                    alert('Action Successful');
+                },
+                error: function(response){
+                    alert('Action Failed!');
+                },
+            });
+        }
+
+    })
+</script>
+
 
 <script>
     let avgScore = parseFloat('{{quiz.average_score}}')
@@ -227,18 +251,10 @@ Quiz Detail
                 backgroundColor: [
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 99, 132, 0.2)',
-                    // 'rgba(255, 206, 86, 0.2)',
-                    // 'rgba(75, 192, 192, 0.2)',
-                    // 'rgba(153, 102, 255, 0.2)',
-                    // 'rgba(255, 159, 64, 0.2)'
                 ],
                 borderColor: [
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 99, 132, 1)',
-                    // 'rgba(255, 206, 86, 1)',
-                    // 'rgba(75, 192, 192, 1)',
-                    // 'rgba(153, 102, 255, 1)',
-                    // 'rgba(255, 159, 64, 1)'
                 ],
                 borderWidth: 1
             }]
@@ -271,6 +287,7 @@ const formContainer = document.querySelector('.contentBx');
 
 </script>
 <script>
+$(document).ready(function(){
 
 $('.deleteButton').click(function(e){
         e.preventDefault();
@@ -297,15 +314,16 @@ $('.deleteButton').click(function(e){
             });
         }
     });
+})
+;
 </script>
     
 
 
 
 <script>
-// var like_count = '{{quiz.likeCount}}'
-// console.log('This is the like count')
-// console.log(like_count)
+    $(document).ready(function(){
+
 $('.likeForm').submit(function(e){
     e.preventDefault();
 const serializeData = $(this).serialize()
@@ -320,24 +338,9 @@ $.ajax({
         if (response == 'liked'){
             $(`#likeButton${quiz_id}`).text('unlike');
             $('.likeCounter').text('{{quiz.likeCount|add:1}}')
-            // var like_count = parseInt(like_count) + 1
-            // console.log(like_count)
-
-            // let no_of_likes = $('.likeCounter').val()
-            // $('.likeCounter').text(String(no_of_likes + 1))
-            
         }else if (response == 'unliked'){
             $(`#likeButton${quiz_id}`).text('like');
-            // var like_count = parseInt(like_count) - 1
-            // console.log(like_count)
-
             $('.likeCounter').text('{{quiz.likeCount|add:-1}}')
-            // $('.likeCounter').text(String(like_count))
-
-            // let no_of_likes = $('.likeCounter').val()
-            // $('.likeCounter').text(String(no_of_likes - 1))
-  
-
         }
         
 
@@ -347,14 +350,14 @@ $.ajax({
     }
 
 });
-// var like_count = like_count
-// console.log(like_count)
-
 })
+})
+;
 </script> 
 
 
 <script>
+$(document).ready(function(){
 
 $('#deleteQuizForm').submit(function(e){
     e.preventDefault()
@@ -375,6 +378,8 @@ $('#deleteQuizForm').submit(function(e){
     }
 
 })
+});
+
 </script>
 
 <script>

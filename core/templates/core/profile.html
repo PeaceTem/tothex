@@ -1,4 +1,4 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
 
@@ -290,6 +290,8 @@ Profile
 </script>
 {% endif %}
 <script>
+$(document).ready(function(){
+
     function clickFunction(){
         
         $.ajax({
@@ -310,9 +312,11 @@ Profile
         });
 
     }
+})
 </script>
 
 <script>
+$(document).ready(function(){
 
 $('#followForm').submit(function(e){
 e.preventDefault();
@@ -336,6 +340,7 @@ $.ajax({
         alert('It falis silently!')
     }
 });
+})
 })
 
 </script>

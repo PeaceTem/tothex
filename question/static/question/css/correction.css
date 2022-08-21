@@ -35,15 +35,21 @@ a div{
 
 .question-card-container > div{
     margin-bottom: 10px;
-    /* border-top: 4px solid #f11919; */
+    border-top: 4px solid #f11919;
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
     margin: 4px;
+    border-left: 3px solid #f11919b2;
+    box-shadow: 1px 1px 4px #b5ababb9;
 
 }
+#test, .q-box{
+    display: flex;
+    justify-content: flex-start;
+    align-items:flex-start;
+}
 li div{
-    text-align: left;
     margin: 4px;
 
 }

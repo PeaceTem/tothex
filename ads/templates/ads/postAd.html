@@ -1,15 +1,15 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
-{% block quizTitle %}
+{% block title %}
 Ads
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'ads/css/postAd.css' %}">
-{% endblock quizCss %}
+{% endblock css %}
 <div class="container">
 
     <div id="countdownbox"></div>
@@ -38,6 +38,8 @@ Ads
 </div>
 <script src="{% static 'js/jquery.js' %}"></script>
 <script>
+    $(document).ready(function(){
+
     let seconds = 10;
     const next = document.getElementById('nextButton');
     console.log(next)
@@ -87,6 +89,6 @@ function clickFunction(){
 
     }
 
-
+    });
 </script>
 {% endblock content %}

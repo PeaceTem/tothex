@@ -20,7 +20,6 @@ from ckeditor.fields import RichTextField
 # Create your models here.
 """
 User should be able to like this quiz
-
 """
 
 
@@ -34,7 +33,7 @@ class FourChoicesQuestion(models.Model):
     )
 
     SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
-    DURATION_CHOICES = zip( range(15,181, 5), range(15,181, 5) )
+    DURATION_CHOICES = zip( range(15,301, 5), range(15,301, 5) )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fourChoicesQuestions')
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, blank=True, related_name='fourChoicesQuestions')
@@ -52,6 +51,7 @@ class FourChoicesQuestion(models.Model):
     solution = RichTextField(max_length=1000, null=True, blank=True, verbose_name=_('Solution'))
     duration_in_seconds = models.PositiveSmallIntegerField(choices=DURATION_CHOICES, default=30, verbose_name=_('Duration In Seconds'))
     categories = models.ManyToManyField(Category, related_name='fourChoicesQuestions', blank=True)
+    views = models.PositiveIntegerField(default=0)
     attempts = models.PositiveIntegerField(default=0)
     avgScore = models.FloatField(default=0.0)
     solution_quality = models.IntegerField(default=0)
@@ -61,7 +61,7 @@ class FourChoicesQuestion(models.Model):
     answer3NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     answer4NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     shuffleAnswers = models.BooleanField(default=False, verbose_name=_('Shuffle The Answers'))
-    standalone = models.BooleanField(default=True, verbose_name=_("Create as a standalone question too"))
+    standalone = models.BooleanField(default=True, verbose_name=_("Create as an OldTownRoad question too"))
     age_from = models.PositiveSmallIntegerField(null=True, verbose_name=_('Minimum Age Of Quiz Takers'))
     age_to = models.PositiveSmallIntegerField(null=True, verbose_name=_('Maximum Age Of Quiz Takers'))
     relevance = models.IntegerField(default=0)
@@ -203,7 +203,7 @@ class TrueOrFalseQuestion(models.Model):
     )
 
 
-    DURATION_CHOICES = zip(range(15,181, 5), range(15,181, 5))
+    DURATION_CHOICES = zip(range(15,301, 5), range(15,301, 5))
     SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trueOrFalseQuestions')
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, blank=True, related_name='trueOrFalseQuestions')
@@ -220,8 +220,9 @@ class TrueOrFalseQuestion(models.Model):
     points = models.PositiveSmallIntegerField(choices=SCORE_CHOICES, default=1, verbose_name=_('Points'))
 
     solution = RichTextField(max_length=1000, null=True, blank=True, verbose_name=_('Solution'))
-    duration_in_seconds = models.PositiveSmallIntegerField(choices=DURATION_CHOICES, default=20, verbose_name=_('Duration In Seconds'))
+    duration_in_seconds = models.PositiveSmallIntegerField(choices=DURATION_CHOICES, default=30, verbose_name=_('Duration In Seconds'))
     categories = models.ManyToManyField(Category, related_name='trueOrFalseQuestions', blank=True)
+    views = models.PositiveIntegerField(default=0)
     attempts = models.PositiveIntegerField(default=0)
     avgScore = models.FloatField(default=0.0)
     solution_quality = models.IntegerField(default=0)

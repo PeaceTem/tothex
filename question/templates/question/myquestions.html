@@ -18,8 +18,14 @@ My Questions
 <!-- </div> -->
 {% include 'messages.html' %}
 <i>Total questions' attempts = {{total_question_attempts}}</i>
-<div class="container infinite-container" onchange="changed()">
 
+<div class="container infinite-container" onchange="changed()">
+    <div class="questions">
+        The average questions attempts is {{average_attempts}}
+        The average views is {{average_views}}
+        The total views is {{total_views}}
+        The total questions created is {{total_questions_created}}
+    </div>
         {% for date_created, question in page_obj %}
     <div class="questions  infinite-item">
 
@@ -36,6 +42,7 @@ My Questions
                         {{question.attempts}} attempts
                     {% endif %}
                 </div>
+                <div class="views">views: {{question.views}}</div>
                 <div class="average">
                     {{question.avgScore}}%
                 </div>
@@ -137,6 +144,8 @@ My Questions
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 <script>
+    $(document).ready(function(){
+
     var infinite = new Waypoint.Infinite({
         element: $('.infinite-container')[0],
 
@@ -158,6 +167,8 @@ My Questions
         
     
     });
+});
+
 </script>
 
 {% endblock content %}

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="/static/ads/css/adSection.css">
+{% if postAd %}
+<div id="postAd-box" onclick="clickAdLink()">
+    {% if postAd.picture %}
+
+<div id="postAd-image">
+    <img src="{{postAd.picture.url}}">
+</div>
+{% endif %}
+{% if postAd.description %}
+<div>
+    <p id="postAd-desc">
+        {{postAd.description|safe}}
+    </p>
+</div>
+{% endif %}
+{% if postAd.link %}
+<div id="postAd-link">
+    <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'correction' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
+</div>
+{% endif %}
+</div>
+
+{% endif %}
+
+<script>
+    function clickAdLink(){
+        document.getElementsByClassName('postAd')[0].click();
+    };
+</script>

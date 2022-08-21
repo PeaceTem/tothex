@@ -21,17 +21,13 @@ def create_profile(sender, instance, created, *args, **kwargs):
     if created:
         profile = Profile.objects.create(user=instance)
         quizCategories = Category.objects.all().order_by('-quiz_number_of_times_taken')[:5]
-        # questionCategories = Category.objects.all().order_by('-question_number_of_times_taken')[:5]
         for category in quizCategories:
             profile.categories.add(category)
             profile.save()
-        # for category in questionCategories:
-            # profile.categories.add(category)
-            # profile.save()
-        # CoinsEarnerLeaderBoard.objects.create(leader=instance)
-        # CreatorLeaderBoard.objects.create(leader=instance)
-        # ReferralLeaderBoard.objects.create(leader=instance)
-        Follower.objects.create(user=instance)
+        follower = Follower.objects.create(user=instance)
+        # followed = User.objects.get(id=2)
+        # follower.following.add(followed)
+        # users should automatically follow my account here
 
 
 

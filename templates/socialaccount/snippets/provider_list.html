@@ -1,6 +1,6 @@
 {% load socialaccount %}
 {% load static %}
-
+{% load i18n %}
 {% get_providers as socialaccount_providers %}
 
 {% for provider in socialaccount_providers %}
@@ -14,16 +14,11 @@
 </div>
 {% endfor %}
 {% endif %}
-<div class="my-2">
+<div class="my-2" style="max-width:400px;padding:5px;border: 1px solid #f11919; color:#f11919; border-radius: 4px;">
   <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
      href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-     <img 
-      src="
-     {% with 'images/'|add:provider.name|add:'.png' as image %}
-      {% static image %}
-     {% endwith %}
-     " alt="{{ provider.name }}" height="50" width="250"/>
-     </a>
+    {% trans 'Continue with' %} {{provider.name}}
+    </a>
 </div>
 {% endfor %}
 

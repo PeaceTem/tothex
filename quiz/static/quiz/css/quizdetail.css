@@ -46,6 +46,7 @@ div.social-share > div{
 .detail{
     display: block;
     position: relative;
+    top:20px;
     margin:auto;
     width: 500px;
     max-width: 100%;
@@ -57,7 +58,8 @@ div.social-share > div{
     max-width: 95%;
     margin:auto;
     margin-bottom: 10px;
-
+    border-left: 3px solid #f11919b2;
+    box-shadow: 1px 1px 4px #b5ababb9;
 
 }
 

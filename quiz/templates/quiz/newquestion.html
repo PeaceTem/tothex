@@ -8,7 +8,7 @@ Create A New Question
 {% block content %}
 
 {% block quizCss %}
-<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+<link rel="stylesheet" href="{% static 'question/css/newquestion.css' %}">
 {% endblock quizCss %}
 
 
@@ -25,10 +25,10 @@ Create A New Question
     <div class="formBx">
         <h2>Create Question</h2>
 <div>
-    <a href="{% url 'quiz:trueOrFalseQuestion' quiz.id %}">Create A True Or False Question</a>
+    <a class="create" href="{% url 'quiz:trueOrFalseQuestion' quiz.id %}">Create A True Or False Question</a>
 </div>
 <div>
-    <a href="{% url 'quiz:fourChoicesQuestion' quiz.id %}">Create A Four Choices Question</a>
+    <a class="create" href="{% url 'quiz:fourChoicesQuestion' quiz.id %}">Create A Four Choices Question</a>
 </div>
 
 

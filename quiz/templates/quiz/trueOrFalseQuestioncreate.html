@@ -1,16 +1,16 @@
 <!-- Add the copy button to all the form templates and add a display to show that the text has been copied. -->
 
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block quizTitle %}
+{% block title %}
 Create True Or False Question
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
 <style>
     .copysymbol{
@@ -21,7 +21,7 @@ Create True Or False Question
         width: 90px;
     }
 </style>
-{% endblock quizCss %}
+{% endblock css %}
 
 
 {% include 'core/header.html' %}

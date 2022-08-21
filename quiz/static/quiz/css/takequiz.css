@@ -23,6 +23,11 @@ a div{
     width: 100%;
 
 }
+#test, .q-box{
+    display: flex;
+    justify-content: flex-start;
+    align-items:flex-start;
+}
 .questionBx{
     font-weight: 400;
 }
@@ -32,7 +37,7 @@ a div{
     margin:auto;
     width: 500px;
     max-width: 95%;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 
@@ -43,6 +48,8 @@ a div{
     min-height: 50px;
     padding-top: 10px;
     margin-bottom: 10px;
+    border-left: 3px solid #f11919b2;
+    box-shadow: 1px 1px 4px #b5ababb9;
 
 }
 li div{
@@ -101,6 +108,12 @@ input[type="submit"]{
 
 #countdownbox{
     text-align: center;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background: #fff;
+    padding: 5px;
 }
 @media (max-width:700px) {
     *{

@@ -87,6 +87,7 @@
 
     {% include 'jquery.html' %}
     <script>
+    $(document).ready(function(){
 
     $('#replyForm').submit(function(e){
         e.preventDefault();
@@ -104,9 +105,11 @@
             },
         });
     });
-    
+});
+</script>    
+<script>
+    $(document).ready(function(){
 
-    
     $('#answerForm').submit(function(e){
         e.preventDefault();
         let formName = $(this);	
@@ -123,7 +126,10 @@
             },
         });
     });
-    
+})
+
+</script>
+<script>
 const shareButton = document.querySelector('a#shareButton');
 const title = window.document.title;
 const url = window.document.location.href;
@@ -142,10 +148,7 @@ shareButton.addEventListener('click', (e) => {
     }
 });
 
-
-
-
-    </script>
+</script>
 
 {% endblock content %}
 

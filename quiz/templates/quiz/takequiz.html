@@ -50,7 +50,12 @@ Take Quiz
                 <input type="hidden" name="points" value="{{question.points}}">
                 <div class="questionBx">
                     
-                    <div><span>{{index|add:1}}</span> <span>{{question.question|safe}}</span>
+                    <div>
+                        <div class="q-box">
+                            <p>
+                            {{index|add:1}}) {{question.question|safe}}
+                            </p>
+                        </div>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -64,33 +69,40 @@ Take Quiz
                 {% for answer in question.shuffle_answers %}
                 {% if answer == 1 %}
                     <div class="answer">
-                        <input class="option{{question.index}}"   type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
+                        <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}"   type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
                         <label for="id_{{question.index}}_answer1">{{question.answer1}}</label>
                     </div>
                 {% elif answer == 2 %}
                     <div class="answer">
-                        <input class="option{{question.index}}"  type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
+                        <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}"  type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
                         <label for="id_{{question.index}}_answer2">{{question.answer2}}</label>
                     </div>
                 {% elif answer == 3 %}
                     <div class="answer">
-                        <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
+                        <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
                         <label for="id_{{question.index}}_answer3">{{question.answer3}}</label>
                     </div>
                 {% elif answer == 4 %}
                     <div class="answer">
-                        <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
+                        <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
                         <label for="id_{{question.index}}_answer4">{{question.answer4}}</label>
                     </div>
                 {% endif %}
                 {% endfor %}
+                <div style="text-align:right;">
+                    <div style='color:#f11919; text-align:right; margin-right: 3px;'>NeuGott</div>
+                </div>
             </li>
             {% elif question.form == 'trueOrFalseQuestion' %}
             <li class="question">
                 <input type="hidden" name="points" value="{{question.points}}">
                 <div class="questionBx">
                     <div>
-                        <span>{{index|add:1}}</span> <span>{{question.question|safe}}</span>
+                        <div class="q-box">
+                            <p>
+                            {{index|add:1}}) {{question.question|safe}}
+                            </p>
+                        </div>
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -101,13 +113,16 @@ Take Quiz
                       
                 </div>
                     <div class="answer">
-                        <input class="option{{question.index}}"  type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
+                        <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}"  type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
                         <label for="id_{{question.index}}_answer1">{{question.answer1}}</label>
                     </div>
                     
                     <div class="answer">
-                        <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
+                        <input onclick="validateAnswer(this.className, this.id)"   class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
                         <label for="id_{{question.index}}_answer2">{{question.answer2}}</label>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style='color:#f11919; text-align:right; margin-right: 3px;'>NeuGott</div>
                     </div>
             </li>            
             {% endif %}
@@ -117,22 +132,23 @@ Take Quiz
         <input id ='timeTaken' type="hidden" name="timeTaken">
         <input id="submitButton" type="submit" value="Submit">
     </form>
+    <div>The End<br> Please share this quiz with your friends</div>
 </div>
 
 <script>
 
-    // function validateAnswer(option, target){
-    //     let answers = document.getElementsByClassName(option);
+    function validateAnswer(option, target){
+        let answers = document.getElementsByClassName(option);
 
-    //     for(var i = 0; i < answers.length; i++){
-    //     if (answers[i].checked == 1){
-    //         answers[i].checked = 0;
-    //     };  
+        for(var i = 0; i < answers.length; i++){
+        if (answers[i].checked == 1){
+            answers[i].checked = 0;
+        };  
 
-    //     }
-    //     document.getElementById(target).checked = true;
+        }
+        document.getElementById(target).checked = true;
         
-    // }
+    }
 
     const minutes = document.getElementById('minute').textContent;
 
@@ -149,14 +165,13 @@ Take Quiz
 
         timeTaken.value = parseInt(duration - seconds);
         if (seconds == 0){
-            print(seconds);
             const finished =  document.getElementById('submitButton');
             finished.click();
 
         }
 
 
-        if(seconds <= -1){
+        if(seconds <= 0){
             myStopFunction();
         }
     countdownbox.innerHTML = `<b>${minutesLeft}min:${secondsLeft}sec left</b>`;

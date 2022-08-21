@@ -136,7 +136,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     # "core.middleware.LoggingMiddleware",
     # "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
@@ -169,7 +168,7 @@ WSGI_APPLICATION = 'tothex.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
+DATABASES = {   
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
@@ -180,7 +179,7 @@ DATABASES = {
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #         'NAME': config('NAME'),
 #         'USER': config('USER'),
 #         'PASSWORD': config('PASSWORD'), 
@@ -422,8 +421,8 @@ CKEDITOR_CONFIGS = {
         ],
         'toolbar_YourCustomToolbarConfig': [
             # you can use all these settings in your ads section.
-            # {'name': 'document', 'items': ["""'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-',""" 'Templates']},
-            # {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+            {'name': 'document', 'items': ["""'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-',""" 'Templates', 'Source', 'Preview']},
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', '-', 'Undo', 'Redo']},
             # {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
             # {'name': 'forms',
             #  'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
@@ -439,8 +438,8 @@ CKEDITOR_CONFIGS = {
             # '/',
 
             # {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
-            # {'name': 'insert',
-            #  'items': ['Image', 'Flash', 'Table', 'Smiley', 'SpecialChar', """ 'HorizontalRule', 'PageBreak', 'Iframe'"""]},
+            {'name': 'insert',
+             'items': [ 'Table', """ 'Image', 'Flash', 'Smiley', 'SpecialChar', 'HorizontalRule', 'PageBreak', 'Iframe'"""]},
             # '/',
             # {'name': 'styles', 'items': ['Styles',""" 'Format',""" 'Font', 'FontSize']},
             # {'name': 'colors', 'items': ['TextColor', 'BGColor']},
@@ -463,7 +462,7 @@ CKEDITOR_CONFIGS = {
         # 'filebrowserWindowHeight': 725,
         # 'filebrowserWindowWidth': 940,
         # 'toolbarCanCollapse': True,
-        'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+        'mathJaxLib': 'https://cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
         'tabSpaces': 4,
         'extraPlugins': ','.join([
             'uploadimage', # the upload image feature

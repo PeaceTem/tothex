@@ -1,18 +1,19 @@
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% block quizTitle %}
+{% block title %}
 Followers
-{% endblock quizTitle %}
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="/static/core/css/follows.css">
+{% endblock css %}
+
 
 {% block content %}
 
-
-{% block quizCss %}
-<link rel="stylesheet" href="/static/core/css/follows.css">
-{% endblock quizCss %}
 {% include 'core/header.html' %}
 
-Add a customized search elements to the part of the html template
 {% include 'search.html' %}
 
 {% if object_type == 'following' %}
@@ -50,7 +51,8 @@ Add a customized search elements to the part of the html template
 {% include 'jquery.html' %}
 
 <script>
-    
+    $(document).ready(function(){
+
 $('.clickable').click(function(e){
         e.preventDefault();
         // Add a logic that removes the user that's not the creator of this quiz
@@ -65,9 +67,6 @@ $('.clickable').click(function(e){
                 success : function(response){
                     objectBx.parent().css({'background-color':'#ddd','border-radius':'4px'})
                     objectBx.remove()
-                    // objectBx.parent().parent().hide(500);
-                    // $('#questionLength').text('{{quiz.questionLength|add:-1}}')
-                    // document.getElementById('questionLength').innerText = parseInt(document.getElementById('questionLength').innerText) + 1
                     alert("This action is successful!")
 
                 },
@@ -77,6 +76,7 @@ $('.clickable').click(function(e){
 
             });
         });
+    })
       
 </script>
 

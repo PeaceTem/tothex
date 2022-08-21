@@ -226,3 +226,25 @@ Restart=always
 ExecStart=/home/ubuntu/env/md/bin/uwsgi --emperor /home/ubuntu/env/md/vassals --uid www-data --gid www-data
 [Install]
 WantedBy=multi-user.target
+
+
+
+
+
+[Unit]
+Description=uwsgi emperor for neugott website
+After=network.target
+[Service]
+User=ubuntu
+Restart=always
+ExecStart=/home/ubuntu/tothex/tothexvenv/bin/uwsgi --emperor /home/ubuntu/tothex/tothexvenv/vassals --uid www-data --gid www-data
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+
+
+
+django-insecure-4byeclyh#89lkfsjq(sj38vi2siitfd2v8d-8l61(4x3m045zj'

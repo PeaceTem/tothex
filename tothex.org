@@ -97,9 +97,91 @@ sudo certbot install --nginx
 
 
 
-
+  proxy_pass http://django:8000;
 
 certbot renew   or certbot again    to renew let encrypt
 
 
 https://pubdash.ezoic.com/setup
+
+
+sudo passwd postgres   , to change the password of postgres user
+sudo passwd ubuntu     , to change teh password of ubuntu user;
+
+
+su - postgres     , to switch to postgres user;
+su - ubumtu      ,  to switch to ubuntu user;
+
+$("#postcontent").submit(function(e) {
+    $.ajax({
+        type:"POST",
+        url:"add_new_post.php",
+        data:$("#postcontent").serialize(),
+        beforeSend:function(){
+            $(".post_submitting").show().html("<center><img src='images/loading.gif'/></center>");
+        },success:function(response){   
+            //alert(response);
+            $("#return_update_msg").html(response); 
+            $(".post_submitting").fadeOut(1000);                
+        }
+    });
+});
+
+
+The new postgres role is NeuGott.
+
+
+self.addEventListener("install", event => {
+    this.skipWaiting();
+    event.waitUntil(
+        caches.open(staticCacheName)
+            .then(cache => {
+        return fetch('/offline')
+        .then(response => cache.put('/offline', new Response(response.body)));
+            })
+    )
+});
+
+
+sudo usermod -aG sudo newuser,  to add a user to sudoers.
+sudo apt-get install dpkg
+dpkg --status postgresql
+whereis postgresql
+which psql
+ll /usr/bin/psql
+
+
+
+Initialize the server by running the command:
+
+sudo service postgresql-9.3 initdb
+Start the server by running the command:
+
+sudo service postgresql-9.3 start
+
+
+
+
+
+
+
+
+# systemd service for managing all PostgreSQL clusters on the system. This
+# service is actually a systemd target, but we are using a service since
+# targets cannot be reloaded.
+
+[Unit]
+Description=PostgreSQL RDBMS
+
+[Service]
+Type=oneshot  # change this part to notify
+ExecStart=/bin/true
+ExecReload=/bin/true
+RemainAfterExit=on
+
+[Install]
+WantedBy=multi-user.target
+
+The pg_ctl is located in /usr/lib/postgresql/12/bin/pg_ctl
+
+Warning: The unit file, source configuration file or drop-ins of postgresql.service changed on disk. Run 'systemctl daemon-reload' to reload units.

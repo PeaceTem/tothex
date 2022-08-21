@@ -48,7 +48,12 @@ Quiz Generator Submit
 
 
             <div>
-                    {{question.question|safe}} <br>
+                <div class="q-box">
+                    <p>
+                    {{question.question|safe}}
+                    </p>
+                </div>
+                   
                     <div class="points">
                         {% if question.points < 2 %}
                         {{question.points}} point
@@ -184,7 +189,12 @@ Quiz Generator Submit
                         
                     </ol>
                     <div class="solution">
-                        Solution: {{question.solution|safe}}
+                         <div class="q-box">
+                        <p>
+                            Solution: {{question.solution|safe}}
+                        </p>
+                    </div>
+                        
                     </div>
                
             </div>
@@ -194,7 +204,12 @@ Quiz Generator Submit
 
 
                 <div>
-                        {{question.question|safe}} <br>
+                    <div class="q-box">
+                        <p>
+                        {{question.question|safe}}
+                        </p>
+                    </div>
+                        
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -266,7 +281,11 @@ Quiz Generator Submit
                         
                         </ol>
                         <div class="solution">
-                            Solution: {{question.solution|safe}}
+                            <div class="q-box">
+                                <p>
+                                    Solution:<br>{{question.solution|safe}}
+                                </p>
+                            </div>
                         </div>
                    
                 </div>
@@ -336,8 +355,7 @@ Quiz Generator Submit
     
     </script>
 <script>
-
-
+$(document).ready(function(){
     function clickFunction(){
         
         $.ajax({
@@ -358,7 +376,9 @@ Quiz Generator Submit
         });
 
     }
-
+});
+</script>
+<script>
     const yourAnswer = document.getElementsByClassName('yourAnswer')
     const correctAnswer = document.getElementsByClassName('correctAnswer')
     const indicators = document.getElementsByClassName('indicator')
@@ -380,7 +400,7 @@ Quiz Generator Submit
 {% endblock content %}
 
 
-
+<!-- 
 
 <script src="{% static 'question/html2canvas.js' %}"></script>
 <script>
@@ -397,4 +417,4 @@ let elm = document.querySelector('.download-quiz');
 
 
 
-</script>
+</script> -->

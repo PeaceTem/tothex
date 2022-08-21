@@ -45,7 +45,7 @@ from core.tasks import LikeQuiz, StreakValidator, CoinsTransaction, CreatorCoins
 
 from core.services import ReferralService, get_user_ip
 from .services import ScoreRange, generateCoins
-
+from ads.services import getAd
 # Utilities
 import random
 from random import shuffle
@@ -98,7 +98,7 @@ class GeneratePDF(LoginRequiredMixin, View):
 
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
-            filename = f"ToTheX_quiz_{quiz.title}.pdf"
+            filename = f"NeuGott_quiz_{quiz.title}.pdf"
             # content = f"inline; filename={filename}"
             content = f"attachment; filename={filename}"
             response['Content-Disposition'] = content
@@ -131,7 +131,7 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
             code = str(kwargs.get('ref_code'))
             ReferralService(request, code)
         
-        postAd = PostAd.objects.all()
+        # postAd = PostAd.objects.all()
         # if postAd.count() > 0:
         #     postAd = randomChoice(postAd)
         #     postAd.views += 1
@@ -142,7 +142,7 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
     context = {
         'quiz': quiz,
         'user': user,
-        'postAd': postAd,
+        'postAd': getAd('detail'),
         'profile': profile or 'None',
         'number_of_registered_users': number_of_registered_users,
         'questions': questions,
@@ -181,6 +181,7 @@ Add all the documentation here
 def QuizList(request):
     user = request.user
     profile = None
+    page_count = 5
     page = request.GET.get('page') or 1
     
 
@@ -189,36 +190,45 @@ def QuizList(request):
         quizzes = Quiz.objects.none()
         search = search_input.strip()
         search = search.split()
+        page_count = 20
         for search_word in search:
+
             lookup = Q(title__icontains=search_word) | Q(description__icontains=search_word) | Q(categories__title__icontains=search_word) | Q(user__username__icontains=search_word)
             quizzes |= Quiz.objects.filter(lookup).order_by("-relevance")
         
         quizzes = quizzes.order_by('-relevance').distinct()[:100]
     else:
         if user.is_authenticated:
-            profile = Profile.objects.prefetch_related('categories', 'quizTaken').select_related('favoriteUser').get(user=user)
-            categories = profile.categories.all()
-            quizzes = Quiz.objects.none()
-            age = profile.get_user_age
-            lookup = Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
+            profile = Profile.objects.prefetch_related( 'recommended_quizzes', 'categories', 'quizTaken').get(user=user)
+            if profile.recommended_quizzes.count() < page_count:
+                categories = profile.categories.all()
+                age = profile.get_user_age
+                lookup = Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
+                while categories.count() > 0 and profile.recommended_quizzes.count() <= 300:
+                # use while loop to check for quiz length
+                    category = randomChoice(categories)
+                    categories = categories.exclude(id=category.id)
+                    quizzes = category.quizzes.filter(lookup)[:150]
+                    for q in quizzes:
+                        if q not in profile.quizTaken.all():
+                            profile.recommended_quizzes.add(q)
 
-            # use while loop to check for quiz length
 
-            while quizzes.count() < int(page):
-                category = randomChoice(categories)
-                quizzes = category.quizzes.filter(lookup)[:200]# add relevance to filter later
-                # print(category)
-                categories = categories.exclude(id=category.id)
+            if profile.recommended_quizzes.count() > 0:
+                page = 1
+                quizzes = profile.recommended_quizzes.all()[:page_count*2]
+                for rem in quizzes:
+                    profile.recommended_quizzes.remove(rem)
+
 
 
         else:
-            lookup = Q(relevance__gte=0)
+            lookup = Q(relevance__gte=0) & Q(questionLength__gte=0)
             quizzes = Quiz.objects.filter(lookup).order_by('?')[:100]
-    # if you change this paginator constanct to 5 make sure to multiply page by 5
-    p = Paginator(quizzes, 1)
-    # page = request.GET.get('page')
-    # page = 1
+
+    p = Paginator(quizzes, page_count)
     quizzes = p.get_page(page)
+
 
     context={
 

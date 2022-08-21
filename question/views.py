@@ -41,6 +41,7 @@ import json
 from django.utils.text import slugify
 
 from core.services import ReferralService, get_user_ip
+from ads.services import getAd
 # from quiz.services import reverseStringCleaningService, stringCleaningService
 
 # Create your views here.
@@ -96,8 +97,9 @@ def MyQuestionList(request):
 
     questions.sort(key=sortKey, reverse=True)
     # add reverse later
-
-
+    total_views = sum([x[1].views for x in questions])
+    
+    questions_length = len(questions)
     p = Paginator(questions, 10)
     page = request.GET.get('page')
     questions = p.get_page(page)
@@ -108,6 +110,10 @@ def MyQuestionList(request):
         'page_obj': questions,
         "viewer": "owner",
         "total_question_attempts": total_question_attempts,
+        'average_attempts':round(total_question_attempts/questions_length, 2),
+        'average_views':round(total_views/questions_length, 2),
+        'total_questions_created':questions_length,
+        'total_views': total_views,
     }
 
     return render(request, 'question/myquestions.html', context)
@@ -159,11 +165,10 @@ def AnswerQuestion(request):
                 profile = Profile.objects.prefetch_related('categories', 'fourChoicesQuestionsMissed', 'fourChoicesQuestionsTaken', 'recommended_four_choices_questions').get(user=user)
 
                 categories = profile.categories.all()
-                question = FourChoicesQuestion.objects.none()
                 age = profile.get_user_age
                 lookup = Q(relevance__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
                 questionsList = (*profile.fourChoicesQuestionsMissed.all(), *profile.fourChoicesQuestionsTaken.all(),)
-                while categories.count() > 1 and profile.recommended_four_choices_questions.count() <= 150:
+                while categories.count() >= 1 and profile.recommended_four_choices_questions.count() <= 150:
                     category = randomChoice(categories)
                     categories = categories.exclude(id=category.id)
                     questions = (*category.fourChoicesQuestions.filter(lookup)[:200],)
@@ -195,7 +200,6 @@ def AnswerQuestion(request):
                 profile = Profile.objects.prefetch_related("categories","trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'recommended_true_or_false_questions').get(user=user)
 
                 categories = profile.categories.all()
-                question = TrueOrFalseQuestion.objects.none()
                 age = profile.get_user_age
                 lookup = Q(relevance__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
                 questionsList = (*profile.trueOrFalseQuestionsMissed.all(), *profile.trueOrFalseQuestionsTaken.all(),)
@@ -351,6 +355,7 @@ def CorrectionView(request, question_form, question_id, qtype, answer):
         'question': question,
         'questionType': qtype,
         'answer' : answer,
+        'postAd': getAd('correction'),
     }
 
     return render(request, 'question/correction.html', context)
@@ -979,7 +984,6 @@ def PastQuestions(request):
     return render(request, 'question/quiz.html', context)
 
     
-
 
 
 

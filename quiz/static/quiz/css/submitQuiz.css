@@ -1,6 +1,6 @@
 
 *{
-    text-align: center;
+    /* text-align: center; */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -15,13 +15,17 @@ a div{
     width: 100%;
 
 }
-
+/* #test, .q-box{
+    display: flex;
+    justify-content: flex-start;
+    align-items:flex-start;
+} */
 .question-box,  .container, .question-card-container{
     display: block;
     position: relative;
     margin:auto;
     width: 500px;
-    max-width: 90%;
+    max-width: 98%;
     margin-top: 10px;
 }
 
@@ -40,6 +44,10 @@ a div{
     border-radius: 4px;
     min-height: 50px;
     padding-top: 10px;
+    padding-left: 4px;
+    border-top: 4px solid #f11919;
+    border-left: 3px solid #f11919b2;
+    box-shadow: 1px 1px 4px #b5ababb9;
 }
 ol{
     max-width: 100%;
@@ -67,10 +75,14 @@ img{
     text-align: left;
 }
 
-
+#likes form{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 input[type="submit"]{
-    margin: auto;
     background: #f11919;
     color: #fff;
     width: 95vw;
@@ -81,6 +93,7 @@ input[type="submit"]{
     margin-bottom: 2px;
     outline: none;
     border-radius: 4px;
+
 }
 
 .points{
@@ -99,6 +112,9 @@ button{
     width: 120px;
     max-width: 25vw;
     border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 ol.answers{

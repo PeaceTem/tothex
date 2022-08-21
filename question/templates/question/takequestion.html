@@ -56,44 +56,48 @@
 
                         {% for a in ans %}
                         {% if a == 1 %}
-                        <div class="answer">
-                            <label for="id_{{index}}_answer1">
-                            <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                        <div onclick="AutoClick(this)" class="answer">
+                            <label for="id_{{question.index}}_answer1">
+                            <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+
                             {{question.answer1}}
-                        </label>
+                            </label>
                         </div>
                         {% elif a == 2 %}
-                        <div class="answer">
+                        <div onclick="AutoClick(this)" class="answer">
 
-                            <label for="id_{{index}}_answer2">
-                            <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                            <label for="id_{{question.index}}_answer2">
+                            <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+
                             {{question.answer2}}
-                        </label>
+                            </label>
 
                         </div>
                         {% elif a == 3 %}
 
-                        <div class="answer">
-                            <label for="id_{{index}}_answer3">
-                            <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
+                        <div onclick="AutoClick(this)" class="answer">
+                            <label for="id_{{question.index}}_answer3">
+                            <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
                             {{question.answer3}}
                         </label>
                         </div>
                         {% elif a == 4 %}
 
-                        <div class="answer">
-                            <label for="id_{{index}}_answer4">
-                            <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
+                        <div onclick="AutoClick(this)" class="answer">
+
+                            <label for="id_{{question.index}}_answer4">
+                            <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
+
                             {{question.answer4}}
-                        </label>
+                            </label>
                         </div>
                         {% endif %}
                         {% endfor %}
-                        <div>
-                            <input type="submit"  id="submitButton"  value="Submit">
+                        <div class="submitBx">
+                            <input style="display:none;" type="submit"  id="submitButton"  value="Submit">
         
                         </div>
-                        <div style='text-align:right; color:#f11919; text-align:right; margin-right: 3px; font-size:20;'>ToTheX</div>
+                        <div style='text-align:right; color:#f11919; text-align:right; margin-right: 3px; font-size:20;'>NeuGott</div>
         
                     </div>
                     
@@ -111,31 +115,34 @@
 
 
 
-                <div class="answer">
-                    <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
-                    <label for="id_{{index}}_answer1"> 
+                <div onclick="AutoClick(this)" class="answer">
+                    <label for="id_{{question.index}}_answer1"> 
+                    <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
                             {{question.answer1}}
                     </label>
                 </div>
                 
-                <div class="answer">
-                    <input class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
-                    <label for="id_{{index}}_answer3"> 
+                <div onclick="AutoClick(this)" class="answer">
+                    <label for="id_{{question.index}}_answer2"> 
+                    <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+
                             {{question.answer2}}
                     </label>
                 </div>
-                <div>
+                <div style="display:none;" class="submitBx">
                     <input type="submit"  id="submitButton"  value="Submit">
 
                 </div>
-                <div style='text-align:right; color:#f11919; text-align:right; margin-right: 3px; font-size:20;'>ToTheX</div>
+                <div style='text-align:right; color:#f11919; text-align:right; margin-right: 3px; font-size:20;'>NeuGott</div>
 
             </div>
                     
                         
                 {% endif %}
+
                 <input type="hidden" name="questionType" value="{{questionType}}">
         </form>
+
     
     <!-- disable the submit button if the question has not been answered -->
     {% if questionType == 'OldTownRoad' %}
@@ -149,7 +156,7 @@
         </form>
     {% endif %}
         <a href=""  class="a">
-            <div>Download Image</div>
+            <div>Screenshot</div>
         </a>
     </div>
     
@@ -195,8 +202,6 @@
 
     const countdownbox = document.getElementById('countdownbox');
     const skip = document.getElementById('skipButton');
-    console.log(seconds);
-    console.log(skip);
     
 
     const myInterval = setInterval(()=>{
@@ -215,8 +220,6 @@
         }
         countdownbox.innerHTML = `<b>${minutesLeft}min:${secondsLeft}sec left</b>`;
 
-        console.log('Finished!')
-        console.log(seconds)
     }, 1000)
 
 function myStopFunction(){
@@ -225,5 +228,21 @@ function myStopFunction(){
 
     
 </script>
+<script>
+    const AutoSubmit = function(){
+        console.log('The input button is clicked!')
+        let endpoint = document.getElementById('submitButton');
+        endpoint.click();
+        endpoint.style.backGroundColor = '#fff';
+
+    }
+    const AutoClick = function(arg){
+        let inputbx = arg.childNodes[1];
+        inputbx.click();
+        console.log(inputbx)
+        console.log(arg);
+    }
+</script>
 
 {% endblock content %}
+

@@ -29,7 +29,11 @@ Old Town Road Correction
         <div class="question-box download-container">
             {% if question.form == 'fourChoicesQuestion' %}
             <div>
-                    {{question.question|safe}}
+                <div id="test" class="q-box">
+                    <div>
+                        {{question.question|safe}}
+                    </div>
+                </div>
                     <ol class="answers">
                         <ol class="answers">
                             {% if question.correct == 'answer1' %}
@@ -159,7 +163,7 @@ Old Town Road Correction
     
                     </ol>
                         
-                        <div class="solution">
+                        <div class="solution q-box">
                             Solution: {{question.solution|safe}}
                         </div>
                         {% if not user in question.solution_validators.all %}
@@ -175,13 +179,18 @@ Old Town Road Correction
                                 <input type="submit" value="Submit">
                             </form>
                             </div>
-                        {% endif %}        
+                        {% endif %}  
+                        <div style="text-align:right;">
+                            <div style='color:#f11919; text-align:right; margin-right: 3px;'>NeuGott</div>
+                        </div>      
             </div>
             {% elif question.form == 'trueOrFalseQuestion' %}
 
 
                 <div>
-                        {{question.questionType}}
+                    <div class="q-box">
+                        {{question.question|safe}}
+                    </div>
                         <ol class="answers">
                             {% if question.correct == 'True' %}
                         <li class="answerGreen">
@@ -246,7 +255,7 @@ Old Town Road Correction
                         </ol>
                         
                          
-                        <div class="solution">
+                        <div class="solution q-box">
                         Solution: {{question.solution|safe}}
                         </div>
                       {% if not user in question.solution_validators.all %}
@@ -263,8 +272,13 @@ Old Town Road Correction
                         </div>
                         {% endif %}
                 </div>
+                <div style="text-align:right;">
+                    <div style='color:#f11919; text-align:right; margin-right: 3px;'>NeuGott</div>
+                </div>
             {% endif %}
         </div>
+{% include 'ads/adSection.html' %}
+
         <div>
             <a href=""  class="a">Download</a>
         </div>
@@ -290,7 +304,6 @@ Old Town Road Correction
 
 
 <script>
-
 let elm = document.querySelector('.question-box.download-container');
 elm.prepend("");
 html2canvas(elm).then(function(canvas){
@@ -304,6 +317,7 @@ html2canvas(elm).then(function(canvas){
 
 
 <script>
+$(document).ready(function(){
 
 function clickFunction(){
         
@@ -325,10 +339,11 @@ function clickFunction(){
         });
 
     }
-
+});
 </script>
 
 <script>
+    $(document).ready(function(){
 
 
     $(document).on('submit', '#solutionQualityForm', function(e){
@@ -351,6 +366,6 @@ function clickFunction(){
 
         });
         });
-
+    });
 </script>
 {% endblock content%}

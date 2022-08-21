@@ -1,18 +1,18 @@
 
 
-{% extends 'quiz/base.html' %}
+{% extends 'base.html' %}
 
 {% load static %}
 {% load social_share %}
-{% block quizTitle %}
+{% block title %}
 Quiz Submit
-{% endblock quizTitle %}
+{% endblock title %}
 
 {% block content %}
 
-{% block quizCss %}
+{% block css %}
 <link rel="stylesheet" href="{% static 'quiz/css/submitQuiz.css' %}">
-{% endblock quizCss %}
+{% endblock css %}
 {% include 'core/header.html' %}
 
 
@@ -47,28 +47,40 @@ Quiz Submit
         Your Average Score: {{user_avg_score}}%
         <br>
         {{timeTaken}}
+        <p>
+        You don't see the solutions to questions you didn't answer!
+
+        </p>
     </div>
 </div>
 
 
 <div class="question-card-container download-quiz">
-        You don't see the solutions to questions you didn't answer!
+    <div>
+        {% if quiz.composition %}
+        <div class="q-box">
+            <p>
+            {{quiz.composition|safe}}
+            </p>
+        </div>
+        {% endif %}
+    </div>
         <ol>
         
         {% for question, answer in questionsList %}
         <div class="question-box">
-            {% if quiz.composition %}
-            <div>
-                {{quiz.composition|safe}}
-            </div>
-            {% endif %}
+
             {% if question.form == 'fourChoicesQuestion' %}
         <li class="question">
 
             <div class="indicator"></div>
 
             <div>
-                    {{question.question|safe}} <br>
+                <div class="q-box">
+                    <p>
+                    {{question.question|safe}}
+                    </p>
+                </div>
                     <div class="points">
                         {% if question.points < 2 %}
                         {{question.points}} point
@@ -206,7 +218,12 @@ Quiz Submit
 
                     </ol>
                     <div class="solution">
-                        Solution: {{question.solution|safe}}
+                        <!-- Solution: -->
+
+                        <!-- <div class="q-box"> -->
+                            {{question.solution|safe}}
+                        <!-- </div> -->
+
                     </div>
                
             </div>
@@ -217,7 +234,12 @@ Quiz Submit
 
 
                 <div>
-                        {{question.question|safe}} <br>
+                    <div class="q-box">
+                        <p>
+                        {{question.question|safe}}
+                        </p>
+                    </div>
+
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -287,7 +309,11 @@ Quiz Submit
                            
                         </ol>
                         <div class="solution">
-                            Solution: {{question.solution|safe}}
+                            <!-- Solution: -->
+
+                            <!-- <div class="q-box"> -->
+                                {{question.solution|safe}}
+                            <!-- </div> -->
                         </div>
                    
                 </div>
@@ -349,8 +375,11 @@ Quiz Submit
     
     </div>
     <div>
-        <a href="{% url 'quiz:random-quiz-picker' %}">Take Another Quiz</a>
+        <div class="link-container">
+            <a href="{% url 'quiz:random-quiz-picker' %}">Take Another Quiz</a>
+        </div>
     </div>
+    
     {% if user.is_authenticated %}
     {% if not user in quiz.solution_validators.all %}
     <div>
@@ -368,8 +397,11 @@ Quiz Submit
     {% endif %}
     {% endif %}
     <div>
-        <div class="link-container">
-            <a href="{% url 'quiz:take-quiz' quiz.id %}">Re-take Quiz</a>
+        <div>
+            <div class="link-container">
+                <a href="{% url 'quiz:take-quiz' quiz.id %}">Re-take Quiz</a>
+
+            </div>
         </div>
     </div>
     
@@ -432,7 +464,7 @@ Quiz Submit
         let cvs = document.querySelector('canvas');
         let a = document.querySelector('.a');
         a.href = cvs.toDataURL();
-        a.download = 'ToTheX-{{quiz.quiz.title}}.png'
+        a.download = 'NeuGott-{{quiz.quiz.title}}.png'
     })
 
 </script>
@@ -489,6 +521,7 @@ $('form#report').submit(function(e){
 </script>
 
 <script>
+$(document).ready(function(){
 
 function ActivateForm(){
     const solution = document.getElementById('solutionQualityForm');
@@ -511,10 +544,13 @@ function ActivateForm(){
             }
         });
         });
-
+    })
+;
 </script>
 
 <script>
+$(document).ready(function(){
+
 $('.likeForm').submit(function(e){
 e.preventDefault();
 const serializeData = $(this).serialize()
@@ -538,6 +574,8 @@ $.ajax({
 
 });
 })
+})
+;
 </script>
 <script>
 const shareButton = document.querySelector('a#shareButton');

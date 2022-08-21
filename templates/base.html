@@ -8,8 +8,12 @@
     {% load pwa %}
     {% progressive_web_app_meta %}
     <link rel="manifest" href="manifest.json">
-    <link rel="shortcut icon" href="{% static 'images/tothex_160.png' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static '/images/tothex_160.png' %}" type="image/x-icon">
     <!-- Bootstrap CSS -->
+    <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -25,7 +29,7 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <meta name="description" content="take quizzes and answer questions">
     <meta name="keywords" content="categories,neugott,quiz,question">
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <!-- <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> -->
     <meta name="author" content="NeuGott">
 </head>
     <body>
@@ -33,9 +37,19 @@
         {% block content %}
 
         {% endblock content %}
-
+        <div class="d-flex d-none position-fixed" style="display:none;color:white;bottom:2vh;left:46vw">
+            <button id="onloadWindow" class="btn btn-danger loading">
+                <span style="color:white;" class="spinner-border spinner-border-sm">Loader</span>
+            </button>
+        </div>
+        
     </body>
-    
+    <script>
+        window.addEventListener('load', function(){
+            document.getElementById('onloadWindow').style.display = 'absolute';
+            console.log('The window is loading')
+        })
+    </script>
 </html>
 
 
