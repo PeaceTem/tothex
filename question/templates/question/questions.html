@@ -5,6 +5,9 @@ Questions
 {% endblock title %}
 
 {% block css %}
+
+<link rel="stylesheet" href="/static/css/loading.css">
+
 <link rel="stylesheet" href="{% static 'question/css/questions.css' %}">
 {% endblock css %}
 {% block content %}
@@ -59,6 +62,33 @@ Questions
             </div>
         </a>
     </div>
+    <div id="explanation">
+        <p>
+            <div>
+                    \[2x^a\]
+
+          <!-- <annotation encoding="application/x-tex">{\displaystyle a_{0}(x)y+a_{1}(x)y'+a_{2}(x)y''+\cdots +a_{n}(x)y^{(n)}+b(x)=0,}</annotation> -->
+      <!-- <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/ac470d7aef63fd48b3045c19dc2fa151077d05b8" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -0.838ex; width:56.783ex; height:3.343ex;" alt="{\displaystyle a_{0}(x)y+a_{1}(x)y'+a_{2}(x)y''+\cdots +a_{n}(x)y^{(n)}+b(x)=0,}"></span> -->
+
+            </div>
+            Dear user, this is to inform you that this app is still in testing phase.<br>
+            Start creating quizzes and questions. They might be really useful to some certain people.
+            See this as your own contribution to the advancement of humanity.
+            Feel free to give me any feedback(click the menu link at the top left of your device screen). I'm hopeful, by the end of november 2022, this app will be fully functional.
+            <div>
+                <a id="paystack" href="https://paystack.com/pay/neugott-donation-for-the-developer" target="self">Donate</a>
+            </div>
+            Your Donation helps to improve the quality of this app.
+        </p>
+        
+        </div>
+        <div style="margin:auto; padding:4px;">
+            <div style='text-align: start; font-size: 14px;'>Total Number Of Registered Users : {{number_of_registered_users}}</div>
+            <div style='text-align: left; font-size: 14px;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
+            <div style='text-align: left; font-size: 14px;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>    
+        </div>
+        
+
 </div>
 
 
@@ -82,58 +112,19 @@ Questions
 </div>
 
 
-
-
-
-
-
- 
-
 <div id="openForm">
     <a id="open" class="link" href="{% url 'question:new-question' %}">+</a>
 </div>
-<div id="explanation">
-<p>
-    <div>
-        <math>
-            \frac{1}{2}
-        </math>
-    </div>
-    Dear user, this is to inform you that this app is still in testing phase.<br>
-    Feel free to give me any feedback(click the menu link at the top left of your device screen<br>
-    Create quizzes, questions, qxas(Question and Answers) as many as you can because this is how money will be generated from this app very soon.
-    <br>
-    This app is not meant to be addictive. <br>
-    I'm hopeful, by the end of november 2022, this app will be fully functional.
-    <br>
-    As we all know that the current state of tertiary institutions in Nigeria is fucked up, 
-    I'm planning to brush up on my skills in IT security and web development but I'm penniless right now.
-    And last but not the least, you can donate some token as low as #100(approx. 20 cents) as a gesture of good will.
-    <div>
-        <a id="paystack" href="https://paystack.com/pay/neugott-donation-for-the-developer" target="self">Donate</a>
-    </div>
-    Your Donation helps to improve the user experience of this page.
-    
-</p>
-
-<p style="display:none;">
-    Ask about what users think about bitcoin and other cryptocurrency.
-    Tell them they will be able to trade them here.
-    Allow payment in Naira at a flat rate of #400 per dollar at payout and payin
-    The currency will be TTXD.<br>
-    1 USD = 1 TTXD flat rate.<br>
-    1 400 = 1 TTXD flat rate.<br>
-    Collect money inside a wallet, and use the available funds in the wallet for any payment on the app.
-    The payment will be set before paypal or paystack or coinbase client is contacted.
-    The payout will be 85%.
-</p>
-</div>
-
-<div style='text-align: center; font-size: 16px; '>Total Number Of Registered Users : {{number_of_registered_users}}</div>
-<div style='text-align: center; font-size: 16px;'>Total Number Of Quizzes Created : {{number_of_quizzes_created}}</div>
-<div style='text-align: center; font-size: 16px;'>Total Number Of Questions Created : {{number_of_questions_created}}</div>
-
-
+{% include 'mathjax.html' %}
+{% include 'loading.html' %}
+<!-- <script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+</script> -->
+<!-- <script>
+    window.MathJax = {
+        loader: {load: ["input/tex", "output/chtml"]}
+    };
+</script> -->
 <script src="{% static 'question/js/questions.js' %}"></script>
 <script>
     const formContainer = document.querySelector('.contentBx');

@@ -47,20 +47,14 @@ img{
 }
 
 
-div#explanation{
-    width: 100vw;
-}
-
-
 
 div#explanation{
-    width: 400px;
-    max-width: 95vw;
     margin: 5px auto;
     padding:4px;
-    border-radius: 4px;
 }
-
+div p{
+    text-align: left;
+}
 div#openForm{
     position: fixed;
     bottom: 10px;

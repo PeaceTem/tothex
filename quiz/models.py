@@ -53,6 +53,7 @@ class Quiz(models.Model):
     composition = RichTextField(max_length=10000, null=True, blank=True, verbose_name=_("Composition and Instructions"))
     date = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
+    views = models.PositiveIntegerField(default=0)
     when = models.CharField(max_length=200, null=True, blank=True)
     lastQuestionIndex = models.PositiveSmallIntegerField(default=0)
     questionLength = models.PositiveSmallIntegerField(default=0)

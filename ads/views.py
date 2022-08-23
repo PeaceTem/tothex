@@ -25,6 +25,9 @@ def PostAdView(request,nextpage):
 
 
 
+
+# add the post ads click function to the javascript of every 
+
 def PostAdClick(request, post_id, location):
     # link_id = request.GET.get('link_id')
     user = request.user

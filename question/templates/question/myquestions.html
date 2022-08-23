@@ -9,6 +9,7 @@ My Questions
 {% block content %}
 
 {% block css %}
+{% include 'mathjax.html' %}
 <link rel="stylesheet" href="{% static 'question/css/myquestions.css' %}">
 {% endblock css %}
 {% include 'core/header.html' %}
@@ -21,6 +22,7 @@ My Questions
 
 <div class="container infinite-container" onchange="changed()">
     <div class="questions">
+        $$\sqrt{\log{4} 5}$$
         The average questions attempts is {{average_attempts}}
         The average views is {{average_views}}
         The total views is {{total_views}}
@@ -86,6 +88,8 @@ My Questions
                         {{question.attempts}} attempts
                     {% endif %}
                 </div>
+                <div class="views">views: {{question.views}}</div>
+
                 <div class="average">
                     {{question.avgScore}}%
                 </div>
@@ -138,6 +142,7 @@ My Questions
 </div>
 
 {% include 'jquery.html' %}
+{% include 'loading.html' %}
 
 <script src="{% static 'question/js/myquestions.js' %}"></script>
 

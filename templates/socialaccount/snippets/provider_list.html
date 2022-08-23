@@ -14,8 +14,8 @@
 </div>
 {% endfor %}
 {% endif %}
-<div class="my-2" style="max-width:400px;padding:5px;border: 1px solid #f11919; color:#f11919; border-radius: 4px;">
-  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+<div class="my-2" style="max-width:400px;width:95vw;margin:auto;padding:5px;border: 1px solid #f11919; color:#f11919; border-radius: 4px;">
+  <a style="font-size: 20;font-weight:600;text-decoration:none;" title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
      href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
     {% trans 'Continue with' %} {{provider.name}}
     </a>

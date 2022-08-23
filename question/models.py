@@ -85,7 +85,7 @@ class FourChoicesQuestion(models.Model):
         dt = (self.date_created)
         dt_updated = (self.date_updated)
         if dt and dt_updated and self.solution:
-            rel = (len(self.solution.split()) * 2) + (len(self.question.split()) * 3) + (self.attempts * 5) + (self.solution_quality * 100)
+            rel = (len(self.solution.split())) + (self.attempts * 2) + (self.solution_quality * 10)
             
             self.relevance = rel
 
@@ -257,7 +257,7 @@ class TrueOrFalseQuestion(models.Model):
         dt = (self.date_created)
         dt_updated = (self.date_updated)
         if dt and dt_updated and self.solution:
-            rel = (len(self.solution.split()) * 2) + (len(self.question.split()) * 3) + (self.attempts * 5) + (self.solution_quality * 100)
+            rel = (len(self.solution.split())) + (self.attempts) + (self.solution_quality * 10)
             self.relevance = rel
 
 

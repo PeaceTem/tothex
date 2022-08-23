@@ -114,6 +114,8 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
     try:
         user = request.user
         quiz = Quiz.objects.select_related("quizlink").prefetch_related("likes", "categories").get(id=quiz_id)
+        quiz.views += 1
+        quiz.save()
         preQuestions = []
         preQuestions += quiz.fourChoicesQuestions.all()
         preQuestions += quiz.trueOrFalseQuestions.all()
@@ -1081,11 +1083,6 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
     
     if request.method == 'POST':
         score = 0
-        postAd = PostAd.objects.all()
-        postAd = randomChoice(postAd)
-        postAd.views += 1
-        postAd.submitpageviews += 1
-        postAd.save()
         # if user.is_authenticated:
         #     streak = Streak.objects.get(profile=profile)
 
@@ -1282,7 +1279,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
             'user_avg_score': user_avg_score,
             'total_score': total_score,
             'questionsList': questionsList,
-            'postAd': postAd,
+            'postAd': getAd('submit'),
             'avgScore': avgScore,
             'attempt_report': attempt_report,
             'timeTaken' : timeTaken,

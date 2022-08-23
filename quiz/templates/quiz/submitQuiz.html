@@ -11,6 +11,8 @@ Quiz Submit
 {% block content %}
 
 {% block css %}
+{% include 'mathjax.html' %}
+
 <link rel="stylesheet" href="{% static 'quiz/css/submitQuiz.css' %}">
 {% endblock css %}
 {% include 'core/header.html' %}
@@ -454,6 +456,7 @@ Quiz Submit
 
 <script src="{% static 'question/html2canvas.js' %}"></script>
 {% include 'jquery.html' %}
+{% include 'loading.html' %}
 
 <script>
 

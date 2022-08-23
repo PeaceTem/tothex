@@ -1,0 +1,3 @@
+make sure the database is set to postgresql
+Add a signal(pre_delete) for delete function to set the active to false instead of deleting it.
+collect all staticfiles

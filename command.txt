@@ -248,3 +248,10 @@ WantedBy=multi-user.target
 
 
 django-insecure-4byeclyh#89lkfsjq(sj38vi2siitfd2v8d-8l61(4x3m045zj'
+
+
+To generate ssh keys
+ssh-keygen -o -t rsa -C “ssh@github.com”
+
+nginx logs
+/var/log/nginx/access. log

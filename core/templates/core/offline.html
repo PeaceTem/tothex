@@ -37,6 +37,10 @@
         Click the button below to reload this manually
     </p>
     <button type="button">Reload</button>
+    {% include 'jquery.html' %}
+
+    {% include 'loading.html' %}
+
     <script>
         document.querySelector('button').addEventListener('click', () => {
             window.location.reload();

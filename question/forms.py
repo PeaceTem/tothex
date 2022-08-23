@@ -9,7 +9,7 @@ class NewFourChoicesQuestionForm(forms.ModelForm):
     class Meta:
         model = FourChoicesQuestion
         fields = '__all__'
-        exclude = ('user', 'quiz', 'form', 'index', 'views', 'date_created', 'standalone', 'categories', 'attempts', 'avgScore',  'solution_quality', 'solution_validators', 'answer1NumberOfTimesTaken', 'answer2NumberOfTimesTaken', 'answer3NumberOfTimesTaken', 'answer4NumberOfTimesTaken', 'relevance',)
+        exclude = ('user', 'quiz','views', 'form', 'index', 'views', 'date_created', 'standalone', 'categories', 'attempts', 'avgScore',  'solution_quality', 'solution_validators', 'answer1NumberOfTimesTaken', 'answer2NumberOfTimesTaken', 'answer3NumberOfTimesTaken', 'answer4NumberOfTimesTaken', 'relevance',)
 
 
 
@@ -18,7 +18,7 @@ class NewTrueOrFalseQuestionForm(forms.ModelForm):
     class Meta:
         model = TrueOrFalseQuestion
         fields = '__all__'
-        exclude = ('user', 'quiz', 'form', 'index', 'views', 'answer1', 'answer2', 'standalone', 'categories', 'solution_validators' , 'date_created', 'categories', 'attempts', 'avgScore',  'solution_quality', 'solution_validators', 'answer1NumberOfTimesTaken', 'answer2NumberOfTimesTaken', 'relevance',)
+        exclude = ('user', 'quiz','views', 'form', 'index', 'views', 'answer1', 'answer2', 'standalone', 'categories', 'solution_validators' , 'date_created', 'categories', 'attempts', 'avgScore',  'solution_quality', 'solution_validators', 'answer1NumberOfTimesTaken', 'answer2NumberOfTimesTaken', 'relevance',)
 
     def clean(self):
         a1 = self.cleaned_data.get('age_from')

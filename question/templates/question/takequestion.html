@@ -3,12 +3,17 @@
 {% load static %}
 
 {% block title %}
-{{section}}
+{% if questionType == 'OldTownRoad' %}
+            Old Town Road
+            {% elif questionType == 'Following' %}
+            Bohemian Grove
+            {% endif %}
 {% endblock title %}
 
 {% block content %}
 
 {% block css %}
+{% include 'mathjax.html' %}
 <link rel="stylesheet" href="{% static 'question/css/takequestion.css' %}">
 {% endblock css %}
 
@@ -17,6 +22,15 @@
 {% include 'messages.html' %}
 
     <div>
+    <div>
+        <p>
+            {% if questionType == 'OldTownRoad' %}
+            Old Town Road
+            {% elif questionType == 'Following' %}
+            Bohemian Grove
+            {% endif %}
+        </p>
+    </div>
         <div class="inline">
             <div>
                 Prize: {{score}}
@@ -165,6 +179,7 @@
 <div  style="display:none;" class='result'>
       
 </div>
+{% include 'loading.html' %}
 
 <script src="{% static 'question/html2canvas.js' %}"></script>
 
@@ -226,11 +241,10 @@ function myStopFunction(){
     clearInterval(myInterval);
 }
 
-    
 </script>
 <script>
     const AutoSubmit = function(){
-        console.log('The input button is clicked!')
+        // console.log('The input button is clicked!')
         let endpoint = document.getElementById('submitButton');
         endpoint.click();
         endpoint.style.backGroundColor = '#fff';
@@ -239,8 +253,8 @@ function myStopFunction(){
     const AutoClick = function(arg){
         let inputbx = arg.childNodes[1];
         inputbx.click();
-        console.log(inputbx)
-        console.log(arg);
+        // console.log(inputbx)
+        // console.log(arg);
     }
 </script>
 

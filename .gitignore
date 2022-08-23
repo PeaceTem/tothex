@@ -3,7 +3,7 @@
 uwsgi_myproj.ini
 uwsgi_params/
 
-
+ttx
 
 
 .DS_Store
@@ -70,7 +70,7 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-ttx/
+ttx
 # Flask stuff:
 instance/
 .webassets-cache

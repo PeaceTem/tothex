@@ -231,18 +231,21 @@ def AnswerQuestion(request):
     else:
         if question_type == 'fourChoices':
             questions = FourChoicesQuestion.objects.filter(relevance__gte=0)[:100]
-            question = randomChoice(questions)
-
         elif question_type == 'trueOrFalse':
             questions = TrueOrFalseQuestion.objects.filter(relevance__gte=0)[:100]
-            question = randomChoice(questions)
         
+        if questions.count() > 0:
+            question = randomChoice(questions)
+        else:
+            messages.info(request, _('The questions are insufficient!'))
+            return redirect("question:questions")
     score = round((2 - question.avgScore/100) * 2, 2)
+    question.views += 1  
+    question.save() 
     context = {
     'question': question,
     'score'  : score,
     'questionType' : 'OldTownRoad',
-    'section' : 'Old Town Road',
     }
     
     if question.form == "fourChoicesQuestion":
@@ -323,7 +326,8 @@ def FollowingQuestion(request):
             return redirect("question:questions")
         # change the recommendation algorithm to bucket based
         
-        
+    question.views += 1  
+    question.save()      
     score = round((2 - question.avgScore/100) * 2, 2)
 
 
@@ -332,7 +336,6 @@ def FollowingQuestion(request):
         'score': score,
         'question': question,
         'questionType' : 'Following',
-        'section' : 'The Bohemian Grove',
     }
     if question.form == "fourChoicesQuestion":
         ans = [1,2,3,4]
@@ -1262,15 +1265,9 @@ def TCorrectionView(request, question_form, question_id, answer):
 
     answer = question.getAnswer(answer)
     
-    postAd = PostAd.objects.all()
-    postAd = randomChoice(postAd)
-    # print(postAd)
-
-    
 
     context={
         'question': question,
-        'postAd': postAd,
         'answer': answer,
     }
 

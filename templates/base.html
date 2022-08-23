@@ -32,24 +32,13 @@
     <!-- <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> -->
     <meta name="author" content="NeuGott">
 </head>
-    <body>
-      
-        {% block content %}
+<body>   
+    {% block content %}
 
-        {% endblock content %}
-        <div class="d-flex d-none position-fixed" style="display:none;color:white;bottom:2vh;left:46vw">
-            <button id="onloadWindow" class="btn btn-danger loading">
-                <span style="color:white;" class="spinner-border spinner-border-sm">Loader</span>
-            </button>
-        </div>
-        
-    </body>
-    <script>
-        window.addEventListener('load', function(){
-            document.getElementById('onloadWindow').style.display = 'absolute';
-            console.log('The window is loading')
-        })
-    </script>
+    {% endblock content %}
+
+</body>
+
 </html>
 
 

@@ -11,7 +11,7 @@
     <div id="profileUser">
         {% if profile.user == request.user %}
         <span>{{profile.coins}}
-            <img class='svg' src="{%static 'images/coin-svgrepo-com.svg' %}" alt="coins">
+            <img class='svg' src="{% static 'images/coin-svgrepo-com.svg' %}" alt="coins">
         </span>
         {% endif %}
     </div>

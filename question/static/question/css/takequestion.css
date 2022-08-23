@@ -126,7 +126,7 @@ input[type="submit"]{
 }
 .answer{
     padding: 10px 4px;
-    border: 1px solid #ccc;
+    border: 2px solid #555;
     border-radius: 4px;
 
 }

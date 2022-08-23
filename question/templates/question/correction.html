@@ -10,6 +10,8 @@ Old Town Road Correction
 {% block content %}
 
 {% block css %}
+{% include 'mathjax.html' %}
+
 <link rel="stylesheet" href="{% static 'question/css/correction.css' %}">
 {% endblock css %}
 
@@ -301,6 +303,7 @@ Old Town Road Correction
 <script src="{% static 'question/html2canvas.js' %}"></script>
 
 {% include 'jquery.html' %}
+{% include 'loading.html' %}
 
 
 <script>

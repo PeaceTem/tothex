@@ -10,6 +10,8 @@ Take Quiz
 {% block content %}
 
 {% block css %}
+{% include 'mathjax.html' %}
+
 <link rel="stylesheet" href="{% static 'quiz/css/takequiz.css' %}">
 {% endblock css %}
 
@@ -134,6 +136,7 @@ Take Quiz
     </form>
     <div>The End<br> Please share this quiz with your friends</div>
 </div>
+{% include 'loading.html' %}
 
 <script>
 

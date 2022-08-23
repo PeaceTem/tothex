@@ -6,6 +6,8 @@
 
 {% block content %}
 {% block css %}
+{% include 'mathjax.html' %}
+
 <link rel="stylesheet" href="{% static 'question/css/fourChoices.css' %}">
 {% endblock css %}
 {% include 'core/header.html' %}
@@ -52,13 +54,17 @@
 <input type="text"  onclick="copyFunction(this.id)" name="" id="uarr" value="↑" class="copysymbol" readonly>
 <input type="text"  onclick="copyFunction(this.id)" name="" id="rarr" value="→" class="copysymbol" readonly>
 <input type="text"  onclick="copyFunction(this.id)" name="" id="darr" value="↓" class="copysymbol" readonly>
+<input type="text"  onclick="copyFunction(this.id)" name="" id="jax" value="$$\frac{\sqrt{11010_2}}{1111_2}$$" class="copysymbol" readonly>
+
 
 
 <div class="question">
+    $$\frac{\sqrt{11010_2}}{1111_2}$$
     {% block form_block %}
 
     {% endblock form_block %}
 </div>
+{% include 'loading.html' %}
 
 <script>
     function copyFunction(base){

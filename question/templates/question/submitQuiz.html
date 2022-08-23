@@ -11,6 +11,8 @@ Quiz Generator Submit
 {% block content %}
 
 {% block css %}
+{% include 'mathjax.html' %}
+
 <link rel="stylesheet" href="{% static 'quiz/css/submitQuiz.css' %}">
 {% endblock css %}
 {% include 'core/header.html' %}
@@ -336,6 +338,8 @@ Quiz Generator Submit
 </div>
 
 <script src="{% static 'js/jquery.js' %}"></script>
+{% include 'loading.html' %}
+
 <script>
 
     const shareButton = document.querySelector('a#shareButton');
