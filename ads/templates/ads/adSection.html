@@ -16,7 +16,7 @@
 {% endif %}
 {% if postAd.link %}
 <div id="postAd-link">
-    <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id {{page}} %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
+    <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id page %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
 </div>
 {% endif %}
 </div>

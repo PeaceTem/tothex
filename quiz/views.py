@@ -219,7 +219,8 @@ def QuizList(request):
 
             if profile.recommended_quizzes.count() > 0:
                 page = 1
-                quizzes = profile.recommended_quizzes.all()[:page_count*2]
+                page_count = 5
+                quizzes = profile.recommended_quizzes.all()[:page_count + 1]
                 for rem in quizzes:
                     profile.recommended_quizzes.remove(rem)
 
