@@ -319,31 +319,7 @@ html2canvas(elm).then(function(canvas){
 </script>
 
 
-<script>
-$(document).ready(function(){
 
-function clickFunction(){
-        
-        $.ajax({
-            // change this to post
-            type: 'GET', 
-            url : $('a.postAd').data('url'),
-            data : {
-            },
-            success : function(response){
-                alert('link clicked!')
-                
-
-            },
-            error : function(){
-                alert('It falis silently!')
-            }
-
-        });
-
-    }
-});
-</script>
 
 <script>
     $(document).ready(function(){

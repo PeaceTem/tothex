@@ -170,25 +170,25 @@ WSGI_APPLICATION = 'tothex.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {   
-   'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': BASE_DIR / 'db.sqlite3',
-   }
-}
+# DATABASES = {   
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+# }
 
 
 
-# DATABASES = {
-#      'default': {
-#          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#          'NAME': 'postgres',
-#          'USER': 'dbmasteruser',
-#          'PASSWORD': '?xQ(1JSI]nZG^-4?nXitnv[$Leg]3gLp', 
-#          'HOST': 'ls-33d64515978a764b1cff2ac8c0e56c45d199c5d7.czzbhfz5hxzc.eu-west-2.rds.amazonaws.com',
-#          'PORT': '5432',
-#      }
-#  }
+DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+         'NAME': 'postgres',
+         'USER': 'dbmasteruser',
+         'PASSWORD': '?xQ(1JSI]nZG^-4?nXitnv[$Leg]3gLp', 
+         'HOST': 'ls-33d64515978a764b1cff2ac8c0e56c45d199c5d7.czzbhfz5hxzc.eu-west-2.rds.amazonaws.com',
+         'PORT': '5432',
+     }
+ }
 
 # DATABASES = {
 #     'default' : {},

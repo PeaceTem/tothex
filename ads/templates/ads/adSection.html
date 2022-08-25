@@ -16,7 +16,7 @@
 {% endif %}
 {% if postAd.link %}
 <div id="postAd-link">
-    <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id 'correction' %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
+    <a class="postAd" onclick="clickFunction()" data-url="{% url 'ads:post-click' postAd.id {{page}} %}" href="{{postAd.link}}" target="_blank">Visit Site</a>
 </div>
 {% endif %}
 </div>
@@ -27,5 +27,29 @@
     function clickAdLink(){
         document.getElementsByClassName('postAd')[0].click();
     };
-    // Add the post ad click here
+</script>
+
+
+    <script>
+$(document).ready(function(){
+    function clickFunction(){
+        
+        $.ajax({
+            // change this to post
+            type: 'GET', 
+            url : $('a.postAd').data('url'),
+            data : {
+            },
+            success : function(response){
+                alert('link clicked!')
+                
+            },
+            error : function(){
+                alert('It falis silently!')
+            }
+
+        });
+
+    }
+});
 </script>

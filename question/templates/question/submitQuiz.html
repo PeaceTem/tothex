@@ -300,13 +300,6 @@ Quiz Generator Submit
 </ol>
 
 <div class="question-card-container">
-    
-    <!-- <div style="display:none; max-width: 500px;" class="result">
-    
-    </div>
-    <div>
-        <a href=""  class="a">Download the Image</a>
-    </div> -->
 
 {% if type == 'reAttempt' %}
     <div>
@@ -334,9 +327,10 @@ Quiz Generator Submit
     </div>
 
 </div>
+{% include 'ads/adSection.html' %}
 
 </div>
-
+<div></div>
 <script src="{% static 'js/jquery.js' %}"></script>
 {% include 'loading.html' %}
 
@@ -358,30 +352,7 @@ Quiz Generator Submit
     });
     
     </script>
-<script>
-$(document).ready(function(){
-    function clickFunction(){
-        
-        $.ajax({
-            // change this to post
-            type: 'GET', 
-            url : $('a.postAd').data('url'),
-            data : {
-            },
-            success : function(response){
-                alert('link clicked!')
-                
-
-            },
-            error : function(){
-                alert('It falis silently!')
-            }
-
-        });
-
-    }
-});
-</script>
+<!-- 
 <script>
     const yourAnswer = document.getElementsByClassName('yourAnswer')
     const correctAnswer = document.getElementsByClassName('correctAnswer')
@@ -399,26 +370,6 @@ $(document).ready(function(){
     }
 
 
-</script>
+</script> -->
 
 {% endblock content %}
-
-
-<!-- 
-
-<script src="{% static 'question/html2canvas.js' %}"></script>
-<script>
-
-let elm = document.querySelector('.download-quiz');
-    elm.prepend("");
-    html2canvas(elm).then(function(canvas){
-        document.querySelector('.result').append(canvas);
-        let cvs = document.querySelector('canvas');
-        let a = document.querySelector('.a');
-        a.href = cvs.toDataURL();
-        a.download = 'ToTheX-{{quiz.quiz.title}}.png'
-    })
-
-
-
-</script> -->

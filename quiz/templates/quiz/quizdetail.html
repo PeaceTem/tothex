@@ -209,7 +209,6 @@ Quiz Detail
     </div>
     <a href="{% url 'question:questions' %}">Go Back</a>
     </div>
-
 <!-- Ezoic - bottom_of_page - bottom_of_page -->
 <div id="ezoic-pub-ad-placeholder-101"> </div>
 <!-- End Ezoic - bottom_of_page - bottom_of_page -->    
@@ -337,14 +336,15 @@ $.ajax({
     url : $(this).data('url'),
     data : serializeData,
     success : function(response){
+        $(`#likeButton${quiz_id}`).hide();
         
-        if (response == 'liked'){
-            $(`#likeButton${quiz_id}`).text('unlike');
-            $('.likeCounter').text('{{quiz.likeCount|add:1}}')
-        }else if (response == 'unliked'){
-            $(`#likeButton${quiz_id}`).text('like');
-            $('.likeCounter').text('{{quiz.likeCount|add:-1}}')
-        }
+        // if (response == 'liked'){
+        //     $(`#likeButton${quiz_id}`).text('unlike');
+        //     $('.likeCounter').text('{{quiz.likeCount|add:1}}')
+        // }else if (response == 'unliked'){
+        //     $(`#likeButton${quiz_id}`).text('like');
+        //     $('.likeCounter').text('{{quiz.likeCount|add:-1}}')
+        // }
         
 
     },
