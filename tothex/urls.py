@@ -29,12 +29,12 @@ def HomePage(request):
 
 
 urlpatterns = [
-    path('n', include('pwa.urls')),
+    path('', include('pwa.urls')),
+    path('', HomePage),
     # path('debug/', include('debug_toolbar.urls')),
-    path('ng/', include('routers.urls')),
+    path('', include('routers.urls')),
     path('admin/', admin.site.urls),
     path('zohoverify/verifyforzoho.html', zoho),
-    path('', HomePage),
 
     # add zohomail verify to this part of the code.
 
