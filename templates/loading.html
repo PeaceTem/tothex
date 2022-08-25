@@ -1,15 +1,17 @@
 <div id="loading-overlay" class="loading-window"></div>
-<div id="loading-bar" class="d-flex d-none position-fixed" 
+<!-- <div id="loading-bar" class="d-flex d-none position-fixed" 
 style="z-index:99999999;color:white;bottom:2vh;left:46vw">
     <button id="onloadWindow" class="btn btn-danger loading">
         <span style="color:white;" class="spinner-border spinner-border-sm"></span>
     </button>
-</div>
+</div> -->
 <script>
     $(function(){
         $('#loading-overlay').hide();
         $('#loading-bar').hide();
+    // window.onbeforeunload(()=>{
 
+    // })
        $(window).on('beforeunload', ()=>{
     // let loadingOverlay = document.getElementById('loading-overlay');
     // loadingOverlay.style.display = 'absolute';
@@ -19,24 +21,5 @@ style="z-index:99999999;color:white;bottom:2vh;left:46vw">
         
        }) 
     });
-    // let loadingOverlay = document.getElementById('loading-overlay');
-    // let myOnLoadInterval = setInterval(()=>{
-        // window.addEventListener('load', function(){
-            // loadingOverlay.style.display = 'absolute';
-            // console.log('The window is loading')
-        // })
-    // 
-        // myOnLoadStopFunction();
-    
-        // add the black overlay later
-    // }, 100)
-    
-    
-// function myOnLoadStopFunction(){
-    // if (!window.onload){
-        // clearInterval(myOnLoadInterval);
-        // loadingOverlay.classList.remove('loading-window');
-        // console.log('Stop loading');
-    // };
-// }
+
 </script>

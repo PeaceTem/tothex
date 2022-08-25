@@ -2,8 +2,9 @@
 *.sock
 uwsgi_myproj.ini
 uwsgi_params/
-
-ttx
+*.ini
+*uwsgi_params
+*ttx
 
 
 .DS_Store

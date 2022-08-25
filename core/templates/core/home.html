@@ -1,2 +1,20 @@
+
+{% if not user.is_authenticated %}
 <button><a href="{% url 'register' %}">Create an account</a></button>
 <button><a href="{% url 'login' %}">Login to your account</a></button>
+
+{% endif %}
+
+
+
+<h1>NeuGott</h1>
+Add a counter that will inform the user they are being redirected to old town road
+<h4>This is where geniuses gather to train one another</h4>
+<section>
+    <p>
+        <a href="{% url 'question:answer-question' %}">Start taking questions</a>
+    </p>
+    <p>
+        <a href="{% url 'quiz:quizzes' %}">Or take a quiz</a>
+    </p>
+</section>

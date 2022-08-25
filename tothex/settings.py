@@ -86,16 +86,18 @@ INSTALLED_APPS = [
 
 
 # PROGRESSIVE WEB APP
-PWA_SERVICE_WORKER_PATH = BASE_DIR / 'static/js' / 'serviceworker.js'
+# add the service worker location
+# start rendering this from the staticfiles dir
+PWA_SERVICE_WORKER_PATH = BASE_DIR / 'staticfiles/js' / 'serviceworker.js'
 
 PWA_APP_NAME = 'NeuGott Lite'
 PWA_APP_DESCRIPTION = "NeuGott Lite"
 PWA_APP_THEME_COLOR = '#fff'
 PWA_APP_BACKGROUND_COLOR = '#fff'
 PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = '/' # change it to / if it gives an error
+PWA_APP_SCOPE = '/ng/' # change it to / if it gives an error
 PWA_APP_ORIENTATION = 'portrait'
-PWA_APP_START_URL = '/question/' #change to /quiz/
+PWA_APP_START_URL = '/ng/quiz/' #change to /quiz/
 PWA_APP_STATUS_BAR_COLOR = '#fff' #'default'
 PWA_APP_ICONS = [
 	{
@@ -168,25 +170,25 @@ WSGI_APPLICATION = 'tothex.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-#DATABASES = {   
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
+DATABASES = {   
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
+   }
+}
 
 
 
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'postgres',
-         'USER': 'dbmasteruser',
-         'PASSWORD': '?xQ(1JSI]nZG^-4?nXitnv[$Leg]3gLp', 
-         'HOST': 'ls-33d64515978a764b1cff2ac8c0e56c45d199c5d7.czzbhfz5hxzc.eu-west-2.rds.amazonaws.com',
-         'PORT': '5432',
-     }
- }
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#          'NAME': 'postgres',
+#          'USER': 'dbmasteruser',
+#          'PASSWORD': '?xQ(1JSI]nZG^-4?nXitnv[$Leg]3gLp', 
+#          'HOST': 'ls-33d64515978a764b1cff2ac8c0e56c45d199c5d7.czzbhfz5hxzc.eu-west-2.rds.amazonaws.com',
+#          'PORT': '5432',
+#      }
+#  }
 
 # DATABASES = {
 #     'default' : {},
@@ -307,7 +309,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'olumidejonathan10@gmail.com' # 'olumidejonathan@zohomail.com'
+EMAIL_HOST_USER = 'olumidejonathan@zohomail.com'
 EMAIL_HOST_PASSWORD = 'triumphant'
 
 # SOCIAL AUTHENTICATION_BACKENDS

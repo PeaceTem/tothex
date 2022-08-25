@@ -24,21 +24,18 @@ def zoho(request):
     return render(request, 'core/verifyforzoho.html')
 
 
-urlpatterns = [
-    path('', include('pwa.urls')),
-    # path('debug/', include('debug_toolbar.urls')),
+def HomePage(request):
+    return render(request, 'core/home.html')
 
+
+urlpatterns = [
+    path('n', include('pwa.urls')),
+    # path('debug/', include('debug_toolbar.urls')),
+    path('ng/', include('routers.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-    path('core/', include('core.urls')),
-    path('quiz/', include('quiz.urls', namespace='quiz')),
-    path('category/', include('category.urls', namespace='category')),
-    path('question/', include('question.urls', namespace='question')),
-    path('leaderboard/', include('leaderboard.urls', namespace='leaderboard')),
-    path('@', include('personalProfile.urls', namespace='profile')),
-    path('ads/', include('ads.urls', namespace='ads')),
-    path('qxa/', include('q.urls', namespace='qxa')),
     path('zohoverify/verifyforzoho.html', zoho),
+    path('', HomePage),
+
     # add zohomail verify to this part of the code.
 
 ]

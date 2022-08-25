@@ -14,7 +14,7 @@
 
   <div class="text-center">
     <h1>{% trans "Sign In" %}</h1>
-    {% comment %}<a href="{{ signup_url }}">sign up</a>{% endcomment %}
+    <a href="{{ signup_url }}">sign up</a>
     {% get_providers as socialaccount_providers %}
     {% if socialaccount_providers %}
     <p>{% blocktrans with site.name as site_name %}
@@ -26,21 +26,19 @@
         {% include "socialaccount/snippets/provider_list.html" with process="login" %}
       </div>
 
-      <!-- <div class="login-or border-top border-bottom my-3">{% trans 'OR' %}</div> -->
+      <div class="login-or border-top border-bottom my-3">{% trans 'OR' %}</div>
 
     </div>
 
     {% include "socialaccount/snippets/login_extra.html" %}
 
     {% else %}
-    {% comment %}
     <p>{% blocktrans %}If you have not created an account yet, then please
     <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-    {% endcomment %}
     
     {% endif %}
   </div>
-  <!-- <div class="row">
+  <div class="row">
     <div class="col-md-6 offset-md-3">
       <form class="login" method="POST" action="{% url 'account_login' %}">
           {% csrf_token %}
@@ -53,6 +51,6 @@
             <a class="button secondaryAction text-dark text-center" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
           </div>
         </form>
-    </div> -->
+    </div>
   </div>
 {% endblock %}
