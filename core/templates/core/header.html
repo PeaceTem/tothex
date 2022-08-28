@@ -27,15 +27,20 @@
         font-weight: 700;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
+    img#neugott{
+        width:20px;
+        height:20px;
+    }
 </style>
 
 
 <div class="head-arrow">
     <div class="head-box">
-        <a href="{{request.META.HTTP_REFERER}}">
+        <a href="{{request.META.HTTP_REFERER}}" alt="NeuGott back button">
             ←
         </a>
         <span>NeuGott</span>
+        <img style="width:20px; height:20px;border-radius:4px;" id="neugott" src="/static/core/images/tothex_160.png" alt="NeuGott">
         
     </div>
 </div>

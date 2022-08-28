@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
-DEBUG = config('DEBUG', cast=bool, default=True)
+DEBUG = config('DEBUG', cast=bool, default=False)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS')
 
 
@@ -119,7 +119,7 @@ PWA_APP_SPLASH_SCREEN = [
 ]
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'en-US'
-PWA_DEBUG_MODE = True
+PWA_DEBUG_MODE = False
 
 # crispy forms
 
@@ -423,16 +423,16 @@ CKEDITOR_CONFIGS = {
         ],
         'toolbar_YourCustomToolbarConfig': [
             # you can use all these settings in your ads section.
-            {'name': 'document', 'items': ["""'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-',""" 'Templates', 'Source', 'Preview']},
-            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', '-', 'Undo', 'Redo']},
+            # {'name': 'document', 'items': ["""'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-',""" 'Templates', 'Source', 'Preview']},
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo']},
             # {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
             # {'name': 'forms',
             #  'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
                     #    'HiddenField']},
-            '/',
+            # '/',
             {'name': 'basicstyles',
              'items': ["""'Bold', 'Italic', 'Underline', 'Strike',""", 'Subscript', 'Superscript', '-', 'RemoveFormat']},
-            '/',
+            # '/',
             # {'name': 'paragraph',
             #  'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
                     #    'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',

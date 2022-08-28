@@ -6,13 +6,15 @@ from .forms import NewPostAdForm
 from random import shuffle
 from quiz.utils import randomChoice
 # Create your views here.
-
 def PostAdView(request,nextpage):
     postAd = PostAd.objects.order_by('?').first()
     # postAd = randomChoice(postAd)
     postAd.views += 1
     postAd.bannerpageviews += 1
     postAd.save()
+    profile = request.user.profile
+    profile.coins += 1
+    profile.save()
     
 
     context={

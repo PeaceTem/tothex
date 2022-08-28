@@ -8,6 +8,7 @@ from django.forms import model_to_dict
 from django.http import HttpResponse
 from .serializers import CategorySerializer
 from rest_framework import generics
+from django.views.generic.base import TemplateView
 
 
 
@@ -63,3 +64,15 @@ class AddCategory(View):
 
 
 
+class ProfileCategory(TemplateView):
+    template_name = 'quiz/categoryCreate.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["obj_type"] = "profile"
+        profile = self.request.user.profile
+        context["objCategories"] = profile.categories.all()
+        # remove the page_obj part for this profile categories
+        pass
+    def post(self, request):
+        pass
+    pass

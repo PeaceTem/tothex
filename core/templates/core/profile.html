@@ -72,7 +72,7 @@ Profile
     
      {% if user != profile.user and user.is_authenticated %}
         {% if user in follower.followers.all %}
-
+        {% comment %}
         <form id='followForm' action="{% url 'unfollow' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="following" value="{{follower.user.id}}" readonly>
@@ -83,6 +83,8 @@ Profile
                 {% trans "UnFollow" %}
             </button>
         </form>
+        {% endcomment %}
+
         {% else %}
 
 

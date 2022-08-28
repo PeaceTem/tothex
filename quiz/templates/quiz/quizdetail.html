@@ -9,7 +9,6 @@ Quiz Detail
 
 {% block css %}
 {% include 'mathjax.html' %}
-
 <link rel="stylesheet" href="{% static 'quiz/css/quizdetail.css' %}">
 {% include 'chartjs.html' %}
 
@@ -41,7 +40,7 @@ Quiz Detail
             </math>
         </div> 
         <div>
-            <div >created by {{quiz.user|capfirst}}</div>
+            <div >Created by @{{quiz.user}}</div>
             <div >It was created on {{quiz.date|date}} {{quiz.date|time}}</div> 
             <div > Attempts: {{quiz.attempts}}
             </div>
@@ -70,9 +69,12 @@ Quiz Detail
                         <div style="color:#fff;" id="likeButton{{quiz.id}}" >like</div>
                     </button>
                 {% else %}
+                    {% comment %}
                     <button id="like{{quiz.id}}" type="submit">
                         <div  style="color:#fff;" id="likeButton{{quiz.id}}" >unlike</div>
                     </button>
+                    {% endcomment %}
+
                 {% endif %}
             </form>
         </div>
@@ -82,9 +84,11 @@ Quiz Detail
             likes: <span class="likeCounter">{{quiz.likeCount}}</span>
         </div>
         <div>
-            <a href="{% url 'quiz:take-quiz' quiz.id %}">
-                    Take Quiz
-            </a>
+            <form action="{% url 'quiz:take-quiz' quiz.id %}" method="get">
+                <button id="like{{quiz.id}}" type="submit">
+                    <div  style="color:#fff;" >Take Quiz</div>
+                </button>
+            </form>
         </div>
 
         {% if quiz.user == user %}
@@ -209,10 +213,7 @@ Quiz Detail
     </div>
     <a href="{% url 'question:questions' %}">Go Back</a>
     </div>
-<!-- Ezoic - bottom_of_page - bottom_of_page -->
-<div id="ezoic-pub-ad-placeholder-101"> </div>
-<!-- End Ezoic - bottom_of_page - bottom_of_page -->    
-<div> An Ezoic Ad is being shown here </div> 
+
 
 {% include 'jquery.html' %}
 {% include 'loading.html' %}
@@ -386,7 +387,6 @@ $('#deleteQuizForm').submit(function(e){
 </script>
 
 <script>
-
 const shareButton = document.querySelector('a#shareButton');
 const title = window.document.title;
 const url = window.document.location.href;
@@ -395,7 +395,13 @@ shareButton.addEventListener('click', (e) => {
     if(navigator.share){
         navigator.share({
             title: `${title}`,
-            url : `${url}`
+            url : `
+            {% if user.is_authenticated %}
+            {% url 'quiz:submit-quiz' quiz.id profile %}
+            {% else %}
+            {% url 'quiz:submit-quiz' quiz.id None %}
+            {% endif %}
+            `
         }).catch(console.error);
     }else{
         alert('Use a default share button');

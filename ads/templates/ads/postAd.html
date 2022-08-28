@@ -10,7 +10,7 @@ Ads
 {% block css %}
 <link rel="stylesheet" href="{% static 'ads/css/postAd.css' %}">
 {% endblock css %}
-<div class="container">
+<div onclick="clickAdLink()" class="container">
 
     <div id="countdownbox"></div>
     {% if postAd.picture %}
@@ -37,10 +37,17 @@ Ads
 {% endif %}
 </div>
 <script src="{% static 'js/jquery.js' %}"></script>
+
+<script>
+    function clickAdLink(){
+        document.getElementsByClassName('postAd')[0].click();
+    };
+</script>
+
 <script>
     $(document).ready(function(){
 
-    let seconds = 10;
+    let seconds = 15;
     const next = document.getElementById('nextButton');
     console.log(next)
     next.style.display = 'none'

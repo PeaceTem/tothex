@@ -338,7 +338,7 @@ def FollowerListView(request, follower_id, page_name):
         context = {}
         search_input = search_input.split()
         search_input = "_".join(search_input)
-        searched_user = User.objects.filter(username=search_input).exists() 
+        searched_user = User.objects.filter(username__iexact=search_input).exists() 
         if searched_user:
             # profile = Profile.objects.get(user=searched_user)
             return redirect('profile:profile', profile_name=search_input)

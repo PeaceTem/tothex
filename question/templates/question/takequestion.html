@@ -29,6 +29,7 @@
             {% elif questionType == 'Following' %}
             Bohemian Grove
             {% endif %}
+        <img style="width:20px; height:20px;border-radius:4px;" id="neugott" src="/static/question/images/tothex_160.png" alt="NeuGott">
         </p>
     </div>
         <div class="inline">
@@ -230,7 +231,7 @@
             let skip = document.getElementById('skipButton');
             skip.click();
         }
-        if (seconds <= -1){
+        if (seconds <= 0){
             myStopFunction();
         }
         countdownbox.innerHTML = `<b>${minutesLeft}min:${secondsLeft}sec left</b>`;

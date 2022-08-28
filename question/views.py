@@ -167,6 +167,8 @@ def AnswerQuestion(request):
             # the profile should only prefetch recommended questions alone
             # print('Entering the first step')
             profile = Profile.objects.prefetch_related('recommended_four_choices_questions').get(user=user)
+            if profile.coins < 1:
+                return redirect('ads:postAd', nextpage='oldtownroad')
             if profile.recommended_four_choices_questions.count() < 1:
                 # print('Entering the funnel!')
 
@@ -203,6 +205,8 @@ def AnswerQuestion(request):
         elif question_type == 'trueOrFalse':
             profile = Profile.objects.prefetch_related('recommended_true_or_false_questions').get(user=user)
             # print('First step')
+            if profile.coins < 1:
+                return redirect('ads:postAd', nextpage='oldtownroad')
             if profile.recommended_true_or_false_questions.count() < 1:
                 # print('entering the funnel')
                 profile = Profile.objects.prefetch_related("categories","trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'recommended_true_or_false_questions').get(user=user)
@@ -274,6 +278,8 @@ def FollowingQuestion(request):
     if question_type == 'fourChoices':
         # print('Entering the first step')
         profile = Profile.objects.prefetch_related('following_four_choices_questions').get(user=user)
+        if profile.coins < 1:
+            return redirect('ads:postAd', nextpage='following')
         if profile.following_four_choices_questions.count() < 1:
             # print('Entering the funnel!')
 
@@ -286,7 +292,7 @@ def FollowingQuestion(request):
             while following.count() > 0 and profile.following_four_choices_questions.count() <= 150:
                 f = randomChoice(following)
                 following = following.exclude(id=f.id)
-                questions = f.fourChoicesQuestions.all()
+                questions = f.fourChoicesQuestions.filter(standalone=True)
                 for q in questions:
                     if q not in questionsList:
                         profile.following_four_choices_questions.add(q)
@@ -307,6 +313,8 @@ def FollowingQuestion(request):
     elif question_type == 'trueOrFalse':
         profile = Profile.objects.prefetch_related('following_true_or_false_questions').get(user=user)
         # print('First step')
+        if profile.coins < 1:
+            return redirect('ads:postAd', nextpage='following')
         if profile.following_true_or_false_questions.count() < 1:
             # print('entering the funnel')
             profile = Profile.objects.prefetch_related("trueOrFalseQuestionsMissed","trueOrFalseQuestionsTaken",'following_true_or_false_questions').get(user=user)
@@ -317,7 +325,7 @@ def FollowingQuestion(request):
             while following.count() > 0 and  profile.following_true_or_false_questions.count() <= 150:
                 f = randomChoice(following)
                 following = following.exclude(id=f.id)
-                questions = f.trueOrFalseQuestions.all()
+                questions = f.trueOrFalseQuestions.filter(standalone=True)
                 for q in questions:
                     if q not in questionsList:
                         profile.following_true_or_false_questions.add(q)
@@ -828,15 +836,19 @@ def SubmitQuestion(request):
 
 def QuizGenerator(request):
     user = request.user
-    if user.is_authenticated:
-        profile = Profile.objects.prefetch_related('categories', 'trueOrFalseQuestionsTaken', 'trueOrFalseQuestionsMissed', 'fourChoicesQuestionsTaken', 'fourChoicesQuestionsMissed').get(user=user)
+    if request.method == "GET":
+        if user.is_authenticated:
 
-        categories = profile.categories.all().order_by('title')
-    else:
-        categories = Category.objects.all().order_by('quiz_number_of_times_taken')[:25]
-    form = QuizGeneratorForm()
+            profile = Profile.objects.prefetch_related('categories').get(user=user)
+
+            categories = profile.categories.all().order_by('title')
+        else:
+            categories = Category.objects.all().order_by('quiz_number_of_times_taken')[:25]
+        form = QuizGeneratorForm()
 
     if request.method == 'POST':
+        profile = Profile.objects.prefetch_related('categories', 'trueOrFalseQuestionsTaken', 'trueOrFalseQuestionsMissed', 'fourChoicesQuestionsTaken', 'fourChoicesQuestionsMissed').get(user=user)
+
         try:
             form = QuizGeneratorForm(request.POST)
 
@@ -851,7 +863,7 @@ def QuizGenerator(request):
                 else:
                     age = 15
                 for category in categories:
-                    lookup = Q(categories__title=category, solution_quality__gt=1, age_from__lte=age, age_to__gte=age)
+                    lookup = Q(categories__title=category, solution_quality__gte=0, age_from__lte=age, age_to__gte=age)
                     trueOrFalseQuestions |= TrueOrFalseQuestion.objects.filter(lookup).distinct()[:1000]
                     fourChoicesQuestions |= FourChoicesQuestion.objects.filter(lookup).distinct()[:1000]
                 trueOrFalseQuestions = trueOrFalseQuestions.distinct()

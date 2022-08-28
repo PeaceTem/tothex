@@ -516,21 +516,24 @@ def PostLike(request):
 
     return HttpResponse('Error!')
 
-
-class RandomQuizPicker(LoginRequiredMixin, View):
+# make this function available to every one
+class RandomQuizPicker(View):
     def get(self, request):
         # print(self.request.META["HTTP_USER_AGENT"])
         user = self.request.user
-        profile = Profile.objects.prefetch_related("categories").get(user=user)
-        categories = profile.categories.all()
-        quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=10, solution_quality__gt=3, average_score__gte=50).distinct()[:100]
-        quiz = None
-        if not quizzes.count() > 0:
-            quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=10, solution_quality__gt=0).distinct()[:100]
+        if user.is_authenticated:
+            profile = Profile.objects.prefetch_related("categories").get(user=user)
+            categories = profile.categories.all()
+            quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=5, solution_quality__gt=3, average_score__gte=50).distinct()[:100]
+            quiz = None
+            if not quizzes.count() > 0:
+                quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=5, solution_quality__gt=0).distinct()[:100]
 
-        
-        if not quizzes.count() > 0:
-            quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=10)[:100]
+            
+            if not quizzes.count() > 0:
+                quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=5)[:100]
+        else:
+            quizzes = Quiz.objects.filter(questionLength__gte=5)
 
         if quizzes.count() > 0:
             quiz = randomChoice(quizzes)
@@ -538,7 +541,8 @@ class RandomQuizPicker(LoginRequiredMixin, View):
         if not quiz:
             messages.error(self.request, _('There is no quiz available'))
             return redirect('quiz:quizzes')
-        return redirect('quiz:quiz-detail', quiz_id=quiz.id, quiz_slug=quiz.slug, ref_code=profile.code)
+
+        return redirect('quiz:take-quiz', quiz_id=quiz.id)
         # return redirect('quiz:take-quiz', quiz_id=quiz.id)
 
 
@@ -1016,16 +1020,6 @@ def TakeQuiz(request, quiz_id):
         profile = Profile.objects.get(user=user)
         messages.info(request,_("3 coins will be removed after submitting this quiz!"))
         
-    #     if quiz not in profile.quizTaken.all():
-    #         if profile.coins < 5:
-    #             messages.error(request,_("You don't have enough coins to take a quiz"))
-    #             messages.info(request,_("Earn more coins by taking your quiz here!"))
-    #             return redirect('question:quiz-generator')
-    #         profile.coins -= 5
-    #         messages.info(request, _('5 coins have been removed!'))
-    #         profile.save()
-
-
     preQuestions = []
     preQuestions += quiz.fourChoicesQuestions.all()
     preQuestions += quiz.trueOrFalseQuestions.all()
@@ -1041,7 +1035,8 @@ def TakeQuiz(request, quiz_id):
     
     if quiz.shuffleQuestions:
         shuffle(questions)
-
+    quiz.views += 1
+    quiz.save()
     questions = enumerate(questions)
     context = {
         'user': user,

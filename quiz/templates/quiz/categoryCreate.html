@@ -89,7 +89,7 @@ Categories
 {% include 'loading.html' %}
 <script>
 function addClassCategory(obj_name){
-
+let bucket = document.getElementById('categoryBucket');
 bucket.innerHTML += `
 <input type="text" class = "addedCategories" name="addedCategories" value=${obj_name} readonly>
                         `;

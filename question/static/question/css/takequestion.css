@@ -73,6 +73,7 @@ form.question-form-box{
     left: 0;
     border-left: 3px solid #f11919b2;
     box-shadow: 1px 1px 4px #b5ababb9;
+    border-top: 3px solid #f11919f9;
 }
 
 form.question-form-box >*{
@@ -126,9 +127,12 @@ input[type="submit"]{
 }
 .answer{
     padding: 10px 4px;
-    border: 2px solid #555;
+    /* border: 2px solid #555; */
     border-radius: 4px;
-
+    box-shadow: 1px 1px 4px #b5ababb9;
+    box-shadow: -1px -1px 4px #b5ababb9;
+    width: 95%;
+    margin-top: 10px;
 }
 
 .a div{
