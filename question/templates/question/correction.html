@@ -14,7 +14,9 @@ Old Town Road Correction
 
 <link rel="stylesheet" href="{% static 'question/css/correction.css' %}">
 {% endblock css %}
-
+{% if not user.is_authenticated %}
+{% include 'core/authenticate.html' %}
+{% endif %}
 
 {% include 'messages.html'%}
 
@@ -285,15 +287,25 @@ Old Town Road Correction
             <a href=""  class="a">Download</a>
         </div>
 {% if questionType == 'OldTownRoad' %}
-<div>
+<form action="{% url 'question:answer-question' %}" method="get">
+    <input type="submit" value="Continue Answering Questions">
+</form>
+<!-- <div>
     <a href="{% url 'question:answer-question' %}">Continue Answering Questions</a>
-</div>
+</div> -->
 {% elif questionType == 'Following' %}
-<div>
+<form action="{% url 'question:following-questions' %}" method="get">
+    <input type="submit" value="Next Question">
+</form>
+<!-- <div>
     <a href="{% url 'question:following-questions' %}">Continue Answering Questions</a>
-</div>
+</div> -->
 {% endif %}
-
+{% if question.quiz %}
+<form action="{% url 'quiz:take-quiz' question.quiz.id %}" method="get">
+    <input type="submit" value="Take The Full Quiz">
+</form>
+{% endif %}
 
 
 <div  style="display:none;" class='result'>

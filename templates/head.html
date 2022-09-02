@@ -55,7 +55,9 @@
     </div>
 
     <div class="icon">
-        <div><i class="fa fa-handshake-o" aria-hidden="true"></i> advertise with us ...</div>
+        <div>
+            <a href="{% url 'advertise' %}"><i class="fa fa-handshake-o" aria-hidden="true"></i> advertise with us</a>
+        </div>
     </div>
 
     <div class="icon">
@@ -66,6 +68,12 @@
     <a href="{% url 'logout' %}">
         <div class="icon">
             <div> <i class="fa fa-sign-out" aria-hidden="true"></i> logout</div>
+        </div>
+    </a>
+    {% else %}
+    <a href="{% url 'account_login' %}">
+        <div class="icon">
+            <div> <i class="fa fa-sign-out" aria-hidden="true"></i> login</div>
         </div>
     </a>
     {% endif %}

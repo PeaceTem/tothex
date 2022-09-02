@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden, HttpResponse, HttpResponseRedirec
 
 # function based views
 from django.views.generic.edit import FormView
+from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 
 from django.contrib.auth.views import LoginView
@@ -66,7 +67,12 @@ class FeedBack(FormView):
 
         return super().form_valid(form)
 
+class MyStruggle(TemplateView):
+    template_name='core/my_struggle.html'
 
+
+class Advertise(TemplateView):
+    template_name='core/contact.html'
 
 """
 Use try except block to catch errors
@@ -330,30 +336,34 @@ def LinkClick(request, link_id):
 
 
 
-@login_required(redirect_field_name='next', login_url='account_login')
+# @login_required(redirect_field_name='next', login_url='account_login')
 def FollowerListView(request, follower_id, page_name):
     search_input = request.GET.get('search-area') or ''
-
+    print(search_input)
     if search_input:
-        context = {}
         search_input = search_input.split()
+        print(search_input)
         search_input = "_".join(search_input)
-        searched_user = User.objects.filter(username__iexact=search_input).exists() 
+        searched_user = None
+        try:
+            searched_user = User.objects.get(username__iexact=search_input) or None
+        except:
+            pass
         if searched_user:
             # profile = Profile.objects.get(user=searched_user)
-            return redirect('profile:profile', profile_name=search_input)
+            return redirect('profile:profile', profile_name=searched_user)
         else:
             messages.error(request, f"There is no user named {search_input}")
-            return redirect('profile')
+            return redirect(request.META["HTTP_REFERER"])
 
 
     if page_name == 'followers':
         follower = Follower.objects.prefetch_related('followers', 'following').get(id=follower_id)
-        objects = follower.followers.all()
+        # objects = follower.followers.all()
         object_type = 'followers'
     elif page_name == 'following':
         follower = Follower.objects.prefetch_related('following').get(id=follower_id)
-        objects = follower.following.all()
+        # objects = follower.following.all()
         object_type = 'following'
 
     else:
@@ -363,6 +373,7 @@ def FollowerListView(request, follower_id, page_name):
         'objects' : follower,
         'object_type' : object_type,
         'follower_id': follower_id,
+        'user': request.user,
     }
 
     return render(request, 'core/followerList.html', context)
@@ -373,8 +384,11 @@ def FollowerListView(request, follower_id, page_name):
 @login_required(redirect_field_name='next', login_url='account_login')
 def FollowActionView(request, follower_id, user_id, action):
     user = request.user
+    follower = Follower.objects.select_related('user').prefetch_related('followers').get(id=follower_id) #the action taker
+
+    if not user == follower.user:
+        return HttpResponse('An Error Occurred!')
     _user = User.objects.get(id=user_id)
-    follower = Follower.objects.prefetch_related('followers').get(id=follower_id) #the action taker
     _follower = Follower.objects.prefetch_related('followers').get(user=_user) # the action recipient
     # Make some necessary adjustments here!
     if action == 'follow':
@@ -392,5 +406,6 @@ def FollowActionView(request, follower_id, user_id, action):
     return HttpResponse('Done!')
 
     
+
 
 

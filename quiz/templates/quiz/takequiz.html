@@ -4,7 +4,7 @@
 {% load static %}
 
 {% block title %}
-Take Quiz
+Take Quiz {{quiz.slug}}
 {% endblock title %}
 
 {% block content %}
@@ -15,19 +15,41 @@ Take Quiz
 <link rel="stylesheet" href="{% static 'quiz/css/takequiz.css' %}">
 {% endblock css %}
 
-{% include 'core/header.html' %}
 
-
+<div style="display: block;border-bottom: 1px solid #ccc;height: 50px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
+    <div style="padding-right: 6px;">
+        <a style="margin-right: 7px;color: black;text-decoration: none;font-size: 40px;padding-right: 4px;"
+        href="{% url 'quiz:quizzes' %}" 
+        alt="NeuGott back button">
+            ←
+        </a>
+        <span id="countdownbox1" style="color: #a83425;font-weight:600; font-size:30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            NeuGott
+        </span>
+        <img style="border-radius:4px;display:none;" src="/static/core/images/tothex_160.png" alt="NeuGott">
+  
+    </div>
+</div>
 <div class="container">
 
 {% include 'messages.html'%}
+    <div>
+        <form action="{% url 'quiz:quizzes' %}" method="get">
+            
+            <input type="submit" value="Go Back Home">
+        </form>   
+        <br>
+        <form action="{% url 'quiz:random-quiz-picker' %}" method="get">
+            
+            <input type="submit" value="Take Another Quiz">
+        </form>
+    </div>
     <div class="minuteBx">
         <div style="display:none;" id="minute">{{quiz.duration}}</div>
         <div>
             {{quiz.get_quiz_duration}}
         </div>
     </div>
-    <div id="countdownbox"></div>
     {% if quiz.composition %}
     <div>
         {{quiz.composition|safe}}
@@ -70,22 +92,22 @@ Take Quiz
 
                 {% for answer in question.shuffle_answers %}
                 {% if answer == 1 %}
-                    <div class="answer">
+                    <div  onclick="AutoClick(this)" class="answer">
                         <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}"   type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
                         <label for="id_{{question.index}}_answer1">{{question.answer1}}</label>
                     </div>
                 {% elif answer == 2 %}
-                    <div class="answer">
+                    <div  onclick="AutoClick(this)" class="answer">
                         <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}"  type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
                         <label for="id_{{question.index}}_answer2">{{question.answer2}}</label>
                     </div>
                 {% elif answer == 3 %}
-                    <div class="answer">
+                    <div  onclick="AutoClick(this)" class="answer">
                         <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}|{{question.id}}|answer3">
                         <label for="id_{{question.index}}_answer3">{{question.answer3}}</label>
                     </div>
                 {% elif answer == 4 %}
-                    <div class="answer">
+                    <div  onclick="AutoClick(this)" class="answer">
                         <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}|{{question.id}}|answer4">
                         <label for="id_{{question.index}}_answer4">{{question.answer4}}</label>
                     </div>
@@ -114,12 +136,12 @@ Take Quiz
                     </div>
                       
                 </div>
-                    <div class="answer">
+                    <div onclick="AutoClick(this)" class="answer">
                         <input onclick="validateAnswer(this.className, this.id)"  class="option{{question.index}}"  type="checkbox" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}|{{question.id}}|answer1">
                         <label for="id_{{question.index}}_answer1">{{question.answer1}}</label>
                     </div>
                     
-                    <div class="answer">
+                    <div  onclick="AutoClick(this)" class="answer">
                         <input onclick="validateAnswer(this.className, this.id)"   class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
                         <label for="id_{{question.index}}_answer2">{{question.answer2}}</label>
                     </div>
@@ -155,7 +177,7 @@ Take Quiz
 
     const minutes = document.getElementById('minute').textContent;
 
-    const countdownbox = document.getElementById('countdownbox');
+    const countdownbox = document.querySelector('span#countdownbox1');
     let seconds = minutes ;
     const duration = minutes;
     const quiz = document.getElementById('quizForm');
@@ -194,5 +216,11 @@ function myStopFunction(){
     // this.addEventListener('beforeprint', (e)=>{
     //     e.preventDefault();
     // })
+    const AutoClick = function(arg){
+        let inputbx = arg.childNodes[1];
+        inputbx.click();
+        // console.log(inputbx)
+        // console.log(arg);
+    }
 </script>
 {% endblock content %}

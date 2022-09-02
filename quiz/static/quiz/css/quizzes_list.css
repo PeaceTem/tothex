@@ -235,14 +235,14 @@ div#openForm{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     background:rgba(189, 41, 41, 0.7);
     cursor: pointer;
 }
 a#open{
     color: #fff;
-    font-size: 20px;
+    font-size: 40px;
     background:rgba(112, 77, 77, 0.1);
 }
 

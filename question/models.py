@@ -62,8 +62,8 @@ class FourChoicesQuestion(models.Model):
     answer4NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     shuffleAnswers = models.BooleanField(default=False, verbose_name=_('Shuffle The Answers'))
     standalone = models.BooleanField(default=True, verbose_name=_("Create as an OldTownRoad question too"))
-    age_from = models.PositiveSmallIntegerField(null=True, verbose_name=_('Minimum Age Of Quiz Takers'))
-    age_to = models.PositiveSmallIntegerField(null=True, verbose_name=_('Maximum Age Of Quiz Takers'))
+    age_from = models.PositiveSmallIntegerField(default=11, verbose_name=_('Minimum Age Of Quiz Takers'))
+    age_to = models.PositiveSmallIntegerField(default=65, verbose_name=_('Maximum Age Of Quiz Takers'))
     relevance = models.IntegerField(default=0)
     
     objects = FourChoicesQuestionManager()
@@ -230,8 +230,8 @@ class TrueOrFalseQuestion(models.Model):
     answer1NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     answer2NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     standalone = models.BooleanField(default=True, verbose_name=_("Create as a standalone question too"))
-    age_from = models.PositiveSmallIntegerField(null=True, verbose_name=_('Minimum Age Of Quiz Takers'))
-    age_to = models.PositiveSmallIntegerField(null=True, verbose_name=_('Maximum Age Of Quiz Takers'))
+    age_from = models.PositiveSmallIntegerField(default=11, verbose_name=_('Minimum Age Of Quiz Takers'))
+    age_to = models.PositiveSmallIntegerField(default=65, verbose_name=_('Maximum Age Of Quiz Takers'))
     relevance = models.IntegerField(default=0)
     
   

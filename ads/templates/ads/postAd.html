@@ -10,16 +10,19 @@ Ads
 {% block css %}
 <link rel="stylesheet" href="{% static 'ads/css/postAd.css' %}">
 {% endblock css %}
-<div onclick="clickAdLink()" class="container">
+<div class="container">
 
     <div id="countdownbox"></div>
+    <div  onclick="clickAdLink()">
+        <p>{{postAd.name}}</p>
+    </div>
     {% if postAd.picture %}
-    <div>
+    <div  onclick="clickAdLink()">
         <img src="{{postAd.picture.url}}">
     </div>
     {% endif %}
     {% if postAd.description %}
-    <div>
+    <div  onclick="clickAdLink()">
         {{postAd.description|safe}}
     </div>
     {% endif %}
@@ -45,7 +48,7 @@ Ads
 </script>
 
 <script>
-    $(document).ready(function(){
+    // $(document).ready(function(){
 
     let seconds = 15;
     const next = document.getElementById('nextButton');
@@ -96,6 +99,6 @@ function clickFunction(){
 
     }
 
-    });
+    // });
 </script>
 {% endblock content %}

@@ -15,6 +15,7 @@ a div{
     width: 100%;
 
 }
+
 /* #test, .q-box{
     display: flex;
     justify-content: flex-start;
@@ -171,7 +172,7 @@ ol.scores{
 }
 
 .answerGreen div{
-    border: 2px solid rgb(0, 255, 55);
+    border: 1px solid rgb(0, 255, 55);
     background: rgba(0, 255, 55, 0.1);
     border-radius: 4px;
     padding: 2px 4px;

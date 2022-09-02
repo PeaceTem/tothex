@@ -6,7 +6,10 @@
     color: #555;
 
 }
-
+b.counter{
+    color:#f11919;
+    font-size: 30px;
+}
 section{
     display: block;
     background:linear-gradient(60deg, rgba(235, 224, 224, 0.308), rgba(243, 232, 232, 0.3));
@@ -64,14 +67,14 @@ input[type="button"]{
     margin: 2px 2px;
 }
 
-
 a button{
     border: none;
     outline: none;
-    padding: 3px 5px;
-    background: #777;
+    padding: 10px;
+    background-color: #f11919;
+
     color: #fff;
-    font-size: 1rem;
+    font-size: 1.5rem;
     border-radius: 10px;
     margin: 8px 0 4px 4px;
 }

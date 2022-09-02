@@ -22,7 +22,7 @@ Referral
     {% for leader in leaders %}
         <div class="line">
             <div class="name">@{{leader}}</div>
-            <div class="length">refers: {{leader.refers}}</div>
+            <div class="length">refers: {{leader.refercount}}</div>
             <div>
                 <a href="{% url 'profile:profile' leader  %}">See Face</a>
             </div>

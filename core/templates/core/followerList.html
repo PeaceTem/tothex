@@ -9,10 +9,20 @@ Followers
 <link rel="stylesheet" href="/static/core/css/follows.css">
 {% endblock css %}
 
-
 {% block content %}
+<div style="display: block;border-bottom: 1px solid #ccc;height: 40px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
+    <div style="padding-right: 6px;">
+        <a style="margin-right: 7px;color: black;text-decoration: none;font-size: 40px;padding-right: 4px;"
+        href="{% url 'profile' %}" 
+        alt="NeuGott back button">
+            ←
+        </a>
+        <span style="color: #a83425;font-weight:600; font-size:30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            NeuGott
+        </span>
 
-{% include 'core/header.html' %}
+    </div>
+</div>
 
 {% include 'search.html' %}
 
@@ -21,7 +31,9 @@ Followers
     {% for obj in objects.following.all %}
     <div class="followers">
         {{obj}} 
+        {% if not user == objects %}
         <a class="clickable" href="{% url 'follow-action' follower_id obj.id 'unfollow' %}"><button style="border-radius:4px; padding: 3px; border:none; color: #fff; background:#f11919;">Unfollow</button></a> 
+        {% endif %}
     </div>
     <br>
 
@@ -30,13 +42,16 @@ Followers
 {% elif object_type == 'followers' %}
 
     {% for obj in objects.followers.all %}
-    <div>
+    <div class="followers">
 
         {{obj}} 
+        {% if not user == objects %}
+
         {% if obj in objects.following.all %}
             <i style="font-size: 11px; color: #666; background:#eee;">followed</i>
         {% else %}
             <a class="clickable" href="{% url 'follow-action' follower_id obj.id 'follow' %}"><button style="border-radius:4px; padding: 3px; border:none; color: #fff; background:#f11919;">Follow</button></a> 
+        {% endif %}
         {% endif %}
     </div>
     <br>

@@ -18,6 +18,9 @@ urlpatterns = [
     path('donate', views.Donate, name='donate'),
     path('feedback', views.FeedBack.as_view(), name='feedback'),
     path('chart/', views.Chart, name='chart'),
+    path('my-struggle', views.MyStruggle.as_view(), name='my-struggle'),
+    path('contact', views.Advertise.as_view(), name='advertise'),
+
     #referral
     path('', views.Home, name='home'),
     path('menu/', views.Menu, name='menu'),

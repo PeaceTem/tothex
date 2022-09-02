@@ -13,6 +13,7 @@ urlpatterns = [
     path('wealth/', views.WealthLeaderBoardView, name='wealth'),
     path('referral/', views.ReferralLeaderBoardView, name='referral'),
     path('creator/', views.CreatorsLeaderBoardView, name='creator'),
+    path('referrals/', views.referrals, name='referrals'),
 
 ]
 

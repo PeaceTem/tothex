@@ -160,7 +160,7 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
 
     
     try:
-        attempters = quiz.attempter_set.select_related('user').all()[:10]
+        attempters = quiz.attempters.all()[:10]
         context['attempters'] = attempters
     except:
         pass
@@ -533,16 +533,16 @@ class RandomQuizPicker(View):
             if not quizzes.count() > 0:
                 quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=5)[:100]
         else:
-            quizzes = Quiz.objects.filter(questionLength__gte=5)
+            quizzes = Quiz.objects.filter(questionLength__gte=0)
 
         if quizzes.count() > 0:
             quiz = randomChoice(quizzes)
 
-        if not quiz:
-            messages.error(self.request, _('There is no quiz available'))
-            return redirect('quiz:quizzes')
-
-        return redirect('quiz:take-quiz', quiz_id=quiz.id)
+            if not quiz:
+                messages.error(self.request, _('There is no quiz available'))
+                return redirect('quiz:quizzes')
+            return redirect('quiz:take-quiz', quiz_id=quiz.id)
+        return HttpResponse("An error Occurred!")
         # return redirect('quiz:take-quiz', quiz_id=quiz.id)
 
 
@@ -583,7 +583,7 @@ def QuizCreate(request):
 class QuizLinkCreate(LoginRequiredMixin, View):
 
     def get(self, request, quiz_id, *args, **kwargs):
-        quiz = Quiz.objects.select_related('quizlink').get(id=quiz_id)
+        quiz = Quiz.objects.select_related('quizlink', 'user').get(id=quiz_id)
         try:
             if quiz.quizlink.link:
                 return redirect('quiz:category-create', quiz_id=quiz.id)
@@ -907,7 +907,6 @@ def CategoryCreate(request, quiz_id):
     user = request.user
     profile = Profile.objects.prefetch_related("categories").get(user=user)
     quiz = Quiz.objects.prefetch_related("categories").get(id=quiz_id)
-    categories = Category.objects.all().order_by('quiz_number_of_times_taken')[:20]
     #make this part more efficient
     title = request.GET.get('newCategory') or ''
     title = slugify(title)
@@ -937,39 +936,65 @@ def CategoryCreate(request, quiz_id):
 
 
 
-    # create pagination
-    quizCategories = quiz.categories.all()
-    addedCategories = request.GET.getlist('addedCategories') or ''
-    if addedCategories:
+    addedCategory = request.GET.get("addedCategory") or ''
+    if addedCategory:
+        try:
+            category = Category.objects.get(title__iexact=addedCategory) or None
+            if category:
+
+                while quiz.categories.count() > 2:
+                    removed = quiz.categories.first()
+                    quiz.categories.remove(removed)
+                quiz.categories.add(category)
+
+                if profile.categories.all().count() > 9:
+                    removed = profile.categories.first()
+                    profile.categories.remove(removed)
+                profile.categories.add(category)
+        except:
+            pass
+
+
+
+    # # create pagination
+    # quizCategories = quiz.categories.all()
+    # addedCategories = request.GET.getlist('addedCategories') or ''
+    # if addedCategories:
         
-        for category in quizCategories:
-            # this is possible because __str__ returns the title of the category
-            if category not in addedCategories:
-                quiz.categories.remove(category)
+    #     for category in quizCategories:
+    #         # this is possible because __str__ returns the title of the category
+    #         if category not in addedCategories:
+    #             quiz.categories.remove(category)
 
-        for cart in addedCategories:
-            if quiz.categories.all().count() < 3:
-                try:
-                    category = Category.objects.get(title__iexact=cart) or None
-                    if category:
-                        if category not in quiz.categories.all():
-                            quiz.categories.add(category)
-                            if profile.categories.all().count() > 9:
-                                removed = profile.categories.first()
-                                profile.categories.remove(removed)
-                            profile.categories.add(category)
+    #     for cart in addedCategories:
+    #         if quiz.categories.all().count() < 3:
+    #             try:
+    #                 category = Category.objects.get(title__iexact=cart) or None
+    #                 if category:
+    #                     if category not in quiz.categories.all():
+    #                         quiz.categories.add(category)
+    #                         if profile.categories.all().count() > 9:
+    #                             removed = profile.categories.first()
+    #                             profile.categories.remove(removed)
+    #                         profile.categories.add(category)
 
-                except:
-                    pass
+    #             except:
+    #                 pass
         
     quizCategories = quiz.categories.all()
+    if request.GET.get('request_type') == 'ajax':
+        # just use this place to return the json response
+        print("Python just comes at you like motherfucker!")
+        return JsonResponse({"categories":[x.title for x in quizCategories],
+                            "category_count": quiz.categories.count(),})
 
-    p = Paginator(categories, 20)
-    page = request.GET.get('page')
-    categories = p.get_page(page)
+    # categories = Category.objects.all().order_by('quiz_number_of_times_taken')[:20]
+    # p = Paginator(categories, 20)
+    # page = request.GET.get('page')
+    # categories = p.get_page(page)
 
     context= {
-        'page_obj': categories,
+        'page_obj': profile.categories.all(),# use profile categories here
         'objCategories' : quizCategories,
         'quiz': quiz,
         'obj_type': 'quiz',
@@ -978,6 +1003,16 @@ def CategoryCreate(request, quiz_id):
     return render(request, 'quiz/categoryCreate.html', context)
 
 
+
+@login_required(redirect_field_name='next' ,login_url='account_login')
+def CategoryRemove(request, quiz_id):
+    quiz = Quiz.objects.prefetch_related('categories').get(id=quiz_id)
+    category = request.GET.get('removedCategory')
+    category = Category.objects.get(title=category)
+    quiz.categories.remove(category)
+    print('category removed')
+    return JsonResponse({"categories":[x.title for x in quiz.categories.all()],
+                        "category_count": quiz.categories.count(),})
 
 
 @login_required(redirect_field_name='next' ,login_url='account_login')
@@ -1103,6 +1138,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
 
                 question.attempts += 1
+                question.views += 1
                 
                 if pos == 'answer1':
                     question.answer1NumberOfTimesTaken += 1
@@ -1149,6 +1185,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
                 
                 question.attempts += 1
+                question.views += 1
                 
                 if pos == 'answer1':
                     question.answer1NumberOfTimesTaken += 1
@@ -1183,82 +1220,83 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
 
 
                 question.save()
+        try:
+            total_score = quiz.totalScore
+            user_score = score
+            user_avg_score = (user_score/total_score) * 100
 
-        total_score = quiz.totalScore
-        user_score = score
-        user_avg_score = (user_score/total_score) * 100
+            if user.is_authenticated:
+                
+                    quiz.attempts += 1 # add this back below user_avg_score when attempters are fully in use
 
-        if user.is_authenticated:
-            try:
-                quiz.attempts += 1 # add this back below user_avg_score when attempters are fully in use
-
-                if quiz.user != profile.user:
-                    # StreakValidator.delay(profile, user_score)
-                    if user_avg_score >= 50:
-                        creator = Profile.objects.get(user=quiz.user)
-                        for category in quiz.categories.all():
-                            if category not in profile.categories.all():
-                                if profile.categories.all().count() > 9:
-                                    removed = profile.categories.first()
-                                    profile.categories.remove(removed)
-                                profile.categories.add(category)
-
-                    if quiz not in profile.quizTaken.all():
-                        value = generateCoins(decimal.Decimal(user_avg_score), quiz.average_score, quiz.questionLength  )
-                        # value = round(((decimal.Decimal(user_avg_score)/100 + 1)**3) *(1 - (quiz.average_score/100)) * decimal.Decimal(user_score),0) + 5
-                        profile.coins += value - 3
-                        profile.save()
-
-                        """
-                        This is a celery tasks
-                        don't remove the previous task ooo because it is different from this celery task
-                        """
-                        # CoinsTransaction.delay(user, value)
-
-                        creator.coins += 1
-                        creator.save()
-                        # CreatorCoins.delay(creator.user, 1)
-
-                        messages.success(request, f"You've won {value} coins!")
-                        messages.info(request, f"3 coins have been deducted from your bonus!")
-                    # else:
-                    #     value = 5
-                    #     profile.coins += value 
-                    #     profile.save()
-                    #     messages.success(request, f"You've won {value} coins!")
-
-                        """
-                        This is a celery tasks
-                        don't remove the previous task ooo because it is different from this celery task
-                        """
-                        # CoinsTransaction.delay(user, value -5)
-
-
-
-                quiz.average_score = round(((quiz.average_score *(quiz.attempts - 1) + decimal.Decimal(user_avg_score)) / quiz.attempts), 1)
-                quiz.save()
-                if quiz not in profile.quizTaken.all():
-                    if profile.quizTaken.all().count() > 999:
-                        removed = profile.quizTaken.first()
-                        profile.quizTaken.remove(removed)
-                    profile.quizTaken.add(quiz)
                     if quiz.user != profile.user:
-                        Attempter.objects.create(user=user, quiz=quiz, score=user_score, percentage=user_avg_score, timeTaken=TimeTaken)
+                        # StreakValidator.delay(profile, user_score)
+                        if user_avg_score >= 50:
+                            creator = Profile.objects.get(user=quiz.user)
+                            for category in quiz.categories.all():
+                                if category not in profile.categories.all():
+                                    if profile.categories.all().count() > 9:
+                                        removed = profile.categories.first()
+                                        profile.categories.remove(removed)
+                                    profile.categories.add(category)
 
-                profile.quizAttempts += 1
-                profile.quizAvgScore = decimal.Decimal(round(((profile.quizAvgScore * (profile.quizAttempts - 1) + decimal.Decimal(user_avg_score)) / profile.quizAttempts), 1))
+                        if quiz not in profile.quizTaken.all():
+                            value = generateCoins(decimal.Decimal(user_avg_score), quiz.average_score, quiz.questionLength  )
+                            
+                            # value = round(((decimal.Decimal(user_avg_score)/100 + 1)**3) *(1 - (quiz.average_score/100)) * decimal.Decimal(user_score),0) + 5
+                            profile.coins += value - 3
+                            profile.save()
 
-                profile.save()
-            except ZeroDivisionError:
-                messages.error(request, _("You didn't answer any question."))
-                return redirect('quiz:take-quiz', quiz_id = quiz.id)
-        else:
-            if score > 0:
-                user_score = score
+                            """
+                            This is a celery tasks
+                            don't remove the previous task ooo because it is different from this celery task
+                            """
+                            # CoinsTransaction.delay(user, value)
+
+                            creator.coins += 1
+                            creator.save()
+                            # CreatorCoins.delay(creator.user, 1)
+
+                            messages.success(request, f"You've won {value} coins!")
+                            messages.info(request, f"3 coins have been deducted from your bonus!")
+                        # else:
+                        #     value = 5
+                        #     profile.coins += value 
+                        #     profile.save()
+                        #     messages.success(request, f"You've won {value} coins!")
+
+                            """
+                            This is a celery tasks
+                            don't remove the previous task ooo because it is different from this celery task
+                            """
+                            # CoinsTransaction.delay(user, value -5)
+
+
+
+                    quiz.average_score = round(((quiz.average_score *(quiz.attempts - 1) + decimal.Decimal(user_avg_score)) / quiz.attempts), 1)
+                    quiz.save()
+                    if quiz not in profile.quizTaken.all():
+                        if profile.quizTaken.all().count() > 999:
+                            removed = profile.quizTaken.first()
+                            profile.quizTaken.remove(removed)
+                        profile.quizTaken.add(quiz)
+                        if quiz.user != profile.user:
+                            Attempter.objects.create(user=user, quiz=quiz, score=user_score, percentage=user_avg_score, timeTaken=TimeTaken)
+
+                    profile.quizAttempts += 1
+                    profile.quizAvgScore = decimal.Decimal(round(((profile.quizAvgScore * (profile.quizAttempts - 1) + decimal.Decimal(user_avg_score)) / profile.quizAttempts), 1))
+
+                    profile.save()
             else:
-                messages.error(request, _("You didn't answer any question."))
-                return redirect('question:answer-question')
-        
+                if score > 0:
+                    user_score = score
+                else:
+                    messages.error(request, _("You didn't answer any question."))
+                    return redirect('question:answer-question')
+        except ZeroDivisionError:
+            messages.error(request, _("You didn't answer any question."))
+            return redirect('quiz:take-quiz', quiz_id = quiz.id)
+                
 
         for category in quiz.categories.all():
             category.quiz_number_of_times_taken += 1

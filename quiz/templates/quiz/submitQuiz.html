@@ -15,9 +15,24 @@ Quiz Submit
 
 <link rel="stylesheet" href="{% static 'quiz/css/submitQuiz.css' %}">
 {% endblock css %}
-{% include 'core/header.html' %}
+{% if not user.is_authenticated %}
+{% include 'core/authenticate.html' %}
+{% endif %}
 
 
+<div style="display: block;border-bottom: 1px solid #ccc;height: 50px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
+    <div style="padding-right: 6px;">
+        <a style="margin-right: 7px;color: black;text-decoration: none;font-size: 40px;padding-right: 4px;"
+        href="{% url 'quiz:quizzes' %}" 
+        alt="NeuGott back button">
+            ←
+        </a>
+        <span style="color: #a83425;font-weight:600; font-size:30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            NeuGott
+        </span>
+  
+    </div>
+</div>
 
 
 
@@ -42,13 +57,13 @@ Quiz Submit
     <div>
         {{attempt_report}}
         <br>
-        You scored: {{user_score}}/{{total_score}}
+        You scored: <span style="font-size:25px;">{{user_score}}/{{total_score}}</span>
         <br>
         Total quiz attempts : {{quiz.attempts}}
         <br>
         Quiz's average score: {{avgScore}}%
         <br>
-        Your Average Score: {{user_avg_score}}%
+        Your Average Score:  <span style="font-size:25px;">{{user_avg_score}}%</span>
         <br>
         {{timeTaken}}
         <p>
@@ -81,9 +96,7 @@ Quiz Submit
 
             <div>
                 <div class="q-box">
-                    <p>
                     {{question.question|safe}}
-                    </p>
                 </div>
                     <div class="points">
                         {% if question.points < 2 %}
@@ -239,9 +252,7 @@ Quiz Submit
 
                 <div>
                     <div class="q-box">
-                        <p>
                         {{question.question|safe}}
-                        </p>
                     </div>
 
                         <div class="points">
@@ -425,7 +436,7 @@ Quiz Submit
 
 
 <div class="social-share">
-    <i style="font-size: 12px; color: #777;">Refer To Earn More Coins (20 coins per click)</i>
+    <i style="font-size: 15px; color: #333;">Refer To Earn More Coins (20 coins per click)</i>
     
     <div>
         <a id="shareButton" href="#">Share to Social Media</a>
@@ -438,7 +449,7 @@ Quiz Submit
         <div class="link-container">
         <a onclick="QuizLinkClickFunction()" data-url="{% url 'quiz:quiz-link-click-counter' quizLink.id %}" class="profile-link" href="{{quizLink.link}}" target="_blank" rel="noopener noreferrer">{{quizLink.name}}</a>
         </div>
-        <div style="font-size: 12px; color: #777;">
+        <div style="font-size: 14px; color: #777;">
             {{quizLink.description}}
         </div>
         {% if request.user.is_authenticated and request.user not in quizLink.reporters.all %}
@@ -499,6 +510,7 @@ Quiz Submit
     }
 </script>
 <script>
+$(document).ready(function(){
 
 $('form#report').submit(function(e){
     e.preventDefault();
@@ -524,15 +536,18 @@ $('form#report').submit(function(e){
         });
 
 })
+});
+
 </script>
 
 <script>
-$(document).ready(function(){
-
-function ActivateForm(){
+    function ActivateForm(){
     const solution = document.getElementById('solutionQualityForm');
     solution.submit();
 }
+
+$(document).ready(function(){
+
 
 
     $(document).on('submit', '#solutionQualityForm', function(e){
@@ -554,6 +569,7 @@ function ActivateForm(){
 ;
 </script>
 
+
 <script>
 $(document).ready(function(){
 
@@ -567,9 +583,9 @@ $.ajax({
     data : serializeData,
     success : function(response){
         if (response == 'liked'){
-            $(`#likeButton${quiz_id}`).text('unlike');
+            $(`#likeButton${quiz_id}`).hide();
         }else if (response == 'unliked'){
-            $(`#likeButton${quiz_id}`).text('like');
+            $(`#likeButton${quiz_id}`).hide();
         }
         
 

@@ -364,9 +364,9 @@ def FollowingQuestion(request):
 def CorrectionView(request, question_form, question_id, qtype, answer):
     user = request.user
     if question_form == 'fourChoicesQuestion':
-        question = FourChoicesQuestion.objects.prefetch_related("solution_validators").select_related("user").get(id=question_id)
+        question = FourChoicesQuestion.objects.prefetch_related("solution_validators").select_related("user", "quiz").get(id=question_id)
     elif question_form == 'trueOrFalseQuestion':
-        question = TrueOrFalseQuestion.objects.prefetch_related("solution_validators").select_related("user").get(id=question_id)
+        question = TrueOrFalseQuestion.objects.prefetch_related("solution_validators").select_related("user", "quiz").get(id=question_id)
 
 
     context={
@@ -465,6 +465,7 @@ Add all the documentation here
 """
 @login_required(redirect_field_name='next' ,login_url='account_login')
 def CategoryCreate(request, question_id):
+    q_id = question_id
     user = request.user
     profile = Profile.objects.prefetch_related("categories").get(user=user)
     question_id = question_id.split('-')
@@ -503,38 +504,63 @@ def CategoryCreate(request, question_id):
 
 
     # create pagination
-    questionCategories = question.categories.all()
-    addedCategories = request.GET.getlist('addedCategories') or ''
-    if addedCategories:
+    # addedCategories = request.GET.getlist('addedCategories') or ''
+    # if addedCategories:
         
-        for category in questionCategories:
-            if category not in addedCategories:
-                question.categories.remove(category)
+    #     for category in questionCategories:
+    #         if category not in addedCategories:
+    #             question.categories.remove(category)
 
-        for cart in addedCategories:
-            category = None
-            if question.categories.all().count() < 3:
-                try:
-                    category = Category.objects.get(title__iexact=cart)
-                except:
-                    pass
-                if category:
-                    if category not in question.categories.all():
-                        question.categories.add(category)
-                        if profile.categories.all().count() > 9:
-                            removed = profile.categories.first()
-                            profile.categories.remove(removed)
-                        profile.categories.add(category)
+    #     for cart in addedCategories:
+    #         category = None
+    #         if question.categories.all().count() < 3:
+    #             try:
+    #                 category = Category.objects.get(title__iexact=cart)
+    #             except:
+    #                 pass
+    #             if category:
+    #                 if category not in question.categories.all():
+    #                     question.categories.add(category)
+    #                     if profile.categories.all().count() > 9:
+    #                         removed = profile.categories.first()
+    #                         profile.categories.remove(removed)
+    #                     profile.categories.add(category)
 
         
     questionCategories = question.categories.all()
+    addedCategory = request.GET.get("addedCategory") or ''
+    if addedCategory:
+        try:
+            category = Category.objects.get(title__iexact=addedCategory) or None
+            if category:
 
+                while question.categories.count() > 2:
+                    removed = question.categories.first()
+                    question.categories.remove(removed)
+                question.categories.add(category)
+
+                if profile.categories.all().count() > 9:
+                    removed = profile.categories.first()
+                    profile.categories.remove(removed)
+                profile.categories.add(category)
+        except:
+            pass
+
+
+        
+    questionCategories = question.categories.all()
+    if request.GET.get('request_type') == 'ajax':
+        # just use this place to return the json response
+        print("Python just comes at you like motherfucker!")
+        return JsonResponse({"categories":[x.title for x in questionCategories],
+                            "category_count": question.categories.count(),})
 
     context= {
         'page_obj': categories,
         'objCategories' : questionCategories,
         'question': question,
         'obj_type' : 'question',
+        'q_id' : q_id,
 
     }
     # question:new-question
@@ -543,6 +569,22 @@ def CategoryCreate(request, question_id):
 
 
 
+
+
+@login_required(redirect_field_name='next' ,login_url='account_login')
+def CategoryRemove(request, question_id):
+    question_id = question_id.split('-')
+    if question_id[0] == 'trueOrFalse':
+        question = TrueOrFalseQuestion.objects.prefetch_related("categories").get(id=question_id[1])
+    elif question_id[0] == 'fourChoices':
+        question = FourChoicesQuestion.objects.prefetch_related("categories").get(id=question_id[1])
+
+    category = request.GET.get('removedCategory')
+    category = Category.objects.get(title=category)
+    question.categories.remove(category)
+    print('category removed')
+    return JsonResponse({"categories":[x.title for x in question.categories.all()],
+                        "category_count": question.categories.count(),})
 
 
 

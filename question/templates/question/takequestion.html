@@ -16,8 +16,21 @@
 {% include 'mathjax.html' %}
 <link rel="stylesheet" href="{% static 'question/css/takequestion.css' %}">
 {% endblock css %}
+<div style="display: block;border-bottom: 1px solid #ccc;height: 50px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
+    <div style="padding-right: 6px;">
+        <a style="margin-right: 7px;color: black;text-decoration: none;font-size: 40px;padding-right: 4px;"
+        href="{% url 'question:questions' %}" 
+        alt="NeuGott back button">
+            ←
+        </a>
+        <span style="color: #a83425;font-weight:600; font-size:30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            NeuGott
+        </span>
+        <img style="border-radius:4px;display:none;" src="/static/core/images/tothex_160.png" alt="NeuGott">
+  
+    </div>
+</div>
 
-<a href="{% url 'question:questions' %}">Go Back</a>
 <div class="container">
 {% include 'messages.html' %}
 
@@ -73,7 +86,7 @@
                         {% if a == 1 %}
                         <div onclick="AutoClick(this)" class="answer">
                             <label for="id_{{question.index}}_answer1">
-                            <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                            <input onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
 
                             {{question.answer1}}
                             </label>
@@ -82,7 +95,7 @@
                         <div onclick="AutoClick(this)" class="answer">
 
                             <label for="id_{{question.index}}_answer2">
-                            <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                            <input onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
 
                             {{question.answer2}}
                             </label>
@@ -92,7 +105,7 @@
 
                         <div onclick="AutoClick(this)" class="answer">
                             <label for="id_{{question.index}}_answer3">
-                            <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
+                            <input onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer3" value="{{question.form}}-{{question.id}}-answer3">
                             {{question.answer3}}
                         </label>
                         </div>
@@ -101,7 +114,7 @@
                         <div onclick="AutoClick(this)" class="answer">
 
                             <label for="id_{{question.index}}_answer4">
-                            <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
+                            <input onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer4" value="{{question.form}}-{{question.id}}-answer4">
 
                             {{question.answer4}}
                             </label>
@@ -132,14 +145,14 @@
 
                 <div onclick="AutoClick(this)" class="answer">
                     <label for="id_{{question.index}}_answer1"> 
-                    <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
+                    <input onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer1" value="{{question.form}}-{{question.id}}-answer1">
                             {{question.answer1}}
                     </label>
                 </div>
                 
                 <div onclick="AutoClick(this)" class="answer">
                     <label for="id_{{question.index}}_answer2"> 
-                    <input style="display:none;" onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
+                    <input onclick="AutoSubmit()" class="option{{question.index}}" type="radio" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}-{{question.id}}-answer2">
 
                             {{question.answer2}}
                     </label>
@@ -193,7 +206,7 @@
         let cvs = document.querySelector('canvas');
         let a = document.querySelector('.a');
         a.href = cvs.toDataURL();
-        a.download = 'ToTheX-{{question.question}}.png'
+        a.download = 'NeuGott-{{question.question}}.png'
     })
     </script>
 
@@ -258,6 +271,7 @@ function myStopFunction(){
         // console.log(arg);
     }
 </script>
+
 
 {% endblock content %}
 

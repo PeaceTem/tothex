@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="/static/ads/css/adSection.css">
 {% if postAd %}
 <div id="postAd-box" onclick="clickAdLink()">
+    <div>
+        <p>{{postAd.name}}</p>
+    </div>
     {% if postAd.picture %}
 
 <div id="postAd-image">
@@ -31,7 +34,7 @@
 
 
     <script>
-$(document).ready(function(){
+// $(document).ready(function(){
     function clickFunction(){
         
         $.ajax({
@@ -51,5 +54,5 @@ $(document).ready(function(){
         });
 
     }
-});
+// });
 </script>

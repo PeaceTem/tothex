@@ -10,7 +10,6 @@ Categories
 {% block css %}
 <link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
 {% endblock css %}
-{% include 'core/header.html' %}
 
 <section>
     {% if obj_type == 'quiz' %}
@@ -20,14 +19,15 @@ Categories
     {% endif %}
 
 <h3>Add Categories</h3>
+<p>Add at least 1 category to get more views</p>
 {% if obj_type == 'quiz' %}
     <div class="top-info">
-        You can add up to 3 categories <br>Categories: <b>{{objCategories.count}}</b>
+        You can add up to 3 categories <br>Categories: <b class="counter">{{objCategories.count}}</b>
     </div>
     <!-- <input type="hidden" name="quiz" id="quiz" value="{{quiz.id}}"> -->
 {% else %}
 <div class="top-info">
-    You can add up to 5 categories <br>Categories: {{objCategories.count}}
+    You can add up to 5 categories <br>Categories: <b class="counter">{{objCategories.count}}</b>
 </div>
 {% endif %}
 
@@ -41,7 +41,7 @@ Categories
 </div>
 
 
-<form action="" id="added-category-form" method="get">
+<!-- <form action="" id="added-category-form" method="get"> -->
     click on a category in this bucket to remove it<br>
     <fieldset>
         <legend>Bucket</legend>
@@ -51,9 +51,10 @@ Categories
             {% endfor %}
         </div>
     </fieldset>
-    add all the categories in the bucket to the quiz
-    <input type="submit" value="Add">
-</form>
+    <!-- add all the categories in the bucket to the quiz -->
+    <!-- change all the submit buttons to red -->
+    <!-- <input type="submit" value="Add"> -->
+<!-- </form> -->
 
 
 <!-- Add infinite scroll to the category with ajax -->
@@ -66,10 +67,12 @@ Categories
 
 {% for category in page_obj %}
 <span class="infinite-item">
-    <input type="button" onclick="addClassCategory(this.value)" value="{{category.title}}">
+    <input type="button" onclick="updateCart(this.value)" value="{{category.title}}">
 </span>
 {% endfor %}
 </div>
+<br>
+<br>
 <div>
     {% if obj_type == 'quiz' %}
 <a href="{% url 'quiz:new-question' quiz.id %}">
@@ -77,7 +80,7 @@ Categories
 </a>
     {% else %}
     <a href="{% url 'question:new-question' %}">
-        Add more Questions
+        <button>Add more Questions</button>
     </a>
     
     {% endif %}
@@ -87,27 +90,31 @@ Categories
 
 {% include 'jquery.html' %}
 {% include 'loading.html' %}
+
+
+
 <script>
-function addClassCategory(obj_name){
-let bucket = document.getElementById('categoryBucket');
-bucket.innerHTML += `
-<input type="text" class = "addedCategories" name="addedCategories" value=${obj_name} readonly>
-                        `;
-}
-</script>
+    // $(document).ready(function(){
 
-
-<script type="text/javascript">
-    $(document).ready(function(){
-
-var bucket = document.getElementById('categoryBucket');
+// var bucket = document.getElementById('categoryBucket');
 
 
 function removeCategory(index){
-    let elem = document.getElementById(index);
-    elem.parentNode.removeChild(elem);
-}
+    // let elem = document.getElementById(index);
+    // elem.parentNode.removeChild(elem);
+    ajaxifyRemoveCategory(index)
 
+}
+function updateCart(obj_name_char){
+    ajaxifyAddCategory(obj_name_char)
+
+    }
+function addClassCategory(obj_name){
+    let bucket = document.getElementById('categoryBucket');
+bucket.innerHTML += `
+<input type="text" id=${obj_name} onclick="removeCategory(this.id)" class = "addedCategories" name="addedCategories" value=${obj_name} readonly>
+                        `;
+};
 var search = document.querySelector('#Search').value;
 function checkSearchAndReload(){
     let response = document.querySelector('#Search').value;
@@ -136,7 +143,7 @@ function collectCategories(searchData){
         for(let res of response){
             categoriesContainer.innerHTML += `
             <span class="infinite-item">
-                <input type="button" onclick="addClassCategory(this.value)" value="${res.title}">
+                <input type="button" onclick="updateCart(this.value)" value="${res.title}">
             </span>
                             `;
         }
@@ -147,6 +154,117 @@ function collectCategories(searchData){
 });
 
 };
-    });
+
+    // });
+
+
+
+
+
 </script>
+{% if obj_type == 'quiz' %}
+<script>
+// $(document).ready(function(){
+
+
+    function ajaxifyRemoveCategory(old_category){
+    let bucket = document.getElementById('categoryBucket');
+    let counters = document.getElementsByClassName('counter');
+	$.ajax({
+	type : 'GET',
+	url : "{% url 'quiz:category-remove' quiz.id %}",
+	data : {removedCategory:old_category},
+	success : function(response){
+        bucket.innerHTML = '';
+        console.log(response.categories);
+        for(let category of response.categories){
+            addClassCategory(category);
+        };
+        counters[0].innerHTML = response.category_count;
+		},
+	error : function(response){
+		alert('An error occurred!');
+		},
+    });
+
+    };
+    function ajaxifyAddCategory(new_category){
+    let bucket = document.getElementById('categoryBucket');
+    let counters = document.getElementsByClassName('counter');
+
+	$.ajax({
+	type : 'GET',
+	url : "{% url 'quiz:category-create' quiz.id %}",
+	data : {request_type: 'ajax', addedCategory: new_category},
+	success : function(response){
+        bucket.innerHTML = '';
+        console.log(response.categories);
+        for(let category of response.categories){
+            addClassCategory(category);
+        };
+        counters[0].innerHTML = response.category_count;
+
+		},
+	error : function(response){
+		alert('An error occurred!');
+		},
+    });
+
+    };
+
+// });
+</script>
+{% elif obj_type == 'question' %}
+<script>
+// $(document).ready(function(){
+
+
+    function ajaxifyRemoveCategory(old_category){
+    let bucket = document.getElementById('categoryBucket');
+    let counters = document.getElementsByClassName('counter');
+	$.ajax({
+	type : 'GET',
+	url : "{% url 'question:category-remove' q_id %}",
+	data : {removedCategory:old_category},
+	success : function(response){
+        bucket.innerHTML = '';
+        console.log(response.categories);
+        for(let category of response.categories){
+            addClassCategory(category);
+        };
+        counters[0].innerHTML = response.category_count;
+		},
+	error : function(response){
+		alert('An error occurred!');
+		},
+    });
+
+    };
+    function ajaxifyAddCategory(new_category){
+    let bucket = document.getElementById('categoryBucket');
+    let counters = document.getElementsByClassName('counter');
+
+	$.ajax({
+	type : 'GET',
+	url : "{% url 'question:category-create' q_id %}",
+	data : {request_type: 'ajax', addedCategory: new_category},
+	success : function(response){
+        bucket.innerHTML = '';
+        console.log(response.categories);
+        for(let category of response.categories){
+            addClassCategory(category);
+        };
+        counters[0].innerHTML = response.category_count;
+
+		},
+	error : function(response){
+		alert('An error occurred!');
+		},
+    });
+
+    };
+
+// }); 
+</script>
+{% endif %}
 {% endblock content %}

@@ -104,6 +104,8 @@ input[type="submit"]{
 
 .answer{
     padding-top: 10px;
+    background:rgba(238, 238, 238, 0.791);
+    margin:10px 4px;
 }
 
 #countdownbox{

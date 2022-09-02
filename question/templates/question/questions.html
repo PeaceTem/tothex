@@ -43,7 +43,7 @@ Questions
 
             
             <div>
-                Old Town Road
+                Old Town Road(recommended)
             </div>
         </a>
     </div>
@@ -62,25 +62,40 @@ Questions
         </a>
     </div>
     <div style="text-align:left;" id="explanation">
+        <div><b>Notice Board</b></div>
         <p>
             <div>
-                    \[2x^a\]
-                    \[\sum\limits_{n=1}^{n=12}\frac{2x^3}{x^2 + 1}\]
-
+                    <!-- \[2x^a\] -->
+                <blockquote>If you can't teach it, you don't know it.</blockquote>
           <!-- <annotation encoding="application/x-tex">{\displaystyle a_{0}(x)y+a_{1}(x)y'+a_{2}(x)y''+\cdots +a_{n}(x)y^{(n)}+b(x)=0,}</annotation> -->
       <!-- <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/ac470d7aef63fd48b3045c19dc2fa151077d05b8" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -0.838ex; width:56.783ex; height:3.343ex;" alt="{\displaystyle a_{0}(x)y+a_{1}(x)y'+a_{2}(x)y''+\cdots +a_{n}(x)y^{(n)}+b(x)=0,}"></span> -->
 
             </div>
-            Dear user, this is to inform you that this app is still in testing phase.<br>
             Make sure you create quizzes and questions(click the + button). They might be really useful to some certain people.
             See this as your own contribution to the advancement of humanity.<br>
-            <b>This is a gift from The University of Ibadan to the world.</b>
-            Thank you for helping me to test this app.
-            Feel free to give me any feedback(click the menu link at the top left of your device screen). I'm hopeful, by the end of november 2022, this app will be fully functional.
+            <b>This is a gift from a University of Ibadan student to the world.</b>
             <div>
-                <a id="paystack" href="https://paystack.com/pay/neugott-donation-for-the-developer" target="self">Donate</a>
+                <a class="paystack" href="https://paystack.com/pay/neugott-donation-for-the-developer" target="self">Donate</a>
             </div>
-            Your Donation helps to make this app remain online and helps improve the quality of this app.
+            Your Donation helps to make this app remain online, free to use for everyone and helps improve the quality of this app.
+            <div>
+                Click this link if you can't donate
+                <a class="paystack" href="https://bicyclelistworst.com/pr2kezxsg5?key=3e297cded3204c868d4a408d67f38c18">
+                    Click Here
+                </a>
+            </div>
+            Help a young developer that wants to make impact on millions of lives.
+            <div>
+                Click here for notifications:
+                <a id="notifications" class="paystack" href="#">
+                    Notification
+                </a>
+            </div>
+            <div>
+                <a class="paystack" href="{% url 'my-struggle' %}">
+                    My Struggle
+                </a>
+            </div>
         </p>
         
         </div>
@@ -140,5 +155,31 @@ Questions
         formContainer.classList.toggle('inactive-bar');
         
     });
+</script>
+<script>
+    const notifButton = document.getElementById('notifications');
+    alert("yes");
+    notifButton.addEventlistener('click', ()=>{
+    alert("heard");
+
+        Notification.requestPermission().then((result)=>{
+            if (result === 'granted'){
+                randomNotification();
+            }
+        })
+    })
+    function randomNotification(){
+        // const randomItem = 
+        const notifTitle = 'Revision Reminder';
+        const notifBody = "There are questions lieing around, waiting for someone to supply answers to them!";
+        const notifImg = "/static/images/tothex_160.png";
+        const notifOptions = {
+            body: notifBody,
+            icon: notifImg,
+        };
+        new Notification(notifTitle, notifOptions);
+        setTimeout(randomNotification, 1000*60*60*8)
+    }
+
 </script>
 {% endblock content %}

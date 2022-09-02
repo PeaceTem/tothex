@@ -41,11 +41,6 @@ input[type="submit"]{
     margin: 5px 5px;
 }
 
-input[type='text']{
-    border: none;
-    outline:none;
-    border-bottom: 1px solid #333;
-  }
 .copysymbol{
     width: 25px;
     margin: 3px;

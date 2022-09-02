@@ -48,7 +48,7 @@ class Quiz(models.Model):
     DURATION_CHOICES = zip( range(1,61), range(1,61) )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, verbose_name=_('Title'))
-    description = RichTextField(max_length=1000, verbose_name=_('Description'))
+    description = RichTextField(max_length=1000, verbose_name=_('Description'), blank=True, null=True)
     slug = models.SlugField(unique=True, null=True,blank=True)
     composition = RichTextField(max_length=10000, null=True, blank=True, verbose_name=_("Composition and Instructions"))
     date = models.DateTimeField(auto_now_add=True)
@@ -69,8 +69,8 @@ class Quiz(models.Model):
     likes = models.ManyToManyField(User, default=None, blank=True, related_name='likes')
     likeCount = models.PositiveIntegerField(default=0)
     solution_validators = models.ManyToManyField(User,  blank=True, related_name='quiz_solution_validators')
-    age_from = models.PositiveSmallIntegerField(null=True, verbose_name=_('Minimum Age Of Quiz Takers'))
-    age_to = models.PositiveSmallIntegerField(null=True, verbose_name=_('Maximum Age Of Quiz Takers'))
+    age_from = models.PositiveSmallIntegerField(default=11, verbose_name=_('Minimum Age Of Quiz Takers'))
+    age_to = models.PositiveSmallIntegerField(default=65, verbose_name=_('Maximum Age Of Quiz Takers'))
     relevance = models.IntegerField(default=0)
 
     objects = QuizManager()
@@ -232,6 +232,6 @@ class Attempter(models.Model):
 
 
     def __str__(self):
-        return f"{self.user.username}"
+        return f"{self.user}"
 
     # check if the attempter has not been created before creating another instance of attempter

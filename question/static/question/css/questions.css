@@ -64,14 +64,14 @@ div#openForm{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     background:rgba(189, 41, 41, 0.7);
     cursor: pointer;
 }
 a#open{
     color: #fff;
-    font-size: 20px;
+    font-size: 40px;
     background:rgba(155, 89, 89, 0.144);
 }
 
@@ -104,7 +104,7 @@ a#open{
     left: 0;
 }
 
-.create, a#paystack{
+.create, a.paystack{
     margin: 4px 3px;
     background: #f11919;
     border-radius: 4px;

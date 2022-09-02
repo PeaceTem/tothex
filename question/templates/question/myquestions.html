@@ -12,21 +12,31 @@ My Questions
 {% include 'mathjax.html' %}
 <link rel="stylesheet" href="{% static 'question/css/myquestions.css' %}">
 {% endblock css %}
-{% include 'core/header.html' %}
 
-<!-- <div style="text-align:left;" class="top-link"> -->
-    <!-- <a style="text-align:left;" href="{% url 'question:questions' %}">Go back</a> -->
-<!-- </div> -->
+<div style="display: block;border-bottom: 1px solid #ccc;height: 50px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
+    <div style="padding-right: 3px;">
+        <a style="margin-right: 7px;color: black;text-decoration: none;font-size: 40px;padding-right: 4px;"
+        href="{% url 'question:questions' %}" 
+        alt="NeuGott back button">
+            ←
+        </a>
+        <span style="color: #a83425;font-weight:600; font-size:30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            NeuGott
+        </span>
+  
+    </div>
+  </div>
+
 {% include 'messages.html' %}
-<i>Total questions' attempts = {{total_question_attempts}}</i>
 
 <div class="container infinite-container" onchange="changed()">
     <div class="questions">
-        $$\sqrt{\log_4 5}$$
-        The average questions attempts is {{average_attempts}}
-        The average views is {{average_views}}
-        The total views is {{total_views}}
-        The total questions created is {{total_questions_created}}
+        My Coven <br>
+        Total questions attempts = <i>{{total_question_attempts}}</i><br>
+        The average questions attempts is {{average_attempts}} <br>
+        The average views is {{average_views}} <br>
+        The total views is {{total_views}} <br>
+        The total questions created is {{total_questions_created}} <br>
     </div>
         {% for date_created, question in page_obj %}
     <div class="questions  infinite-item">
@@ -62,7 +72,7 @@ My Questions
             {% if question.index is 0 and user == question.user %}
             <div class="linkTab">
                 <div class="private-links">
-                    <a href="{% url 'question:edit-trueOrFalseQuestion' question.id %}">Update</a>
+                    <a href="{% url 'question:edit-trueOrFalseQuestion' question.id %}">Edit</a>
                 </div>
                 <div class="private-links">
                     <form class="DeleteForm" action="{% url 'question:delete-question' 'trueOrFalse' question.id %}" method="post">
@@ -107,7 +117,7 @@ My Questions
             {% if question.index is 0 and user == question.user %}
             <div class="linkTab">
                 <div class="private-links">
-                    <a href="{% url 'question:edit-fourChoicesQuestion' question.id %}">Update</a>
+                    <a href="{% url 'question:edit-fourChoicesQuestion' question.id %}">Edit</a>
                 </div>
                 <div class="private-links">
                     <form class="DeleteForm" action="{% url 'question:delete-question' 'fourChoices' question.id %}" method="post">

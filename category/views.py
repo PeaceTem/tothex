@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from .serializers import CategorySerializer
 from rest_framework import generics
 from django.views.generic.base import TemplateView
-
+from rest_framework.response import Response
 
 
 
@@ -59,7 +59,29 @@ class AddCategory(View):
             pass
 
 
+class AjaxCategoryAddOrCreate(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
+    def get(self, request, quiz_id, category):
+        print("Entered!")
+        try:
+            category = Category.objects.get(title=category)
+
+            self.add_category(quiz_id, category)
+            return Response
+        except:
+            user = self.request.user
+            print('The category will be created')
+            self.perform_create_hard(user, quiz_id, category)
+            return Response
+
+    def perform_create_hard(self, user,quiz_id, category):
+        return Response
+
+    @staticmethod
+    def add_category(quiz_id, category):
+        return Response
 
 
 

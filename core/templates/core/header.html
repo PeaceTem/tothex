@@ -1,46 +1,14 @@
-<style>
-    div.head-arrow{
-        display: block;
-        border-bottom: 1px solid #ccc;
-        height: 40px;
-        box-shadow: 0 1px 4px #ccc;
-        position: sticky;
-        top: 0;
-        left: 0;
-        background: #fff;
-        z-index: 1000;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
-    }
-    div.head-box{
-        padding-right: 6px;
-    }
-    div.head-box a{
-        text-decoration: none;
-        font-size: 30px;
-        padding-right: 4px;
-        color: black;
-        margin-right: 7px;
-    }
-    div.head-box span{
-        color: #a83425;
-        font-weight: 700;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    }
-    img#neugott{
-        width:20px;
-        height:20px;
-    }
-</style>
 
-
-<div class="head-arrow">
-    <div class="head-box">
-        <a href="{{request.META.HTTP_REFERER}}" alt="NeuGott back button">
+<div style="display: block;border-bottom: 1px solid #ccc;height: 40px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
+    <div style="padding-right: 6px;">
+        <a style="margin-right: 7px;color: black;text-decoration: none;font-size: 40px;padding-right: 4px;"
+        href="{{request.META.HTTP_REFERER}}" 
+        alt="NeuGott back button">
             ←
         </a>
-        <span>NeuGott</span>
-        <img style="width:20px; height:20px;border-radius:4px;" id="neugott" src="/static/core/images/tothex_160.png" alt="NeuGott">
-        
+        <span style="color: #a83425;font-weight: 700;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            NeuGott
+        </span>
+
     </div>
 </div>

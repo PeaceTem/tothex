@@ -26,7 +26,9 @@ def create_profile(sender, instance, created, *args, **kwargs):
             profile.save()
         follower = Follower.objects.create(user=instance)
         followed = User.objects.get(id=2)
+        _follower = Follower.objects.get(id=1)
         follower.following.add(followed)
+        _follower.followers.add(instance)
         # users should automatically follow my account here
 
 

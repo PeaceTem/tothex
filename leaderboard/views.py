@@ -107,4 +107,18 @@ def ReferralLeaderBoardView(request,*args, **kwargs):
 
 
 
+def referrals(request):
+    user = request.user
+    if user.is_authenticated:
+        instance = user.profile
+    else:
+        instance = user
+    leaders = Profile.objects.all().order_by("-refercount")[:100]
+    # index = (*leaders,).index(instance) + 1 or "100+"
 
+    context = {
+        "leaders": leaders,
+        # "index": index,
+        'instance': instance,
+    }
+    return render(request, 'leaderboard/referral.html', context)

@@ -1,29 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}
+My Struggle
+{% endblock title %}
+{% block css %}
+<style>
+    section{
+        padding:10px;
+    }
+</style>
+{% endblock css %}
+{% block content %}
 <h1>My Struggle</h1>
+<i style="font-size:14px;color:#999;">This page will be updated from time to time</i>
 <h3>The Beginning</h3>
 <section>
+
     <article>
         <p>
             I have always wanted to create something that will be of good use to 
-            everyone since I was young. Fortunately, I stumbled on an idea in 2018
-            to create a robot, or simply put an AI, that will help people through their
-            academical journeythrough a mobile app. It was just an idea, nothing more, nothing less.
-            But I didn't where to start. After a lot of ramblings, I later decided to 
-            learn <b>Wordpress</b>(it helps one to create a website with no code at all)
+            everyone since I was young. Fortunately, I stumbled upon an idea in 2018
+            to create a robot, or simply put, an AI, that will help people through their
+            academical journey which will be deployed via a mobile app. It was just an idea, nothing more, nothing less.
+            But I didn't know where to start. After rambling for a long time, I later decided to 
+            learn <b>Wordpress</b>(it helps one to create a website with no code at all).
             After playing with wordpress for a while, I realised that its power is limited,
             so I went on to learn <b>HTML, CSS, and JavaScript</b>. Then, I switched to 
-            python in 2020.
+            <b>python</b> in 2020.
         </p>
     </article>
-    
+    <br>
     <article>
         <p>
             I taught for a while. During that period I realised that most, if not all,
-             of my students used to forget what they are being taught in less than 2 weeks.
-             So, I carried out a research to know why people forget things easily(I
+             of my students used to forget whatever they were being taught in less than 2 weeks.
+             So, I carried out a research to know why people forget things easily(I was
               just browsing the internet though!). Out of all the results I saw online 
-            the one that interest me the most is Input-Output-Output-Output model. 
-            This model states that the output(revision, practice, rehearsal, whatever) should
+            the one that interests me the most is Input-Output-Output-Output model. 
+            This model states that the output(revision, practice, rehearsal, or whatever) should
              be at least 3X more than the Input. That was why I decided to build this app.
+             So people will be able to practice whatever they've learnt.
         </p>
     </article>
 </section>
+{% endblock content %}

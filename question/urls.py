@@ -26,6 +26,8 @@ urlpatterns = [
     path('edit-question/true-or-false/<str:question_id>/', views.TrueOrFalseQuestionUpdate, name='edit-trueOrFalseQuestion'),
 
     path('category-create/<str:question_id>/', views.CategoryCreate, name='category-create'),
+    path('category-remove/<str:question_id>/', views.CategoryRemove, name='category-remove'),
+
 
     path('question-delete/<str:question_form>/<str:question_id>/', views.DeleteQuestion, name='delete-question'),
 

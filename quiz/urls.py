@@ -44,6 +44,7 @@ urlpatterns = [
 
     #category
     path('create_category/<str:quiz_id>/', views.CategoryCreate, name='category-create'),
+    path('remove_category/<str:quiz_id>/', views.CategoryRemove, name='category-remove'),
 
     #question
     path('<str:quiz_id>/new-question/', views.QuestionCreate, name='new-question'),
