@@ -1045,6 +1045,7 @@ def DeleteQuestion(request,quiz_id, question_form, question_id):
 # the real test view
 """
 Add all the documentation here
+
 """
 def TakeQuiz(request, quiz_id):
 
@@ -1052,6 +1053,7 @@ def TakeQuiz(request, quiz_id):
     quiz = Quiz.objects.prefetch_related('fourChoicesQuestions', 'trueOrFalseQuestions').get(id=quiz_id)
     profile = None
     if user.is_authenticated:
+        # check if the coins is less than 3 to redirect to quiz generator
         profile = Profile.objects.get(user=user)
         messages.info(request,_("3 coins will be removed after submitting this quiz!"))
         
@@ -1329,7 +1331,7 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
             pass
 
         try:
-            attempters = quiz.attempter_set.select_related('user').all()[:10]
+            attempters = quiz.attempters.all()[:10]
             context['attempters'] = attempters
         except:
             pass
