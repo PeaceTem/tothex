@@ -75,24 +75,24 @@ Questions
             See this as your own contribution to the advancement of humanity.<br>
             <b>This is a gift from a University of Ibadan student to the world.</b>
             <div>
-                <a class="paystack" href="https://paystack.com/pay/neugott-donation-for-the-developer" target="self">Donate</a>
+                <a class="paystack1" href="https://paystack.com/pay/neugott-donation-for-the-developer" target="self">Donate</a>
             </div>
             Your Donation helps to make this app remain online, free to use for everyone and helps improve the quality of this app.
             <div>
                 Click this link if you can't donate
-                <a class="paystack" href="https://bicyclelistworst.com/pr2kezxsg5?key=3e297cded3204c868d4a408d67f38c18">
+                <a class="paystack1" href="https://bicyclelistworst.com/pr2kezxsg5?key=3e297cded3204c868d4a408d67f38c18">
                     Click Here
                 </a>
             </div>
             Help a young developer that wants to make impact on millions of lives.
             <div>
                 Click here for notifications:
-                <a id="notifications" class="paystack" href="#">
+                <button id="notifications" class="paystack1">
                     Notification
-                </a>
+                </button>
             </div>
             <div>
-                <a class="paystack" href="{% url 'my-struggle' %}">
+                <a class="paystack1" href="{% url 'my-struggle' %}">
                     My Struggle
                 </a>
             </div>
@@ -158,10 +158,8 @@ Questions
 </script>
 <script>
     const notifButton = document.getElementById('notifications');
-    alert("yes");
-    notifButton.addEventlistener('click', ()=>{
-    alert("heard");
-
+    notifButton.addEventlistener('click', (e)=>{
+        e.preventDefault();
         Notification.requestPermission().then((result)=>{
             if (result === 'granted'){
                 randomNotification();

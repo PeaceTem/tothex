@@ -302,10 +302,12 @@ Old Town Road Correction
 </div> -->
 {% endif %}
 {% if question.quiz %}
+<br>
 <form action="{% url 'quiz:take-quiz' question.quiz.id %}" method="get">
     <input type="submit" value="Take The Full Quiz">
 </form>
 {% endif %}
+<br>
 
 
 <div  style="display:none;" class='result'>

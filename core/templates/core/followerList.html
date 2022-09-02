@@ -31,7 +31,7 @@ Followers
     {% for obj in objects.following.all %}
     <div class="followers">
         {{obj}} 
-        {% if not user == objects %}
+        {% if not user == objects not user.is_authenticated %}
         <a class="clickable" href="{% url 'follow-action' follower_id obj.id 'unfollow' %}"><button style="border-radius:4px; padding: 3px; border:none; color: #fff; background:#f11919;">Unfollow</button></a> 
         {% endif %}
     </div>
@@ -45,7 +45,7 @@ Followers
     <div class="followers">
 
         {{obj}} 
-        {% if not user == objects %}
+        {% if not user == objects not user.is_authenticated %}
 
         {% if obj in objects.following.all %}
             <i style="font-size: 11px; color: #666; background:#eee;">followed</i>

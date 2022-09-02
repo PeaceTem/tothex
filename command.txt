@@ -74,30 +74,27 @@ ssh -i LightsailDefaultKey-eu-west-2.pem ubuntu@18.169.5.25
 
 
 upstream django {
-    server unix:///home/ubuntu/myproj/myproj.sock;
+    server unix:///home/ubuntu/tothex/tothex.sock;
 }
 # configuration of the server
 server {
     listen      80;
-    server_name localhost:8000 18.169.5.25:8000;
+    server_name www.neugott.com neugott.com 13.41.220.184;
     charset     utf-8;
     # max upload size
     client_max_body_size 75M;
     # Django media and static files
     location /media  {
-        alias /home/ubuntu/myproj/media;
+        alias /home/ubuntu/tothex/media;
     }
     location /static {
-        alias /home/ubuntu/myproj/static;
+        alias /home/ubuntu/tothex/staticfiles;
     }
     # Send all non-media requests to the Django server.
 
     location / {
-        proxy_pass /question/;
-    }
-    location / {
         uwsgi_pass  django;
-        include     /home/ubuntu/myproj/uwsgi_params;
+        include     /home/ubuntu/tothex/uwsgi_params;
     }
 }
 

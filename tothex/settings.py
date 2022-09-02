@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
-import django_heroku
+# import django_heroku
 from decouple import config
 # import environ
 # env = environ.Env()
@@ -33,7 +33,7 @@ DEBUG = True
 # DEBUG = str(os.environ.get('DEBUG')) == "1"
 
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "neugott.com", "www.neugott.com",]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "*", "neugott.com", "www.neugott.com",]
 # ALLOWED_HOSTS = str(os.environ.get('ALLOWED_HOST')).split()
 
 
@@ -311,7 +311,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # django hosting configuration
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 
 #SMTP Configuration

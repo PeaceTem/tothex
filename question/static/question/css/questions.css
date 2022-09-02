@@ -114,6 +114,17 @@ a#open{
     display: block;
 }
 
+.paystack1{
+    margin: 4px 3px;
+    background: #f11919;
+    border-radius: 4px;
+    color: white;
+    padding: 4px 6px;
+    margin: 5px;
+    display: block; 
+    border:none;
+    outline:none;
+}
 .question-info{
     font-size: 11px;
     color: #999;

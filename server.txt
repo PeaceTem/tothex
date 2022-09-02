@@ -1,0 +1,19 @@
+sudo apt-get install python3-venv
+mkdir /home/ubuntu/env/
+python3 -m venv /home/ubuntu/env/tothexvenv
+
+
+source ~/env/tothexvenv/bin/activate
+pip install django
+sudo apt-get install python3.8-dev
+sudo apt-get install gcc
+pip install uwsgi
+sudo apt-get install nginx
+
+sudo ln -s /etc/nginx/sites-available/tothex.conf /etc/nginx/sites-enabled/
+
+ssh-keygen -o -t rsa -C "git@github.com:PeaceTem/tothex.git"
+
+
+
+

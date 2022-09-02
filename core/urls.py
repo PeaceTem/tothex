@@ -19,7 +19,7 @@ urlpatterns = [
     path('feedback', views.FeedBack.as_view(), name='feedback'),
     path('chart/', views.Chart, name='chart'),
     path('my-struggle', views.MyStruggle.as_view(), name='my-struggle'),
-    path('contact', views.Advertise.as_view(), name='advertise'),
+    path('advertise', views.Advertise.as_view(), name='advertise'),
 
     #referral
     path('', views.Home, name='home'),
