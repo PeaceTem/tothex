@@ -695,7 +695,8 @@ def QuizUpdate(request, quiz_id):
 def DeleteQuiz(request, quiz_id):
     try:
         user = request.user
-        quiz = get_object_or_404(Quiz, id=quiz_id)
+        quiz = Quiz.objects.get(id=quiz_id)
+        # quiz = get_object_or_404(Quiz, id=quiz_id)
         if not quiz.user == user:
             return HttpResponseForbidden()
         # profile = Profile.objects.get(user=user)
@@ -703,7 +704,10 @@ def DeleteQuiz(request, quiz_id):
             # profile.quizzes -= 1
             # profile.likes -= 1
             # profile.save()
-            quiz.delete()
+            quiz.is_active = False
+            quiz.save()
+            # quiz.delete()
+            
 
             return HttpResponse('deleted!')
     except:
@@ -1029,7 +1033,9 @@ def DeleteQuestion(request,quiz_id, question_form, question_id):
         quiz.totalScore -= question.points
         quiz.duration -= question.duration_in_seconds
         quiz.save()
-        question.delete()
+        question.is_active = False
+        question.save()
+        # question.delete()
 
         return HttpResponse('You have deleted a question.')
 

@@ -409,3 +409,10 @@ def FollowActionView(request, follower_id, user_id, action):
 
 
 
+def allow_notification(request):
+    user = request.user
+    if user.is_authenticated:
+        profile = user.profile
+        profile.coins += 40
+        profile.save()
+    return HttpResponse("40 coins added!")

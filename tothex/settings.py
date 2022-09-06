@@ -24,13 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&qw$#gjx)#=&hti^hwpn*zmmyq8^%0tp0m(u^&&)q)b3f_6-4w'
-# SECRET_KEY = os.environ.get('SECRET_KEY')
+# SECRET_KEY = 'django-insecure-&qw$#gjx)#=&hti^hwpn*zmmyq8^%0tp0m(u^&&)q)b3f_6-4w'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = str(os.environ.get('DEBUG')) == "1"
+# DEBUG = True
+DEBUG = str(os.environ.get('DEBUG')) == "1"
 
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "*", "neugott.com", "www.neugott.com",]
@@ -163,7 +163,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request',
+                # 'django.template.context_processors.request',
 
             ],
         },
@@ -183,18 +183,28 @@ WSGI_APPLICATION = 'tothex.wsgi.application'
 #    }
 # }
 
-
-
 DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'postgres',
-         'USER': 'dbmasteruser',
-         'PASSWORD': '?xQ(1JSI]nZG^-4?nXitnv[$Leg]3gLp', 
-         'HOST': 'ls-33d64515978a764b1cff2ac8c0e56c45d199c5d7.czzbhfz5hxzc.eu-west-2.rds.amazonaws.com',
-         'PORT': '5432',
+         'NAME': os.environ.get('NAME'),
+         'USER': os.environ.get('USER'),
+         'PASSWORD': os.environ.get('PASSWORD'), 
+         'HOST': os.environ.get('HOST'),
+         'PORT': os.environ.get('PORT'),
      }
  }
+
+
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#          'NAME': 'postgres',
+#          'USER': 'dbmasteruser',
+#          'PASSWORD': '?xQ(1JSI]nZG^-4?nXitnv[$Leg]3gLp', 
+#          'HOST': 'ls-33d64515978a764b1cff2ac8c0e56c45d199c5d7.czzbhfz5hxzc.eu-west-2.rds.amazonaws.com',
+#          'PORT': '5432',
+#      }
+#  }
 
 # DATABASES = {
 #     'default' : {},
@@ -280,7 +290,6 @@ STATICFILES_DIRS = [
     BASE_DIR /'ads' / 'static',
     BASE_DIR /'q' / 'static',
     BASE_DIR /'leaderboard' / 'static',
-
 ]
 
 # media files configuration

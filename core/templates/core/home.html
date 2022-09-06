@@ -1,23 +1,75 @@
 
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuGott</title>
+<style>
+    *{
+        font-size: 20px;
+        padding: 4px;
+        font-family: Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
+    }
+    h1{
+        color: #f11919;
+    }
+    a{
+        color: #fff;
+        background: #f11919;
+        padding: 6px;
+        width:100px;
+        text-align: center;
+    }
 
-{% block content %}
-
-{% if not user.is_authenticated %}
-<button><a href="{% url 'register' %}">Create an account</a></button>
-<button><a href="{% url 'login' %}">Login to your account</a></button>
-
-{% endif %}
+</style>
+</head>
+<body>
+    
 
 <h1>NeuGott</h1>
-Add a counter that will inform the user they are being redirected to old town road
 <h4>This is where geniuses gather to train one another</h4>
 <section>
     <p>
-        <a href="{% url 'question:answer-question' %}">Start taking questions</a>
+        You will be redirected to the question page:
+    <div id="countdownbox"><b>15sec left</b></div>
+    </p>
+    <p>
+        <a id="nextButton" href="{% url 'question:answer-question' %}">Start taking questions</a>
     </p>
     <p>
         <a href="{% url 'quiz:quizzes' %}">Or take a quiz</a>
     </p>
 </section>
-{% endblock content %}
+<script>
+
+    let seconds = 15;
+    const next = document.getElementById('nextButton');
+const countdownbox = document.getElementById('countdownbox');
+
+const myInterval = setInterval(()=>{
+    seconds -= 1;
+
+    if (seconds == 0){
+        next.click();
+    }
+
+
+    if (seconds <= 0){
+        myStopFunction();
+    }
+
+
+    countdownbox.innerHTML = `<b>${seconds}sec left</b>`;
+
+}, 1000)
+
+
+function myStopFunction() {
+  clearInterval(myInterval);
+}
+</script>
+</body>
+</html>

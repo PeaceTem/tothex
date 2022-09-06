@@ -90,15 +90,15 @@ def MyQuestionList(request):
     preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=user, standalone=True)
     preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=user, standalone=True)
     questions = []
-    total_question_attempts = 0
+    # total_question_attempts = 0
     for question in preQuestions:
         questions.append(tuple((question.date_created, question)))
-        total_question_attempts += question.attempts
+        # total_question_attempts += question.attempts
 
     questions.sort(key=sortKey, reverse=True)
     # add reverse later
     total_views = sum([x[1].views for x in questions])
-    
+    total_question_attempts = sum([x[1].attempts for x in questions])
     questions_length = len(questions)
     p = Paginator(questions, 10)
     page = request.GET.get('page')
@@ -110,6 +110,7 @@ def MyQuestionList(request):
         pass
 
     context={
+        'owner': user,
         'user': user,
         'nav': 'my-questions',
         'page_obj': questions,
@@ -137,6 +138,9 @@ def VisitorView(request, owner_id):
 
 
     questions.sort(key=sortKey, reverse=True)
+    questions_length = len(questions)
+    total_question_attempts = sum([x[1].attempts for x in questions])
+    total_views = sum([x[1].views for x in questions])
 
     p = Paginator(questions, 10)
     page = request.GET.get('page')
@@ -145,11 +149,24 @@ def VisitorView(request, owner_id):
     
     Add the average attempts and average views to this one also
     """
+    
+    try:
+        average_attempts = round(total_question_attempts/questions_length, 2)
+        average_views = round(total_views/questions_length, 2)
+    except ZeroDivisionError:
+        pass
+
     context={
+        'owner': owner,
         'user':request.user,
         'nav': 'my-questions',
         'page_obj': questions,
         "viewer": "visitor",
+        "total_question_attempts": total_question_attempts,
+        'average_attempts': average_attempts,
+        'average_views': average_views,
+        'total_questions_created':questions_length,
+        'total_views': total_views,
     }
 
     return render(request, 'question/myquestions.html', context)
@@ -159,15 +176,41 @@ def VisitorView(request, owner_id):
 
 
 def AnswerQuestion(request):
+
     user = request.user
     question_type = randomChoice(['fourChoices', 'trueOrFalse'])
-
+    creator = request.GET.get('creator')
+    if creator:
+        creator = User.objects.get(username=creator)
+        if question_type == 'fourChoices':
+            fqs = creator.fourChoicesQuestions.all()
+            question = randomChoice(fqs)
+        elif question_type == 'trueOrFalse':
+            tfqs = creator.trueOrFalseQuestions.all()
+            question = randomChoice(tfqs)
+        score = round((2 - question.avgScore/100) * 2, 2)
+        question.views += 1  
+        question.save() 
+        context = {
+        'question': question,
+        'score'  : score,
+        'questionType' : 'OldTownRoad',
+        'creator' : creator,
+        }
+        
+        if question.form == "fourChoicesQuestion":
+            # check if you are to shuffle this question's answers
+            ans = [1,2,3,4]
+            shuffle(ans)
+            context["ans"] = ans
+        return render(request, 'question/takequestion.html', context)
     if user.is_authenticated:
         if question_type == 'fourChoices':
             # the profile should only prefetch recommended questions alone
             # print('Entering the first step')
             profile = Profile.objects.prefetch_related('recommended_four_choices_questions').get(user=user)
             if profile.coins < 1:
+                messages.info(request, _("You'll get 1 coin here"))
                 return redirect('ads:postAd', nextpage='oldtownroad')
             if profile.recommended_four_choices_questions.count() < 1:
                 # print('Entering the funnel!')
@@ -279,6 +322,7 @@ def FollowingQuestion(request):
         # print('Entering the first step')
         profile = Profile.objects.prefetch_related('following_four_choices_questions').get(user=user)
         if profile.coins < 1:
+            messages.info(request, _("You'll get 1 coin here"))
             return redirect('ads:postAd', nextpage='following')
         if profile.following_four_choices_questions.count() < 1:
             # print('Entering the funnel!')
@@ -361,8 +405,16 @@ def FollowingQuestion(request):
 
 
 
+# def CovenQuestions():
+
+
+
+
+
 def CorrectionView(request, question_form, question_id, qtype, answer):
     user = request.user
+    creator = request.GET.get('creator')
+
     if question_form == 'fourChoicesQuestion':
         question = FourChoicesQuestion.objects.prefetch_related("solution_validators").select_related("user", "quiz").get(id=question_id)
     elif question_form == 'trueOrFalseQuestion':
@@ -376,6 +428,7 @@ def CorrectionView(request, question_form, question_id, qtype, answer):
         'answer' : answer,
         'postAd': getAd('correction'),
         'page': 'correction',
+        'creator': creator,
     }
 
     return render(request, 'question/correction.html', context)
@@ -644,7 +697,9 @@ def DeleteQuestion(request,question_form, question_id):
         question = TrueOrFalseQuestion.objects.select_related('user').get(id=question_id)
     if request.method == 'POST':
         if question.user == user:
-            question.delete()
+            question.is_active = False
+            question.save()
+            # question.delete()
             return HttpResponse('Deleted!')
         else:
             return HttpResponseForbidden()
@@ -665,6 +720,32 @@ value="{{question.form}}|{{question.id}}|answer1"
 def SubmitQuestion(request):
 
     try:
+        qtype = request.POST.get('questionType')
+        creator = request.POST.get('creator')
+        answer = request.POST.get('answer')
+        if not answer:
+            messages.error(request, _("You didn't provide any anwser"))
+            if creator:
+                response = redirect(request.META['HTTP_REFERER'])
+                response['Location'] += f"?creator={creator}"
+                return response
+            return redirect(request.META['HTTP_REFERER'])
+
+
+        if answer is None and qtype == 'following':
+            if creator:
+
+                response = redirect(request.META['HTTP_REFERER'])
+                response['Location'] += f"?creator={creator}"
+                return response
+            return redirect('question:following-questions')
+        elif answer is None and qtype == 'oldTownRoad':
+            if creator:
+
+                response = redirect(request.META['HTTP_REFERER'])
+                response['Location'] += f"?creator={creator}"
+                return response
+            return redirect('question:answer-question')
         user = request.user
         if user.is_authenticated:
 
@@ -673,16 +754,7 @@ def SubmitQuestion(request):
               "fourChoicesQuestionsWareHouse").get(user=user)
 
         if request.method == 'POST':
-            answer = request.POST.get('answer')
-            if not answer:
-                messages.error(request, _("You didn't provide any anwser"))
-                return redirect(request.META['HTTP_REFERER'])
-            qtype = request.POST.get('questionType')
 
-            if answer is None and qtype == 'following':
-                return redirect('question:following-questions')
-            elif answer is None and qtype == 'oldTownRoad':
-                return redirect('question:answer-question')
 
             if user.is_authenticated:
                 # streak = Streak.objects.get(profile=profile)
@@ -773,6 +845,11 @@ def SubmitQuestion(request):
 
                         messages.warning(request, _("You've lost 1 coin"))
                     messages.error(request, _('WRONG!'))
+                    if creator:
+                        response = redirect('question:correction', question_form=combination[0], question_id=combination[1], qtype=qtype, answer=pos)
+                        response['Location'] += f"?creator={creator}"
+                        return response
+
                     return redirect('question:correction', question_form=combination[0], question_id=combination[1], qtype=qtype, answer=pos)
 
 
@@ -861,14 +938,21 @@ def SubmitQuestion(request):
                         profile.save()
                         messages.warning(request, _("You've lost 1 coin"))
                     messages.error(request, _('WRONG!'))
+                    if creator:
+                        response = redirect('question:correction', question_form=combination[0], question_id=combination[1], qtype=qtype, answer=pos)
+                        response['Location'] += f"?creator={creator}"
+                        return response
                     return redirect('question:correction', question_form=combination[0], question_id=combination[1], qtype=qtype, answer=pos)
 
     except:
         pass
-    qtype = request.POST.get('questionType')
-    if qtype == 'OldTownRoad':
+    if qtype == 'OldTownRoad' and creator != None:
+        response = redirect('question:answer-question')
+        response['Location'] += f"?creator={creator}"
+        return response
+    elif qtype == 'OldTownRoad' and creator == None:
         return redirect('question:answer-question')
-    elif qtype == 'following':
+    elif qtype == 'Following':
         return redirect('question:following-questions')
 
     HttpResponse('An error occurred!')
@@ -895,7 +979,7 @@ def QuizGenerator(request):
             form = QuizGeneratorForm(request.POST)
 
             if form.is_valid():
-                duration_in_minutes = form.cleaned_data.get('duration_in_minutes')
+                duration_in_minutes = int(form.cleaned_data.get('duration_in_minutes')) * 60
                 number_of_questions = form.cleaned_data.get('number_of_questions')
                 categories = request.POST.getlist('categories')
                 trueOrFalseQuestions = TrueOrFalseQuestion.objects.none()

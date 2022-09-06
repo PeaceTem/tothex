@@ -54,6 +54,7 @@ class Quiz(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     views = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     when = models.CharField(max_length=200, null=True, blank=True)
     lastQuestionIndex = models.PositiveSmallIntegerField(default=0)
     questionLength = models.PositiveSmallIntegerField(default=0)

@@ -7,7 +7,7 @@
 
 
 {% block css %}
-<link rel="stylesheet" href="/static/q/css/question_page.css">
+<link rel="stylesheet" href="{% static 'q/css/question_page.css' %}">
 {% endblock css %}
 
 
@@ -76,7 +76,7 @@
 
 
 {% include 'jquery.html' %}
-<script src="/static/q/js/question_page.js"></script>
+<script src="{% static 'q/js/question_page.js' %}"></script>
 {% include 'waypoint.html' %}
 <script>
     const formContainer = document.querySelector('#form-container');

@@ -66,25 +66,25 @@ Quiz
             </div>
             {% for ans in question.shuffle_answers %}
             {% if ans == 1 %}
-            <div class="answer">
+            <div onclick="AutoClick(this)" class="answer">
                 <input onclick="validateAnswer(this.className, this.id)" class="option{{index}}"  type="checkbox" name="answer" id="id_{{index}}_answer1" value="fourChoices-{{question.id}}-answer1">
                 <label for="id_{{index}}_answer1">{{question.answer1}}</label>
             </div>
             {% elif ans == 2 %}
             
-            <div class="answer">
+            <div onclick="AutoClick(this)" class="answer">
                 <input onclick="validateAnswer(this.className, this.id)" class="option{{index}}" type="checkbox" name="answer" id="id_{{index}}_answer2" value="fourChoices-{{question.id}}-answer2">
                 <label for="id_{{index}}_answer2">{{question.answer2}}</label>
             </div>
             {% elif ans == 3 %}
 
-            <div class="answer">
+            <div onclick="AutoClick(this)" class="answer">
                 <input onclick="validateAnswer(this.className, this.id)" class="option{{index}}" type="checkbox" name="answer" id="id_{{index}}_answer3" value="fourChoices-{{question.id}}-answer3">
                 <label for="id_{{index}}_answer3">{{question.answer3}}</label>
             </div>
             {% elif ans == 4 %}
 
-            <div class="answer">
+            <div onclick="AutoClick(this)" class="answer">
                 <input onclick="validateAnswer(this.className, this.id)" class="option{{index}}" type="checkbox" name="answer" id="id_{{index}}_answer4" value="fourChoices-{{question.id}}-answer4">
                 <label for="id_{{index}}_answer4">{{question.answer4}}</label>
             </div>
@@ -99,12 +99,12 @@ Quiz
         {{question.question|safe}}
 
     </div>
-            <div class="answer">
+            <div onclick="AutoClick(this)" class="answer">
                 <input onclick="validateAnswer(this.className, this.id)" class="option{{index}}" type="checkbox" name="answer" id="id_{{index}}_answer1" value="trueOrFalse-{{question.id}}-answer1">
                 <label for="id_{{index}}_answer1">{{question.answer1}}</label>
             </div>
             
-            <div class="answer">
+            <div onclick="AutoClick(this)" class="answer">
                 <input onclick="validateAnswer(this.className, this.id)" class="option{{index}}" type="checkbox" name="answer" id="id_{{index}}_answer2" value="trueOrFalse-{{question.id}}-answer2">
                 <label for="id_{{index}}_answer2">{{question.answer2}}</label>
             </div>
@@ -152,19 +152,19 @@ Quiz
     }
 
     const minutes = document.getElementById('minutes').textContent;
-    // let number_of_minutes = Math.floor(parseInt(minutes) / 60)
-    let number_of_minutes = Math.floor(parseInt(minutes))
+    let number_of_minutes = Math.floor(parseInt(minutes) / 60)
+    // let number_of_minutes = Math.floor(parseInt(minutes))
 
-    // let number_of_seconds = parseInt(minutes) % 60
+    let number_of_seconds = parseInt(minutes) % 60
     // let number_of_seconds = parseInt(minutes) *60
 
     let timeDisplay = document.getElementById("timeDisplay")
-    // timeDisplay.innerHTML = `~ ${number_of_minutes}min : ${number_of_seconds}sec`
-    timeDisplay.innerHTML = `~ ${number_of_minutes}min : 00sec`
+    timeDisplay.innerHTML = `~ ${number_of_minutes}min : ${number_of_seconds}sec`
+    // timeDisplay.innerHTML = `~ ${number_of_minutes}min : 00sec`
 
 
     const countdownbox = document.querySelector('span#countdownbox1');
-    let seconds = minutes * 60;
+    let seconds = minutes;
     const quiz = document.getElementById('quizForm');
     
     const myInterval = setInterval(()=>{
@@ -195,5 +195,10 @@ Quiz
 
 
 </script>
-
+<script>
+    const AutoClick = function(arg){
+        let inputbx = arg.childNodes[1];
+        inputbx.click();
+    }
+</script>
 {% endblock content %}

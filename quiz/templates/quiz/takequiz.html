@@ -44,6 +44,7 @@ Take Quiz {{quiz.slug}}
             <input type="submit" value="Take Another Quiz">
         </form>
     </div>
+    <div>{{quiz.title}}</div>
     <div class="minuteBx">
         <div style="display:none;" id="minute">{{quiz.duration}}</div>
         <div>
@@ -141,7 +142,7 @@ Take Quiz {{quiz.slug}}
                         <label for="id_{{question.index}}_answer1">{{question.answer1}}</label>
                     </div>
                     
-                    <div  onclick="AutoClick(this)" class="answer">
+                    <div onclick="AutoClick(this)" class="answer">
                         <input onclick="validateAnswer(this.className, this.id)"   class="option{{question.index}}" type="checkbox" name="answer" id="id_{{question.index}}_answer2" value="{{question.form}}|{{question.id}}|answer2">
                         <label for="id_{{question.index}}_answer2">{{question.answer2}}</label>
                     </div>

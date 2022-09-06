@@ -287,9 +287,15 @@ Old Town Road Correction
             <a href=""  class="a">Download</a>
         </div>
 {% if questionType == 'OldTownRoad' %}
-<form action="{% url 'question:answer-question' %}" method="get">
-    <input type="submit" value="Continue Answering Questions">
-</form>
+        {% if creator %}
+        <form action="{% url 'question:answer-question' %}?creator={{creator}}" method="get">
+            <input type="submit" value="Continue Answering Questions">
+        </form>
+        {% else %}
+        <form action="{% url 'question:answer-question' %}" method="get">
+            <input type="submit" value="Continue Answering Qs">
+        </form>
+        {% endif %}
 <!-- <div>
     <a href="{% url 'question:answer-question' %}">Continue Answering Questions</a>
 </div> -->
@@ -328,7 +334,7 @@ html2canvas(elm).then(function(canvas){
     let cvs = document.querySelector('canvas');
     let a = document.querySelector('.a');
     a.href = cvs.toDataURL();
-    a.download = 'ToTheX-Correction-{{question.question}}.png'
+    a.download = 'NeuGott-Correction-{{question.question}}.png'
 })
 </script>
 

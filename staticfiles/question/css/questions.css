@@ -114,6 +114,22 @@ a#open{
     display: block;
 }
 
+a.paystack1, button#notifications{
+    margin: 4px 3px;
+    background: #f11919;
+    border-radius: 4px;
+    color: white;
+    padding: 4px 6px;
+    margin: 5px;
+    display: block; 
+    border:none;
+    outline:none;
+}
+button#notifications{
+    width: 97.5%;
+    max-width: 90vw;
+    font-size: 16px;
+}
 .question-info{
     font-size: 11px;
     color: #999;

@@ -41,6 +41,7 @@ Questions
         <!-- <a class="question" href="{% url 'ads:postAd' 'oldtownroad' %}"> -->
         <a class="question" href="{% url 'question:answer-question' %}">
 
+          
             
             <div>
                 Old Town Road(recommended)
@@ -65,7 +66,7 @@ Questions
         <div><b>Notice Board</b></div>
         <p>
             <div>
-                    <!-- \[2x^a\] -->
+                   This is the way we teach math in school, \(2x^a\) just be ready for everything imaginable.
                 <blockquote>If you can't teach it, you don't know it.</blockquote>
           <!-- <annotation encoding="application/x-tex">{\displaystyle a_{0}(x)y+a_{1}(x)y'+a_{2}(x)y''+\cdots +a_{n}(x)y^{(n)}+b(x)=0,}</annotation> -->
       <!-- <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/ac470d7aef63fd48b3045c19dc2fa151077d05b8" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -0.838ex; width:56.783ex; height:3.343ex;" alt="{\displaystyle a_{0}(x)y+a_{1}(x)y'+a_{2}(x)y''+\cdots +a_{n}(x)y^{(n)}+b(x)=0,}"></span> -->
@@ -86,10 +87,15 @@ Questions
             </div>
             Help a young developer that wants to make impact on millions of lives.
             <div>
+            <span>
                 Click here for notifications:
-                <button id="notifications" class="paystack1">
+            </span>
+            <span>
+                <button id="notifications">
                     Notification
                 </button>
+            </span>
+                
             </div>
             <div>
                 <a class="paystack1" href="{% url 'my-struggle' %}">
@@ -158,14 +164,27 @@ Questions
 </script>
 <script>
     const notifButton = document.getElementById('notifications');
-    notifButton.addEventlistener('click', (e)=>{
-        e.preventDefault();
+    notifButton.addEventListener('click', (e)=>{
+        // e.preventDefault();
+        alert('Are you ready?');
         Notification.requestPermission().then((result)=>{
             if (result === 'granted'){
+                // add notification function here
+                getCoins();
+                randomNotification();
+            } else if (result === 'denied'){
+            Notification.requestPermission().then((result)=>{
+            if (result === 'granted'){
+                // add notification function here
+                getCoins();
                 randomNotification();
             }
-        })
-    })
+        });
+    };
+        });
+    });
+
+
     function randomNotification(){
         // const randomItem = 
         const notifTitle = 'Revision Reminder';
@@ -175,9 +194,30 @@ Questions
             body: notifBody,
             icon: notifImg,
         };
-        new Notification(notifTitle, notifOptions);
+        let notification = new Notification(notifTitle, notifOptions);
+        let hostname = window.location.host + "/question/take/";
+
+        notification.onclick = function(){
+            window.open(hostname);
+        };
         setTimeout(randomNotification, 1000*60*60*8)
     }
 
+    function getCoins(){
+        $.ajax({
+            // change this to post
+            type: 'GET', 
+            url : `{% url 'allow-notification' %}`,
+            data : {
+            },
+            success : function(response){
+                alert('You have been awarded 40 coins');
+            },
+            error : function(){
+                alert('It falis silently!');
+            }
+
+        });
+    }
 </script>
 {% endblock content %}

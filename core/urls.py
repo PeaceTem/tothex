@@ -20,7 +20,7 @@ urlpatterns = [
     path('chart/', views.Chart, name='chart'),
     path('my-struggle', views.MyStruggle.as_view(), name='my-struggle'),
     path('advertise', views.Advertise.as_view(), name='advertise'),
-
+    path('allow-notification', views.allow_notification, name="allow-notification"),
     #referral
     path('', views.Home, name='home'),
     path('menu/', views.Menu, name='menu'),

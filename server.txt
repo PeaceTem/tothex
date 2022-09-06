@@ -17,3 +17,20 @@ ssh-keygen -o -t rsa -C "git@github.com:PeaceTem/tothex.git"
 
 
 
+mkdir ~/env/bin/vassals
+
+sudo ln -s /home/ubuntu/tothex/tothex_uwsgi.ini /home/ubuntu/env/tothexvenv/vassals/
+
+
+create a systemd file
+
+
+[Unit]
+Description=uwsgi emperor for neugott.com
+After=network.target
+[Service]
+User=ubuntu
+Restart=always
+ExecStart=/home/ubuntu/env/tothexvenv/bin/uwsgi --emperor /home/ubuntu/env/tothexvenv/vassals --uid www-data --gid www-data
+[Install]
+WantedBy=multi-user.target
