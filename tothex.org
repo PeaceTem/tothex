@@ -185,3 +185,4 @@ WantedBy=multi-user.target
 The pg_ctl is located in /usr/lib/postgresql/12/bin/pg_ctl
 
 Warning: The unit file, source configuration file or drop-ins of postgresql.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+python manage.py collectstatic --noinput --clear
