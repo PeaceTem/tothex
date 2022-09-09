@@ -12,7 +12,7 @@ Quiz Generator
 {% block content %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'question/css/fourChoices.css' %}">
+<link rel="stylesheet" href="{% static 'question/css/fourChoices.css' %}?{{static_request}}">
 <style>
 .body{
     padding: 0;

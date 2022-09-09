@@ -47,7 +47,7 @@ Use Try except block thoroughly
 class Quiz(models.Model):
     DURATION_CHOICES = zip( range(1,61), range(1,61) )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200, verbose_name=_('Title'))
+    title = models.CharField(max_length=200, verbose_name=_('Short Title'))
     description = RichTextField(max_length=1000, verbose_name=_('Description'), blank=True, null=True)
     slug = models.SlugField(unique=True, null=True,blank=True)
     composition = RichTextField(max_length=10000, null=True, blank=True, verbose_name=_("Composition and Instructions"))
@@ -59,7 +59,7 @@ class Quiz(models.Model):
     lastQuestionIndex = models.PositiveSmallIntegerField(default=0)
     questionLength = models.PositiveSmallIntegerField(default=0)
     totalScore = models.PositiveSmallIntegerField(default=0)
-    shuffleQuestions = models.BooleanField(default=False)
+    shuffleQuestions = models.BooleanField(default=False, verbose_name=_("Shuffle Questions"))
     attempts = models.PositiveIntegerField(default=0)
     average_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     public = models.BooleanField(default=True)

@@ -8,7 +8,7 @@
 {% block css %}
 {% include 'mathjax.html' %}
 
-<link rel="stylesheet" href="{% static 'question/css/fourChoices.css' %}">
+<link rel="stylesheet" href="{% static 'question/css/fourChoices.css' %}?{{static_request}}">
 {% endblock css %}
 <div style="display: block;border-bottom: 1px solid #ccc;height: 40px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
     <div style="padding-right: 6px;">

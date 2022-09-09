@@ -2,7 +2,7 @@
 
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'quiz/css/quizzes_list.css' %}">
+<link rel="stylesheet" href="{% static 'quiz/css/quizzes_list.css' %}?{{static_request}}">
 <meta name="description" content="Quizzes">
 {% endblock css %}
 {% include 'navbar.html' %}

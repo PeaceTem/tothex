@@ -8,7 +8,7 @@ Create Question
 
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'question/css/newquestion.css' %}">
+<link rel="stylesheet" href="{% static 'question/css/newquestion.css' %}?{{static_request}}">
 {% endblock css %}
 {% include 'core/header.html' %}
 

@@ -7,7 +7,7 @@ Questions
 {% block css %}
 
 
-<link rel="stylesheet" href="{% static 'question/css/questions.css' %}">
+<link rel="stylesheet" href="{% static 'question/css/questions.css' %}?{{static_request}}">
 {% endblock css %}
 {% block content %}
 
@@ -65,15 +65,11 @@ Questions
     <div style="text-align:left;" id="explanation">
         <div><b>Notice Board</b></div>
         <p>
-            <div>
-                <blockquote>If you can't teach it, you don't know it.</blockquote>
-          <!-- <annotation encoding="application/x-tex">{\displaystyle a_{0}(x)y+a_{1}(x)y'+a_{2}(x)y''+\cdots +a_{n}(x)y^{(n)}+b(x)=0,}</annotation> -->
-      <!-- <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/ac470d7aef63fd48b3045c19dc2fa151077d05b8" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -0.838ex; width:56.783ex; height:3.343ex;" alt="{\displaystyle a_{0}(x)y+a_{1}(x)y'+a_{2}(x)y''+\cdots +a_{n}(x)y^{(n)}+b(x)=0,}"></span> -->
-
-            </div>
+            We really need WAEC past questions here.
             Make sure you create quizzes and questions(click the + button). They might be really useful to some certain people.
             See this as your own contribution to the advancement of humanity.<br>
             <b>This is a gift from a University of Ibadan student to the world.</b>
+            <div>click the 'add to home button' at the bottom of your</div>
             <div>
                 <a style="background: #f11919;border-radius: 4px;color: white;
                 padding: 4px 6px;display: block;border:none;outline:none;" class="paystack1" href="https://paystack.com/pay/neugott-donation-for-the-developer" target="self">Donate</a>
@@ -89,7 +85,7 @@ Questions
             Help a young developer that wants to make impact on millions of lives.
             <div>
             <span>
-                Click here for notifications and earn 40 coins:
+                Click here for notifications:
             </span>
             <span>
                 <button style="width: 97.5%;max-width: 90vw;font-size: 16px;background: #f11919;
@@ -169,7 +165,14 @@ Questions
     const notifButton = document.getElementById('notifications');
     notifButton.addEventListener('click', (e)=>{
         // e.preventDefault();
-        alert('Are you ready?');
+        // alert('Are you ready?');
+        // Notification.permission = 'granted'
+        if(Notification.permission === 'prompt'){
+            alert("This is the notification alert");
+        }
+
+        alert('Done!');
+
         Notification.requestPermission().then((result)=>{
             if (result === 'granted'){
                 // add notification function here
@@ -179,7 +182,7 @@ Questions
             Notification.requestPermission().then((result)=>{
             if (result === 'granted'){
                 // add notification function here
-                getCoins();
+                // getCoins();
                 randomNotification();
             }
         });

@@ -8,7 +8,7 @@ Categories
 {% block content %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}?{{static_request}}">
 {% endblock css %}
 
 <section>

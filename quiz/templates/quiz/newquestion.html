@@ -8,7 +8,7 @@ Create A New Question
 {% block content %}
 
 {% block quizCss %}
-<link rel="stylesheet" href="{% static 'question/css/newquestion.css' %}">
+<link rel="stylesheet" href="{% static 'question/css/newquestion.css' %}?{{static_request}}">
 {% endblock quizCss %}
 
 

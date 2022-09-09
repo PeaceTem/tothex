@@ -7,7 +7,7 @@
 
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'q/css/question_page.css' %}">
+<link rel="stylesheet" href="{% static 'q/css/question_page.css' %}?{{static_request}}">
 {% endblock css %}
 
 
@@ -40,6 +40,8 @@
 	</div>
 	{% endfor %}
 </div>
+<br>
+<br>
 <div id="form-container" class="inactive-bar">
 
 	<form id='questionForm' data-action="{% url 'qxa:create-question'  %}" method='post'>

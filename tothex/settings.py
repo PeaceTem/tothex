@@ -144,8 +144,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # "core.middleware.LoggingMiddleware",
+    # 'core.middleware.StaticMiddleware'
+    "core.middleware.LoggingMiddleware",
     # "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # Add the middleware here to solve the issue with static contents
+    # or add no-cache to static configuration
 ]
 
 
@@ -176,33 +179,21 @@ WSGI_APPLICATION = 'tothex.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {   
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
-
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': os.environ.get('NAME'),
-         'USER': os.environ.get('USERNAME'),
-         'PASSWORD': os.environ.get('PASSWORD'), 
-         'HOST': os.environ.get('HOST'),
-         'PORT': os.environ.get('PORT'),
-     }
- }
-
+DATABASES = {   
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
+   }
+}
 
 # DATABASES = {
 #      'default': {
 #          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#          'NAME': 'postgres',
-#          'USER': 'dbmasteruser',
-#          'PASSWORD': '?xQ(1JSI]nZG^-4?nXitnv[$Leg]3gLp', 
-#          'HOST': 'ls-33d64515978a764b1cff2ac8c0e56c45d199c5d7.czzbhfz5hxzc.eu-west-2.rds.amazonaws.com',
-#          'PORT': '5432',
+#          'NAME': os.environ.get('NAME'),
+#          'USER': os.environ.get('USERNAME'),
+#          'PASSWORD': os.environ.get('PASSWORD'), 
+#          'HOST': os.environ.get('HOST'),
+#          'PORT': os.environ.get('PORT'),
 #      }
 #  }
 
@@ -326,7 +317,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #SMTP Configuration
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.zoho.com'
 EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False

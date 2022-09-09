@@ -69,12 +69,12 @@ class GeneratePDF(LoginRequiredMixin, View):
     def get(self, request, quiz_id, **kwargs):
         # user = self.request.user
         number_of_registered_users = Profile.objects.all().count()
-        template = get_template('quiz/takequiz.html')
+        # template = get_template('quiz/takequiz.html')
         quiz = Quiz.objects.prefetch_related('fourChoicesQuestions', 'trueOrFalseQuestions').get(id=quiz_id)
 
         preQuestions = []
-        preQuestions += quiz.fourChoicesQuestions.all()
-        preQuestions += quiz.trueOrFalseQuestions.all()
+        preQuestions += quiz.fourChoicesQuestions.filter(is_active=True)
+        preQuestions += quiz.trueOrFalseQuestions.filter(is_active=True)
         questionsList = []
         for question in preQuestions:
             questionsList.append(tuple((question.index, question)))
@@ -117,8 +117,8 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
         quiz.views += 1
         quiz.save()
         preQuestions = []
-        preQuestions += quiz.fourChoicesQuestions.all()
-        preQuestions += quiz.trueOrFalseQuestions.all()
+        preQuestions += quiz.fourChoicesQuestions.filter(is_active=True)
+        preQuestions += quiz.trueOrFalseQuestions.filter(is_active=True)
         questions = []
         for question in preQuestions:
             questions.append(tuple((question.index, question)))
@@ -196,9 +196,9 @@ def QuizList(request):
         page_count = 20
         for search_word in search:
 
-            lookup = Q(title__icontains=search_word) | Q(description__icontains=search_word) | Q(categories__title__icontains=search_word) | Q(user__username__icontains=search_word)
+            lookup = Q(is_active=True) & (Q(title__icontains=search_word) | Q(description__icontains=search_word) | Q(categories__title__icontains=search_word) | Q(user__username__icontains=search_word) | Q(questionLength__gt=2))
             quizzes |= Quiz.objects.filter(lookup).order_by("-relevance")
-        
+            # quizzes 
         quizzes = quizzes.order_by('-relevance').distinct()[:100]
     else:
         if user.is_authenticated:
@@ -206,7 +206,7 @@ def QuizList(request):
             if profile.recommended_quizzes.count() < page_count:
                 categories = profile.categories.all()
                 age = profile.get_user_age
-                lookup = Q(age_from__lte=age) & Q(age_to__gte=age) #& Q(questionLength__gte=3)
+                lookup = Q(is_active=True) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(questionLength__gt=2)
                 while categories.count() > 0 and profile.recommended_quizzes.count() <= 300:
                 # use while loop to check for quiz length
                     category = randomChoice(categories)
@@ -227,7 +227,7 @@ def QuizList(request):
 
 
         else:
-            lookup = Q(relevance__gte=0) & Q(questionLength__gte=0)
+            lookup = Q(is_active=True) & Q(relevance__gte=0) & Q(questionLength__gt=3)
             quizzes = Quiz.objects.filter(lookup).order_by('?')[:100]
 
     p = Paginator(quizzes, page_count)
@@ -256,7 +256,7 @@ def FollowerQuizList(request):
     quizzes = Quiz.objects.none()
     # add more abstraction for efficiency
     for following in follow.following.all():
-        quizzes |= Quiz.objects.filter(user=following)
+        quizzes |= Quiz.objects.filter(user=following, is_active=True)
     quizzes = quizzes.distinct()
 
     search_input= request.GET.get('search-area') or ''
@@ -264,7 +264,7 @@ def FollowerQuizList(request):
         search = search_input.strip()
         search = search.split()
         for search_word in search:
-            lookup = Q(user=search_word) | Q(user__username__icontains=search_word) | Q(title__icontains=search_word) | Q(description__icontains=search_word)
+            lookup = Q(is_active=True) & (Q(user=search_word) | Q(user__username__icontains=search_word) | Q(title__icontains=search_word) | Q(description__icontains=search_word))
             quizzes = quizzes.filter(lookup).distinct()
     else:
 
@@ -310,7 +310,7 @@ def MyQuizList(request):
         search = search_input.strip()
         search = search.split()
         for search_word in search:
-            lookup = Q(title__icontains=search_word) | Q(description__icontains=search_word)
+            lookup = Q(is_active=True) & (Q(title__icontains=search_word) | Q(description__icontains=search_word))
             quizzes = quizzes.filter(lookup).distinct()
 
     # create pagination
@@ -340,7 +340,7 @@ def VisitorView(request, owner_id):
         search = search_input.strip()
         search = search.split()
         for search_word in search:
-            lookup = Q(title__icontains=search_word) | Q(description__icontains=search_word)
+            lookup = Q(is_active=True) & (Q(title__icontains=search_word) | Q(description__icontains=search_word))
             quizzes = quizzes.filter(lookup).distinct()
 
     # create pagination
@@ -375,7 +375,7 @@ def QuizTakenList(request):
         search = search_input.strip()
         search = search.split()
         for search_word in search:
-            lookup = Q(title__icontains=search_word) | Q(description__icontains=search_word)
+            lookup = Q(is_active=True) & (Q(title__icontains=search_word) | Q(description__icontains=search_word))
             quizzes = quizzes.filter(lookup).distinct()
 
     # create pagination
@@ -400,13 +400,13 @@ def QuizTakenList(request):
 def FavoriteQuizList(request):
     user = request.user
     profile = Profile.objects.prefetch_related('favoriteQuizzes').get(user=user)
-    quizzes = profile.favoriteQuizzes.all()
+    quizzes = profile.favoriteQuizzes.filter(is_active=True)
     search_input= request.GET.get('search-area') or ''
     if search_input:
         search = search_input.strip()
         search = search.split()
         for search_word in search:
-            lookup = Q(title__icontains=search_word) | Q(description__icontains=search_word)
+            lookup = Q(is_active=True) & (Q(title__icontains=search_word) | Q(description__icontains=search_word))
             quizzes = quizzes.filter(lookup).distinct()
         
 
@@ -429,20 +429,22 @@ def FavoriteQuizList(request):
 
 
 
-@login_required(redirect_field_name='next', login_url='account_login')
+# @login_required(redirect_field_name='next', login_url='account_login')
 def CategoryQuizList(request, category):
-    quizzes = Quiz.objects.filter(categories__title=category, relevance__gte=51).order_by("solution_quality")[:100]
-    user = request.user
+    quizzes = Quiz.objects.filter(is_active=True, categories__title=category, relevance__gte=51).order_by("solution_quality")[:100]
     category = Category.objects.get(title=category)
     quizzes = category.quizzes.filter(relevance__gte=51).order_by('solution_quality')[:100]
-    profile = Profile.objects.get(user=user)
+    user = request.user
+    profile = None
+    if user.is_authenticated:
+        profile = Profile.objects.get(user=user)
 
     search_input= request.GET.get('search-area') or ''
     if search_input:
         search = search_input.strip()
         search = search.split()
         for search_word in search:
-            lookup = Q(title__icontains=search_word) | Q(description__icontains=search_word)
+            lookup = Q(is_active=True) & (Q(title__icontains=search_word) | Q(description__icontains=search_word))
             quizzes = quizzes.filter(lookup).distinct()
         
 
@@ -524,16 +526,16 @@ class RandomQuizPicker(View):
         if user.is_authenticated:
             profile = Profile.objects.prefetch_related("categories").get(user=user)
             categories = profile.categories.all()
-            quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=5, solution_quality__gt=3, average_score__gte=50).distinct()[:100]
+            quizzes = Quiz.objects.filter(is_active=True,categories__in=categories, questionLength__gte=5, solution_quality__gt=3, average_score__gte=50).distinct()[:100]
             quiz = None
             if not quizzes.count() > 0:
-                quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=5, solution_quality__gt=0).distinct()[:100]
+                quizzes = Quiz.objects.filter(is_active=True, categories__in=categories, questionLength__gte=5, solution_quality__gt=0).distinct()[:100]
 
             
             if not quizzes.count() > 0:
-                quizzes = Quiz.objects.filter(categories__in=categories, questionLength__gte=5)[:100]
+                quizzes = Quiz.objects.filter(is_active=True, categories__in=categories, questionLength__gte=5)[:100]
         else:
-            quizzes = Quiz.objects.filter(questionLength__gte=0)
+            quizzes = Quiz.objects.filter(is_active=True,questionLength__gt=5)
 
         if quizzes.count() > 0:
             quiz = randomChoice(quizzes)
@@ -646,11 +648,11 @@ def QuizUpdate(request, quiz_id):
             quiz = form.save()
             # quiz.description = mark_safe(quiz.description)
             # quiz.save()s
-            for q in quiz.fourChoicesQuestions.all():
+            for q in quiz.fourChoicesQuestions.filter(is_active=True):
                 q.age_from = quiz.age_from
                 q.age_to = quiz.age_to
                 q.save()
-            for q in quiz.trueOrFalseQuestions.all():
+            for q in quiz.trueOrFalseQuestions.filter(is_active=True):
                 q.age_from = quiz.age_from
                 q.age_to = quiz.age_to
                 q.save()
@@ -695,18 +697,18 @@ def QuizUpdate(request, quiz_id):
 def DeleteQuiz(request, quiz_id):
     try:
         user = request.user
-        quiz = Quiz.objects.get(id=quiz_id)
-        # quiz = get_object_or_404(Quiz, id=quiz_id)
+        quiz = Quiz.objects.prefetch_related('likes').get(id=quiz_id)
         if not quiz.user == user:
             return HttpResponseForbidden()
-        # profile = Profile.objects.get(user=user)
+        profile = Profile.objects.get(user=user)
         if request.method == 'POST':
             # profile.quizzes -= 1
-            # profile.likes -= 1
+            profile.likes -= quiz.likes.count()
             # profile.save()
             quiz.is_active = False
             quiz.save()
             # quiz.delete()
+            profile.save()
             
 
             return HttpResponse('deleted!')
@@ -1064,8 +1066,8 @@ def TakeQuiz(request, quiz_id):
         messages.info(request,_("3 coins will be removed after submitting this quiz!"))
         
     preQuestions = []
-    preQuestions += quiz.fourChoicesQuestions.all()
-    preQuestions += quiz.trueOrFalseQuestions.all()
+    preQuestions += quiz.fourChoicesQuestions.filter(is_active=True)
+    preQuestions += quiz.trueOrFalseQuestions.filter(is_active=True)
     questionsList = []
     for question in preQuestions:
         questionsList.append(tuple((question.index, question)))

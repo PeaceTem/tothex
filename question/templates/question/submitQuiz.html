@@ -13,7 +13,7 @@ Quiz Generator Submit
 {% block css %}
 {% include 'mathjax.html' %}
 
-<link rel="stylesheet" href="{% static 'quiz/css/submitQuiz.css' %}">
+<link rel="stylesheet" href="{% static 'quiz/css/submitQuiz.css' %}?{{static_request}}">
 {% endblock css %}
 {% if not user.is_authenticated %}
 {% include 'core/authenticate.html' %}

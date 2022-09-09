@@ -9,7 +9,7 @@ Quiz Detail
 
 {% block css %}
 {% include 'mathjax.html' %}
-<link rel="stylesheet" href="{% static 'quiz/css/quizdetail.css' %}">
+<link rel="stylesheet" href="{% static 'quiz/css/quizdetail.css' %}?{{static_request}}">
 {% include 'chartjs.html' %}
 
 {% endblock css %}
@@ -21,7 +21,7 @@ Quiz Detail
             ←
         </a>
         <span style="color: #a83425;font-weight:600; font-size:30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-            NeuGott
+            NeuGott {{static_request}} 34
         </span>
   
     </div>
@@ -164,7 +164,7 @@ Quiz Detail
             <span>@{{attempter.user}}</span>
             <span>{{attempter.score}}</span>
             <span>{{attempter.get_percentage}}</span>
-            <div style="font-size: 11px; color: #999; font-style: italic; ">
+            <div style="font-size: 14px; color: #777; font-style: italic; ">
                 {{attempter.get_timetaken}}
             </div>
         </li>

@@ -9,7 +9,7 @@ Profile
 {% endblock title %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'core/css/profile.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/profile.css' %}?{{static_request}}">
 {% endblock css %}
 {% block content %}
 
@@ -325,20 +325,20 @@ $('#followForm').submit(function(e){
 e.preventDefault();
 const serializeData = $(this).serialize()
 const objectBx = $(this)
-let button = document.getElementById('followers')
+let buttonBtn = document.getElementById('followers')
 
 $.ajax({
     type: 'POST',
     url : $(this).attr('action'),
     data : serializeData,
     success : function(response){
-        document.getElementById('followForm').style.visibility = 'hidden';
-        if(response == 'follow'){
-            button.innerText = parseInt(button.innerText) + 1
-        } else if(response == 'unfollow'){
-            button.innerText = parseInt(button.innerText) - 1
-
-        }
+        // document.getElementById('followForm').style.visibility = 'hidden';
+        // if(response == 'follow'){
+        //     buttonBtn.innerText = parseInt(button.innerText) + 1
+        // } else if(response == 'unfollow'){
+        //     buttonBtn.innerText = parseInt(button.innerText) - 1
+            alert("Followership successful!")
+        // }
     },
     error : function(){
         alert('It falis silently!')

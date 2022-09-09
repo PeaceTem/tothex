@@ -87,8 +87,8 @@ def Question(request):
 def MyQuestionList(request):
     user = request.user
     preQuestions = []
-    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=user, standalone=True)
-    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=user, standalone=True)
+    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=user, is_active=True, standalone=True)
+    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=user, is_active=True, standalone=True)
     questions = []
     # total_question_attempts = 0
     for question in preQuestions:
@@ -130,8 +130,8 @@ def MyQuestionList(request):
 def VisitorView(request, owner_id):
     owner = User.objects.get(id=owner_id)
     preQuestions = []
-    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=owner, standalone=True)
-    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=owner, standalone=True)
+    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=owner, is_active=True, standalone=True)
+    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=owner, is_active=True, standalone=True)
     questions = []
     for question in preQuestions:
         questions.append(tuple((question.date_created, question)))
@@ -183,10 +183,10 @@ def AnswerQuestion(request):
     if creator:
         creator = User.objects.get(username=creator)
         if question_type == 'fourChoices':
-            fqs = creator.fourChoicesQuestions.all()
+            fqs = creator.fourChoicesQuestions.filter(is_active=True)
             question = randomChoice(fqs)
         elif question_type == 'trueOrFalse':
-            tfqs = creator.trueOrFalseQuestions.all()
+            tfqs = creator.trueOrFalseQuestions.filter(is_active=True)
             question = randomChoice(tfqs)
         score = round((2 - question.avgScore/100) * 2, 2)
         question.views += 1  
@@ -219,7 +219,7 @@ def AnswerQuestion(request):
 
                 categories = profile.categories.all()
                 age = profile.get_user_age
-                lookup = Q(relevance__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
+                lookup = Q(is_active=True) &  Q(relevance__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
                 questionsList = (*profile.fourChoicesQuestionsMissed.all(), *profile.fourChoicesQuestionsTaken.all(),)
                 while categories.count() >= 1 and profile.recommended_four_choices_questions.count() <= 150:
                     category = randomChoice(categories)
@@ -256,7 +256,7 @@ def AnswerQuestion(request):
 
                 categories = profile.categories.all()
                 age = profile.get_user_age
-                lookup = Q(relevance__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
+                lookup = Q(is_active=True) & Q(relevance__gte=0) & Q(age_from__lte=age) & Q(age_to__gte=age) & Q(standalone=True)
                 questionsList = (*profile.trueOrFalseQuestionsMissed.all(), *profile.trueOrFalseQuestionsTaken.all(),)
                 while categories.count() > 1 and profile.recommended_true_or_false_questions.count() <= 150:
                     category = randomChoice(categories)
@@ -285,9 +285,9 @@ def AnswerQuestion(request):
 
     else:
         if question_type == 'fourChoices':
-            questions = FourChoicesQuestion.objects.filter(relevance__gte=0)[:100]
+            questions = FourChoicesQuestion.objects.filter(is_active=True, relevance__gte=0)[:100]
         elif question_type == 'trueOrFalse':
-            questions = TrueOrFalseQuestion.objects.filter(relevance__gte=0)[:100]
+            questions = TrueOrFalseQuestion.objects.filter(is_active=True, relevance__gte=0)[:100]
         
         if questions.count() > 0:
             question = randomChoice(questions)
@@ -336,7 +336,7 @@ def FollowingQuestion(request):
             while following.count() > 0 and profile.following_four_choices_questions.count() <= 150:
                 f = randomChoice(following)
                 following = following.exclude(id=f.id)
-                questions = f.fourChoicesQuestions.filter(standalone=True)
+                questions = f.fourChoicesQuestions.filter(is_active=True, standalone=True)
                 for q in questions:
                     if q not in questionsList:
                         profile.following_four_choices_questions.add(q)
@@ -369,7 +369,7 @@ def FollowingQuestion(request):
             while following.count() > 0 and  profile.following_true_or_false_questions.count() <= 150:
                 f = randomChoice(following)
                 following = following.exclude(id=f.id)
-                questions = f.trueOrFalseQuestions.filter(standalone=True)
+                questions = f.trueOrFalseQuestions.filter(is_active=True, standalone=True)
                 for q in questions:
                     if q not in questionsList:
                         profile.following_true_or_false_questions.add(q)
@@ -648,7 +648,11 @@ Add all the documentation here
 @login_required(redirect_field_name='next' ,login_url='account_login')
 def FourChoicesQuestionUpdate(request, question_id):
     user = request.user
-    question = get_object_or_404(FourChoicesQuestion, id=question_id)
+
+    # question = get_object_or_404(FourChoicesQuestion, id=question_id)
+    question = FourChoicesQuestion.objects.select_related('user').get(id=question_id)
+    if not user == question.user:
+        return HttpResponseForbidden()
     fourChoicesForm = NewFourChoicesQuestionForm(instance=question)
     if request.method == 'POST':
         form = NewFourChoicesQuestionForm(request.POST or None, instance=question)
@@ -669,6 +673,8 @@ def FourChoicesQuestionUpdate(request, question_id):
 def TrueOrFalseQuestionUpdate(request, question_id):
     user = request.user
     question = TrueOrFalseQuestion.objects.get(id=question_id)
+    if not user == question.user:
+        return HttpResponseForbidden()
     trueOrFalseForm = NewTrueOrFalseQuestionForm(instance=question)
     if request.method == 'POST':
         form = NewTrueOrFalseQuestionForm(request.POST or None, instance=question)
@@ -989,7 +995,7 @@ def QuizGenerator(request):
                 else:
                     age = 15
                 for category in categories:
-                    lookup = Q(categories__title=category, solution_quality__gte=0, age_from__lte=age, age_to__gte=age)
+                    lookup = Q(is_active=True) & (Q(categories__title=category, solution_quality__gte=0, age_from__lte=age, age_to__gte=age))
                     trueOrFalseQuestions |= TrueOrFalseQuestion.objects.filter(lookup).distinct()[:1000]
                     fourChoicesQuestions |= FourChoicesQuestion.objects.filter(lookup).distinct()[:1000]
                 trueOrFalseQuestions = trueOrFalseQuestions.distinct()
@@ -1093,10 +1099,10 @@ def PastQuestions(request):
         user = request.user
         profile = Profile.objects.prefetch_related('trueOrFalseQuestionsTaken', 'trueOrFalseQuestionsMissed', 'fourChoicesQuestionsTaken', 'fourChoicesQuestionsMissed').get(user=user)
 
-        trueOrFalseQuestionsTaken = profile.trueOrFalseQuestionsTaken.all()
-        trueOrFalseQuestionsMissed = profile.trueOrFalseQuestionsMissed.all()
-        fourChoicesQuestionsTaken = profile.fourChoicesQuestionsTaken.all()
-        fourChoicesQuestionsMissed = profile.fourChoicesQuestionsMissed.all()
+        trueOrFalseQuestionsTaken = profile.trueOrFalseQuestionsTaken.filter(is_active=True, standalone=True)
+        trueOrFalseQuestionsMissed = profile.trueOrFalseQuestionsMissed.filter(is_active=True, standalone=True)
+        fourChoicesQuestionsTaken = profile.fourChoicesQuestionsTaken.filter(is_active=True, standalone=True)
+        fourChoicesQuestionsMissed = profile.fourChoicesQuestionsMissed.filter(is_active=True, standalone=True)
 
         questionsList = [*trueOrFalseQuestionsTaken, *trueOrFalseQuestionsMissed, *fourChoicesQuestionsTaken, *fourChoicesQuestionsMissed]
 
@@ -1144,6 +1150,7 @@ def SubmitQuizGenerator(request, ref_code, *args, **kwargs):
     if request.method == 'GET':
         if not user.is_authenticated:
             code = str(kwargs.get('ref_code'))
+            # use ref_code directly instead of kwargs
             ReferralService(request, code)   
         return redirect('question:quiz-generator')
 

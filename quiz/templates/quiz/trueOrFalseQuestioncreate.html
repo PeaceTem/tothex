@@ -11,7 +11,7 @@ Create True Or False Question
 {% block content %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}">
+<link rel="stylesheet" href="{% static 'quiz/css/categoryCreate.css' %}?{{static_request}}">
 <style>
     .copysymbol{
         width: 25px;

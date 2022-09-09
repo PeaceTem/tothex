@@ -339,10 +339,8 @@ def LinkClick(request, link_id):
 # @login_required(redirect_field_name='next', login_url='account_login')
 def FollowerListView(request, follower_id, page_name):
     search_input = request.GET.get('search-area') or ''
-    print(search_input)
     if search_input:
         search_input = search_input.split()
-        print(search_input)
         search_input = "_".join(search_input)
         searched_user = None
         try:
@@ -358,12 +356,10 @@ def FollowerListView(request, follower_id, page_name):
 
 
     if page_name == 'followers':
-        follower = Follower.objects.prefetch_related('followers', 'following').get(id=follower_id)
-        # objects = follower.followers.all()
+        follower = Follower.objects.select_related('user').prefetch_related('followers', 'following').get(id=follower_id)
         object_type = 'followers'
     elif page_name == 'following':
-        follower = Follower.objects.prefetch_related('following').get(id=follower_id)
-        # objects = follower.following.all()
+        follower = Follower.objects.select_related('user').prefetch_related('following').get(id=follower_id)
         object_type = 'following'
 
     else:

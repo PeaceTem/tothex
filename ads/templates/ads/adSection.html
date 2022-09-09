@@ -1,6 +1,6 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'ads/css/adSection.css' %}">
+<link rel="stylesheet" href="{% static 'ads/css/adSection.css' %}?{{static_request}}">
 {% if postAd %}
 <div id="postAd-box" onclick="clickAdLink()">
     <div>
