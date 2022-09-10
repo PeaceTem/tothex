@@ -108,11 +108,7 @@ def MyQuestionList(request):
     p = Paginator(questions, 10)
     page = request.GET.get('page')
     questions = p.get_page(page)
-    try:
-        average_attempts = round(total_question_attempts/questions_length, 2)
-        average_views = round(total_views/questions_length, 2)
-    except ZeroDivisionError:
-        pass
+
 
     context={
         'owner': user,
@@ -121,12 +117,19 @@ def MyQuestionList(request):
         'page_obj': questions,
         "viewer": "owner",
         "total_question_attempts": total_question_attempts,
-        'average_attempts': average_attempts,
-        'average_views': average_views,
+        # 'average_attempts': average_attempts,
+        # 'average_views': average_views,
         'total_questions_created':questions_length,
         'total_views': total_views,
     }
-
+    try:
+        average_attempts = round(total_question_attempts/questions_length, 2)
+        average_views = round(total_views/questions_length, 2)
+        context['average_attempts'] = average_attempts
+        context['average_views'] = average_views
+    except ZeroDivisionError:
+        pass
+    
     return render(request, 'question/myquestions.html', context)
 
 
