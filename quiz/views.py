@@ -186,7 +186,7 @@ def QuizList(request):
     profile = None
     page_count = 5
     page = request.GET.get('page') or 1
-    
+    quizzes = Quiz.objects.none()
 
     search_input= request.GET.get('search-area') or ''
     if search_input:
