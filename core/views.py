@@ -253,13 +253,17 @@ def FollowView(request):
         following_username = request.POST.get('following_username') or None
         if user is not following:
             if following:
-                following = Follower.objects.prefetch_related("followers").get(user=following)
-                # following_user = User.objects.get(username=following_user)#new
+                # following = Follower.objects.prefetch_related("followers").get(user=following)
+                following = Follower.objects.prefetch_related("followers").get(id=following)
+                print('Working', following)
+                following_user = User.objects.get(username=following_user)#new
+                print(following_user, 'that is following')
                 follower = Follower.objects.prefetch_related("following").get(user=user)#new
+                print(follower, 'the followee')
                 following.followers.add(user)
                 follower.following.add(following_user)#new
-                following.save()
-                follower.save()#new
+                # following.save()
+                # follower.save()#new
 
         if user != following_user:
             return HttpResponse('follow')
@@ -274,11 +278,15 @@ def UnfollowView(request):
     user = request.user
     if request.method == 'POST':
         following = request.POST.get('following') or None
+        print('following', following)
         following_user = request.POST.get('following_user') or None
+        print('following_user', following_user)
+
         following_username = request.POST.get('following_username') or None
+        print('following_username', following_username)
         if user is not following:
             if following:
-                following = Follower.objects.prefetch_related("followers").get(user=following)
+                following = Follower.objects.prefetch_related("followers").get(user__username=following)
                 # following_user = User.objects.get(username=following_user)#new
                 follower = Follower.objects.prefetch_related('following').get(user=user)#new
                 following.followers.remove(user)
@@ -330,7 +338,6 @@ def LinkClick(request, link_id):
 
     link.clicks += 1
     link.save()
-    print(link.clicks)
 
     return HttpResponse('clicked')
 
@@ -383,21 +390,23 @@ def FollowActionView(request, follower_id, user_id, action):
     follower = Follower.objects.select_related('user').prefetch_related('followers').get(id=follower_id) #the action taker
 
     if not user == follower.user:
+
         return HttpResponse('An Error Occurred!')
     _user = User.objects.get(id=user_id)
     _follower = Follower.objects.prefetch_related('followers').get(user=_user) # the action recipient
     # Make some necessary adjustments here!
+
     if action == 'follow':
         follower.following.add(_user)
         _follower.followers.add(user)
-        follower.save()
-        _follower.save()
+        # follower.save()
+        # _follower.save()
 
     elif action == 'unfollow':
         follower.following.remove(_user)
         _follower.followers.remove(user)
-        follower.save()
-        _follower.save()
+        # follower.save()
+        # _follower.save()
 
     return HttpResponse('Done!')
 

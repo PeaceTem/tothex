@@ -135,7 +135,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
-
+# http://localhost:8000/question/category-create/trueOrFalse-14
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -145,7 +145,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'core.middleware.StaticMiddleware'
-    "core.middleware.LoggingMiddleware",
+    # "core.middleware.LoggingMiddleware",
     # "debug_toolbar.middleware.DebugToolbarMiddleware",
     # Add the middleware here to solve the issue with static contents
     # or add no-cache to static configuration

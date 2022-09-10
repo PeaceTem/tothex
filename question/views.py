@@ -5,7 +5,7 @@ from .models import TrueOrFalseQuestion, FourChoicesQuestion
 
 from django.contrib.auth.decorators import login_required
 
-from django.db.models import Q, F, Count, Avg, Min, Max
+from django.db.models import Q, F, Count, Avg, Min, Max, Sum
 
 # the forms for each model
 from .forms import NewFourChoicesQuestionForm, NewTrueOrFalseQuestionForm, QuizGeneratorForm
@@ -65,7 +65,11 @@ def Question(request):
     number_of_quizzes_created = Quiz.objects.all().count()
     q1 = TrueOrFalseQuestion.objects.all().count()
     q2 = FourChoicesQuestion.objects.all().count()
-
+    tq = TrueOrFalseQuestion.objects.aggregate(Sum('attempts'))
+    # print('This is the sum that you are looking for: ', question_attempts)
+    # print(question_attempts['attempts__sum'])
+    fq = FourChoicesQuestion.objects.aggregate(Sum('attempts'))
+    total_number_of_attempts = fq['attempts__sum'] + tq['attempts__sum']
     number_of_questions_created = q1 + q2
     profile = None
     if user.is_authenticated:
@@ -76,6 +80,7 @@ def Question(request):
         'number_of_registered_users' : number_of_registered_users,
         'number_of_quizzes_created' : number_of_quizzes_created,
         'number_of_questions_created' : number_of_questions_created,
+        'total_number_of_attempts' : total_number_of_attempts,
     }
 
     return render(request, 'question/questions.html', context)
@@ -182,12 +187,19 @@ def AnswerQuestion(request):
     creator = request.GET.get('creator')
     if creator:
         creator = User.objects.get(username=creator)
+        question = None
         if question_type == 'fourChoices':
             fqs = creator.fourChoicesQuestions.filter(is_active=True)
-            question = randomChoice(fqs)
+            if fqs.count()>0:
+                question = randomChoice(fqs)
         elif question_type == 'trueOrFalse':
             tfqs = creator.trueOrFalseQuestions.filter(is_active=True)
-            question = randomChoice(tfqs)
+            if tfqs.count()>0:
+                question = randomChoice(tfqs)
+        
+        if not question:
+
+            return redirect('question:visitor', owner_id=creator.id)
         score = round((2 - question.avgScore/100) * 2, 2)
         question.views += 1  
         question.save() 
@@ -965,7 +977,10 @@ def SubmitQuestion(request):
 
 
 
-
+"""
+Make the sql query of the page better by using
+category.trueOrFalseQuestions.filter(lookup).exclude(lookdown) :)
+"""
 def QuizGenerator(request):
     user = request.user
     if request.method == "GET":
@@ -979,7 +994,9 @@ def QuizGenerator(request):
         form = QuizGeneratorForm()
 
     if request.method == 'POST':
-        profile = Profile.objects.prefetch_related('categories', 'trueOrFalseQuestionsTaken', 'trueOrFalseQuestionsMissed', 'fourChoicesQuestionsTaken', 'fourChoicesQuestionsMissed').get(user=user)
+        profile = None
+        if user.is_authenticated:
+            profile = Profile.objects.prefetch_related('categories', 'trueOrFalseQuestionsTaken', 'trueOrFalseQuestionsMissed', 'fourChoicesQuestionsTaken', 'fourChoicesQuestionsMissed').get(user=user)
 
         try:
             form = QuizGeneratorForm(request.POST)
