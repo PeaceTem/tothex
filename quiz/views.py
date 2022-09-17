@@ -306,7 +306,7 @@ def FollowerQuizList(request):
 def MyQuizList(request):
     user = request.user
     profile = Profile.objects.get(user=user)
-    quizzes = user.quiz_set.all()
+    quizzes = user.quizzes.all()
 
     search_input= request.GET.get('search-area') or ''
     if search_input:
@@ -335,7 +335,7 @@ def MyQuizList(request):
 def VisitorView(request, owner_id):
     user = User.objects.get(id=owner_id)
     profile = Profile.objects.get(user=user)
-    quizzes = user.quiz_set.all()
+    quizzes = user.quizzes.all()
 
 
     search_input= request.GET.get('search-area') or ''
