@@ -31,7 +31,11 @@
 
 <section >
     <div class="icon">
-        <div><i class="fa fa-cog" aria-hidden="true"></i> settings ...</div>
+        <div>
+            <a href="{% url 'settings:settings' %}">
+                <i class}="fa fa-cog" aria-hidden="true"></i> settings
+            </a>
+        </div>
     </div>
 
     <div class="icon">
@@ -65,15 +69,25 @@
     </div>    
 
     {% if user.is_authenticated %}
+    <div class="icon">
+        <div>
+            <a href="{% url 'quiz:quiz-create' %}"><i class="fa fa-handshake-o" aria-hidden="true"></i>Create Quiz +</a>
+        </div>
+    </div>
     <a href="{% url 'logout' %}">
         <div class="icon">
-            <div> <i class="fa fa-sign-out" aria-hidden="true"></i> logout</div>
+            <div> <i class="fa fa-sign-out" aria-hidden="true"></i>logout</div>
         </div>
     </a>
     {% else %}
+    <div class="icon">
+        <div>
+            <a href="{% url 'quiz:quiz-create' %}"><i class="fa fa-handshake-o" aria-hidden="true"></i>Login and Create Quiz +</a>
+        </div>
+    </div>
     <a href="{% url 'account_login' %}">
         <div class="icon">
-            <div> <i class="fa fa-sign-out" aria-hidden="true"></i> login</div>
+            <div> <i class="fa fa-sign-out" aria-hidden="true"></i>login</div>
         </div>
     </a>
     {% endif %}

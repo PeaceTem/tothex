@@ -1,0 +1,53 @@
+Change your settings here
+
+{% extends 'base.html' %}
+
+{% block css %}
+<style>
+    a{
+        text-decoration: none;
+        font-size: 20px;
+        color:#f11919;
+    }
+    
+</style>
+{% endblock css %}
+
+
+{% block title %}
+Settings
+{% endblock title %}
+
+
+{% block content %}
+<section>
+    <div>
+        <a href="{% url 'settings:change-password' %}">
+            <div>
+                <p>Change Password</p>
+            </div>
+        </a>
+    </div>
+    <div>
+        <a href="{% url 'settings:change-username' %}">
+            <div>
+                <p>Change Username</p>
+            </div>
+        </a>
+    </div>
+    <div>
+        <a href="{% url 'edit_profile' %}">
+            <div>
+                <p>Edit Profile</p>
+            </div>
+        </a>
+    </div>
+    <div>
+        <a href="{% url 'settings:change-categories' %}">
+            <div>
+                <p>Change Categories</p>
+            </div>
+        </a>
+    </div>
+</section>
+{% endblock content %}

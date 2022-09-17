@@ -29,10 +29,10 @@ def HomePage(request):
 
 
 urlpatterns = [
+    path('', include('routers.urls')),
     path('', HomePage),
     path('', include('pwa.urls')),
     # path('debug/', include('debug_toolbar.urls')),
-    path('', include('routers.urls')),
     path('admin/', admin.site.urls),
     path('zohoverify/verifyforzoho.html', zoho),
 

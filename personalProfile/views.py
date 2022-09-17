@@ -8,19 +8,18 @@ from django.contrib.auth.models import User
 def MassProfile(request, profile_name):
     try:
         user = request.user
-        owner = User.objects.get(username=profile_name)
+        owner = User.objects.prefetch_related('followers').get(username=profile_name)
         profile = Profile.objects.select_related("user","streak").get(user=owner)
         link = Link.objects.get(profile=profile)
         
         follower = Follower.objects.prefetch_related('followers','following').get(user=owner)
         followersCount = follower.followers.all().count()
-        followingsCount = follower.following.all().count()
+        # followingsCount = follower.following.all().count()
+        followingsCount = owner.followers.count()
         if user != owner:
             profile.views += 1
             profile.save()
 
-        
-        
     except:
         return redirect('quiz:quizzes')
     

@@ -45,8 +45,10 @@ Use Try except block thoroughly
 
 
 class Quiz(models.Model):
-    DURATION_CHOICES = zip( range(1,61), range(1,61) )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    DURATION_CHOICES = zip(range(1,61), range(1,61))
+    AGE_FROM_DURATION = zip(range(7, 66), range(7, 66))
+    AGE_TO_DURATION = zip(range(7, 66), range(7, 66))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quizzes')
     title = models.CharField(max_length=200, verbose_name=_('Short Title'))
     description = RichTextField(max_length=1000, verbose_name=_('Description'), blank=True, null=True)
     slug = models.SlugField(unique=True, null=True,blank=True)
@@ -70,8 +72,8 @@ class Quiz(models.Model):
     likes = models.ManyToManyField(User, default=None, blank=True, related_name='likes')
     likeCount = models.PositiveIntegerField(default=0)
     solution_validators = models.ManyToManyField(User,  blank=True, related_name='quiz_solution_validators')
-    age_from = models.PositiveSmallIntegerField(default=11, verbose_name=_('Minimum Age Of Quiz Takers'))
-    age_to = models.PositiveSmallIntegerField(default=65, verbose_name=_('Maximum Age Of Quiz Takers'))
+    age_from = models.PositiveSmallIntegerField(default=11, choices=AGE_FROM_DURATION, verbose_name=_('Minimum Age Of Quiz Takers'))
+    age_to = models.PositiveSmallIntegerField(default=30, choices=AGE_TO_DURATION, verbose_name=_('Maximum Age Of Quiz Takers'))
     relevance = models.IntegerField(default=0)
 
     objects = QuizManager()
@@ -86,7 +88,7 @@ class Quiz(models.Model):
         dt_updated = (self.date_updated)
         if dt and dt_updated:
             # add the length of solution for questions
-            rel = (self.questionLength * 5) + (self.attempts * 2) + (self.solution_quality * 10)
+            rel = (self.age_from - self.age_to) * 5 + self.questionLength + self.attempts + self.solution_quality * 10
             
             self.relevance = rel
 

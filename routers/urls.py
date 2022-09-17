@@ -12,4 +12,5 @@ urlpatterns = [
     path('@', include('personalProfile.urls', namespace='profile')),
     path('ads/', include('ads.urls', namespace='ads')),
     path('qxa/', include('q.urls', namespace='qxa')),
+    path('settings/', include('settings.urls', namespace='settings')),
 ]

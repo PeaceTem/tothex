@@ -74,6 +74,8 @@ INSTALLED_APPS = [
     #progressive web app
     'pwa',
     #  "debug_toolbar",
+    'settings.apps.SettingsConfig',
+    'analysis.apps.AnalysisConfig',
 ]
 
 
@@ -145,7 +147,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'core.middleware.StaticMiddleware'
-    # "core.middleware.LoggingMiddleware",
+    "core.middleware.LoggingMiddleware",
     # "debug_toolbar.middleware.DebugToolbarMiddleware",
     # Add the middleware here to solve the issue with static contents
     # or add no-cache to static configuration
@@ -179,24 +181,25 @@ WSGI_APPLICATION = 'tothex.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {   
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
 
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': os.environ.get('NAME'),
-         'USER': os.environ.get('USERNAME'),
-         'PASSWORD': os.environ.get('PASSWORD'), 
-         'HOST': os.environ.get('HOST'),
-         'PORT': os.environ.get('PORT'),
-     }
- }
-
+if DEBUG == True:
+    DATABASES = {   
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+    }
+elif DEBUG == False:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('NAME'),
+            'USER': os.environ.get('USERNAME'),
+            'PASSWORD': os.environ.get('PASSWORD'), 
+            'HOST': os.environ.get('HOST'),
+            'PORT': os.environ.get('PORT'),
+        }
+    }
 # DATABASES = {
 #     'default' : {},
 #     'auth_db':{

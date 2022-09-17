@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponse, HttpResponseRedirect, JsonResponse
 
 # function based views
+from django.views import View
 from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
@@ -16,7 +17,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 from .models import Profile, Follower, Link, FeedBack
-from .forms import FeedBackForm, ProfileCreationForm, LoginForm, NewLinkForm
+from .forms import FeedBackForm, ProfileCreationForm, LoginForm, NewLinkForm, ImageForm
 
 from django.utils.translation import gettext_lazy as _
 
@@ -183,7 +184,8 @@ def ProfilePage(request):
     profile = Profile.objects.select_related("user","streak").get(user=user)
     follower = Follower.objects.prefetch_related('followers','following').get(user=user)
     followersCount = follower.followers.all().count()
-    followingsCount = follower.following.all().count()
+    # followingsCount = follower.following.all().count()
+    followingsCount = user.followers.count()
     link = Link.objects.get(profile=profile)
 
 
@@ -225,6 +227,35 @@ def ProfileCreationPage(request):
     return render(request, 'core/profile_form.html', context)
 
 
+
+# class EditProfilePicture(LoginRequiredMixin, FormView):
+#     form_class = ImageForm
+#     template_name = 'core/edit_profile_picture.html'
+#     model = Profile
+#     success_url = 'profile'
+
+#     def form_valid(self,form):
+#         form.save()
+#         return super(EditProfilePicture, self).form_valid(form)
+
+#     def get(self, request, profile_id):
+#         profile = Profile.objects.get(id=profile_id)
+
+class EditProfilePicture(LoginRequiredMixin, View):
+    def get(self, request, profile_id):
+        print('o de be!')
+        profile = Profile.objects.get(id=profile_id)
+        # form = ImageForm(request.POST or None, request.FILES or None, instance=profile)
+        form = ImageForm(request.GET or None, request.FILES or None, instance=profile)
+        if form.is_valid():
+            print(request.GET.get('_'))
+            # print(request.GET.get('csrfmiddlewaretoken'))
+            # print(form.instance.csrfmiddlewaretoken)
+            # print('Saved')
+            form.save()
+            return JsonResponse({'message': 'works'})
+        context = {'form': form}
+        return render(request, 'core/edit_profile_picture.html', context)
 
 
 
@@ -361,12 +392,20 @@ def FollowerListView(request, follower_id, page_name):
             messages.error(request, f"There is no user named {search_input}")
             return redirect(request.META["HTTP_REFERER"])
 
-
+    owner = None
+    owner_followers = None
     if page_name == 'followers':
         follower = Follower.objects.select_related('user').prefetch_related('followers', 'following').get(id=follower_id)
+        owner = follower.user
+        owner_followers = owner.followers.all()
         object_type = 'followers'
     elif page_name == 'following':
         follower = Follower.objects.select_related('user').prefetch_related('following').get(id=follower_id)
+        owner = follower.user
+        follower = owner.followers.all()
+        print(follower)
+        # This place is not optimized and check other followers views
+
         object_type = 'following'
 
     else:
@@ -377,6 +416,8 @@ def FollowerListView(request, follower_id, page_name):
         'object_type' : object_type,
         'follower_id': follower_id,
         'user': request.user,
+        'owner': owner,
+        'owner_followers': owner_followers,
     }
 
     return render(request, 'core/followerList.html', context)
@@ -384,33 +425,70 @@ def FollowerListView(request, follower_id, page_name):
 
 
     
+# @login_required(redirect_field_name='next', login_url='account_login')
+# def FollowActionView(request, follower_id, user_id, action):
+#     user = request.user
+#     follower = Follower.objects.select_related('user').prefetch_related('followers').get(id=follower_id) #the action taker
+
+#     if not user == follower.user:
+
+#         return HttpResponse('An Error Occurred!')
+#     _user = User.objects.get(id=user_id)
+#     _follower = Follower.objects.prefetch_related('followers').get(user=_user) # the action recipient
+#     # Make some necessary adjustments here!
+
+#     if action == 'follow':
+#         follower.following.add(_user)
+#         _follower.followers.add(user)
+#         # follower.save()
+#         # _follower.save()
+
+#     elif action == 'unfollow':
+#         follower.following.remove(_user)
+#         _follower.followers.remove(user)
+#         # follower.save()
+#         # _follower.save()
+
+#     return HttpResponse('Done!')
+
+    
+
+
+
+"""
+The follower_id is for the leader
+The user_id is for the followee
+"""
 @login_required(redirect_field_name='next', login_url='account_login')
 def FollowActionView(request, follower_id, user_id, action):
     user = request.user
-    follower = Follower.objects.select_related('user').prefetch_related('followers').get(id=follower_id) #the action taker
-
+    follower = Follower.objects.select_related('user').get(id=follower_id) #the action taker
+    print('user', user)
+    print()
+    print('follower', follower)
+    print()
     if not user == follower.user:
-
         return HttpResponse('An Error Occurred!')
     _user = User.objects.get(id=user_id)
-    _follower = Follower.objects.prefetch_related('followers').get(user=_user) # the action recipient
+    _follower = Follower.objects.prefetch_related('followers','following').get(user=_user) # the action recipient
     # Make some necessary adjustments here!
-
+    print('_user', _user)
+    print()
+    print('_follower', _follower)
     if action == 'follow':
-        follower.following.add(_user)
+        # follower.following.add(_user)
         _follower.followers.add(user)
-        # follower.save()
-        # _follower.save()
+        print('added')
 
     elif action == 'unfollow':
-        follower.following.remove(_user)
+        # follower.following.remove(_user)
         _follower.followers.remove(user)
-        # follower.save()
-        # _follower.save()
+        print('removed')
 
     return HttpResponse('Done!')
 
-    
+
+
 
 
 
@@ -421,3 +499,9 @@ def allow_notification(request):
         profile.coins += 40
         profile.save()
     return HttpResponse("40 coins added!")
+
+
+
+
+
+

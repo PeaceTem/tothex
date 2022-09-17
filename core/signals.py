@@ -27,10 +27,10 @@ def create_profile(sender, instance, created, *args, **kwargs):
         follower = Follower.objects.create(user=instance)
         followed = User.objects.get(id=2) #admin
         _follower = Follower.objects.get(id=1) # the admin follower model
-        follower.following.add(followed) # the new user is following admin
+        # follower.following.add(followed) # the new user is following admin
         follower.followers.add(followed) # the admin is following the new user
         _follower.followers.add(instance) # the new user is following admin
-        _follower.following.add(instance) # the admin is following the new user
+        # _follower.following.add(instance) # the admin is following the new user
         # users should automatically follow my account here
 
 

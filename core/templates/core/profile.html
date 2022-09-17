@@ -78,7 +78,6 @@ Profile
             <input type="hidden" name="following" value="{{follower.user.id}}" readonly>
             <input type="hidden" name="following_user" value="{{profile.user}}" readonly>
             <input type="hidden" name="following_username" value="{{profile.user.username}}" readonly>
-
             <button type='submit' class="btn profile-edit-btn">
                 {% trans "UnFollow" %}
             </button>
@@ -86,19 +85,16 @@ Profile
         {% endcomment %}
 
         {% else %}
-        
-                <!-- <form id='followForm' action="{% url 'follow-action' follower.id profile.user.id 'follow'   %}" method="post"> -->
-                <!-- <form id='followForm' action="{% url 'follower' %}" method="post">
+                <form id='followForm' action="{% url 'follow-action' user.id follower.id 'follow'   %}" method="post">
+                <!-- <form id='followForm' action="{% url 'follower' %}" method="post"> -->
                     {% csrf_token %}
                     <input type="hidden" name="following" value="{{follower.id}}" readonly>
                     <input type="hidden" name="following_user" value="{{profile.user.username}}" readonly>
                     <input type="hidden" name="following_username" value="{{profile.user.username}}" readonly>
-        
                     <button type='submit' class="btn profile-edit-btn">
                         {% trans "Follow" %}
                     </button>
                 </form>
-         -->
         {% endif %}
      {% endif %}
     <div class="urlLink">
@@ -323,14 +319,14 @@ $(document).ready(function(){
 $('#followForm').submit(function(e){
 e.preventDefault();
 const serializeData = $(this).serialize()
-// const objectBx = $(this)
+const objectBx = $(this)
 // let buttonBtn = document.getElementById('followers')
-alert($(this).attr('action'));
 $.ajax({
     type: 'POST',
     url : $(this).attr('action'),
     data : serializeData,
     success : function(response){
+        objectBx.hide();
         // document.getElementById('followForm').style.visibility = 'hidden';
         // if(response == 'follow'){
         //     buttonBtn.innerText = parseInt(button.innerText) + 1

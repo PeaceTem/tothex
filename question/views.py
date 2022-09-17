@@ -674,8 +674,8 @@ def FourChoicesQuestionUpdate(request, question_id):
         if form.is_valid():
             form.save()
 
-            return redirect('question:category-create', question_id=f'fourChoices-{question.id}')
-
+            # return redirect('question:category-create', question_id=f'fourChoices-{question.id}')
+            return redirect('question:my-questions')
     
     context= {
         'fourChoicesForm': fourChoicesForm,
@@ -697,7 +697,8 @@ def TrueOrFalseQuestionUpdate(request, question_id):
             form.save()
         
 
-            return redirect('question:category-create', question_id=f'trueOrFalse-{question.id}')
+            # return redirect('question:category-create', question_id=f'trueOrFalse-{question.id}')
+            return redirect('question:my-questions')
 
     
     context= {

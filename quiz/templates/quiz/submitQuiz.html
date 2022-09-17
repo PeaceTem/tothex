@@ -343,22 +343,25 @@ Quiz Submit
 
 
     {% if attempters %}
-    Highest scores
-    <ol class="scores">
-    {% for attempter in attempters %}
     <div>
-        <li>
-            <span>@{{attempter.user}}</span>
-            <span>{{attempter.score}}</span>
-            <span>{{attempter.get_percentage}}</span>
-            <div style="font-size: 11px; color: #999; font-style: italic; ">
-                {{attempter.get_timetaken}}
-            </div>
-        </li>
+        Highest scores
+        <ol class="scores">
+        {% for attempter in attempters %}
+        <div>
+            <li>
+                <span>@{{attempter.user}}</span>
+                <span>{{attempter.score}}</span>
+                <span>{{attempter.get_percentage}}</span>
+                <span style="font-size: 16px; color: #555; font-style: italic; ">
+                    {{attempter.get_timetaken}}
+                </span>
+            <span><a style="font-size:30px;" href="{% url 'profile:profile' attempter.user %}">→</a></span>
+            </li>
+        </div>
+       
+        {% endfor %}
+        </ol>
     </div>
-   
-    {% endfor %}
-    </ol>
     {% endif %}
     
 
@@ -442,7 +445,13 @@ Quiz Submit
         <a id="shareButton" href="#">Share to Social Media</a>
     </div>
 </div>
-
+<div>
+    <form action="{% url 'quiz:quiz-create' %}" method="get">
+        <button id="like{{quiz.id}}" type="submit">
+            <div  style="color:#fff; width: 200px;" >Create Quiz +</div>
+        </button>
+    </form>
+</div>
 {% if quizLink %}
 <div>
     <span>Link below: </span>
@@ -468,6 +477,36 @@ Quiz Submit
 {% include 'ads/adSection.html' %}
 </div>
 
+<div id="suggestions">
+    <div>Suggestions</div>
+    {% for quiz in suggestions  %}
+        <div class="suggest">
+            <div class="title">
+                <a href="{% url 'quiz:take-quiz' quiz.id %}">{{quiz.title}}</a>
+            </div>
+            <div class="description">{{quiz.description|safe}}</div>
+            <div class="combine">
+                <span>{{quiz.date|date}}</span>
+                <span>{{quiz.average_score}}%</span>
+                <span>attempts: {{quiz.attempts}}</span>
+            </div>
+        </div>
+    {% endfor %}
+    {% for quiz in user__quizzes %}
+        <div class="suggest">
+            <div class="title">
+                <a href="{% url 'quiz:take-quiz' quiz.id %}">{{quiz.title}}</a>
+            </div>
+            <div class="description">{{quiz.description|safe}}</div>
+            <div class="combine">
+                <span>{{quiz.date|date}}</span>
+                <span>{{quiz.average_score}}%</span>
+                <span>attempts: {{quiz.attempts}}</span>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
 <script src="{% static 'question/html2canvas.js' %}"></script>
 {% include 'jquery.html' %}
 {% include 'loading.html' %}
@@ -481,7 +520,7 @@ Quiz Submit
         let cvs = document.querySelector('canvas');
         let a = document.querySelector('.a');
         a.href = cvs.toDataURL();
-        a.download = 'NeuGott-{{quiz.quiz.title}}.png'
+        a.download = 'NeuGott_{{quiz.title}}.png'
     })
 
 </script>

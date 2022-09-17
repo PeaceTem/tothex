@@ -113,7 +113,7 @@ class GeneratePDF(LoginRequiredMixin, View):
 def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
     try:
         user = request.user
-        quiz = Quiz.objects.select_related("quizlink").prefetch_related("likes", "categories").get(id=quiz_id)
+        quiz = Quiz.objects.select_related("quizlink", "user").prefetch_related("attempters", "likes", "categories", "fourChoicesQuestions", "trueOrFalseQuestions").get(id=quiz_id)
         quiz.views += 1
         quiz.save()
         preQuestions = []
@@ -133,12 +133,13 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
             code = str(kwargs.get('ref_code'))
             ReferralService(request, code)
         
-        # postAd = PostAd.objects.all()
-        # if postAd.count() > 0:
-        #     postAd = randomChoice(postAd)
-        #     postAd.views += 1
-        #     postAd.detailpageviews += 1
-        #     postAd.save()
+        category = randomChoice(quiz.categories.all())            
+        suggestions = category.quizzes.filter(relevance__gte=0)[:5]
+        owner = quiz.user
+        user__quizzes = owner.quizzes.all()[:5]
+        # get the union of user__quizzes and suggestions
+
+
     except:
         return redirect('quiz:my-quizzes')    
     context = {
@@ -149,6 +150,8 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
         'profile': profile or 'None',
         'number_of_registered_users': number_of_registered_users,
         'questions': questions,
+        'suggestions': suggestions,
+        'user__quizzes': user__quizzes,
     }
 
     try:
@@ -433,7 +436,7 @@ def FavoriteQuizList(request):
 def CategoryQuizList(request, category):
     quizzes = Quiz.objects.filter(is_active=True, categories__title=category, relevance__gte=51).order_by("solution_quality")[:100]
     category = Category.objects.get(title=category)
-    quizzes = category.quizzes.filter(relevance__gte=51).order_by('solution_quality')[:100]
+    quizzes = category.quizzes.filter(relevance__gte=25).order_by('solution_quality')[:100]
     user = request.user
     profile = None
     if user.is_authenticated:
@@ -501,10 +504,10 @@ def PostLike(request):
             likeProfile.save()
             following = Follower.objects.prefetch_related("followers").get(user=quiz.user)
             # following_user = User.objects.get(username=following_user)
-            follower = Follower.objects.prefetch_related("following").get(user=user)
+            # follower = Follower.objects.prefetch_related("following").get(user=user)
             if user not in following.followers.all():
                 following.followers.add(user)
-                follower.following.add(quiz.user)
+                # follower.following.add(quiz.user)
             return HttpResponse('liked')
 
 
@@ -931,7 +934,7 @@ def CategoryCreate(request, quiz_id):
                 pass
 
             if not category:
-                newCategory = Category.objects.create(registered_by=user, title=title, number_of_quizzes=1)
+                newCategory = Category.objects.create(registered_by=user, title=title)
                 quiz.categories.add(newCategory)
                 if profile.categories.all().count() > 9:
                     removed = profile.categories.first()
@@ -1243,6 +1246,10 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                         # StreakValidator.delay(profile, user_score)
                         if user_avg_score >= 50:
                             creator = Profile.objects.get(user=quiz.user)
+                            creator.coins += 1
+                            creator.save()
+                            # CreatorCoins.delay(creator.user, 1)
+
                             for category in quiz.categories.all():
                                 if category not in profile.categories.all():
                                     if profile.categories.all().count() > 9:
@@ -1263,9 +1270,6 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
                             """
                             # CoinsTransaction.delay(user, value)
 
-                            creator.coins += 1
-                            creator.save()
-                            # CreatorCoins.delay(creator.user, 1)
 
                             messages.success(request, f"You've won {value} coins!")
                             messages.info(request, f"3 coins have been deducted from your bonus!")
@@ -1315,7 +1319,10 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
         avgScore = round(quiz.average_score, 2)
         
         attempt_report = _(f"You answered {len(answers)} out of {quiz.questionLength} questions")
-
+        category = randomChoice(quiz.categories.all())            
+        suggestions = category.quizzes.filter(relevance__gte=0)[:5]
+        owner = quiz.user
+        user__quizzes = owner.quizzes.all()[:5]
     
         context = {
             "user": user,
@@ -1329,6 +1336,8 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
             'avgScore': avgScore,
             'attempt_report': attempt_report,
             'timeTaken' : timeTaken,
+            'suggestions' : suggestions,
+            'user__quizzes': user__quizzes,
         }
 
         try:

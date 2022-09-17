@@ -24,13 +24,13 @@ Followers
     </div>
 </div>
 {% include 'search.html' %}
-
+{% include 'messages.html' %}
 {% if object_type == 'following' %}
 
-    {% for obj in objects.following.all %}
+    {% for obj in objects %}
     <div class="followers">
         {{obj}} 
-        {% if user == objects.user and user.is_authenticated %}
+        {% if user == owner and user.is_authenticated %}
         <a class="clickable" href="{% url 'follow-action' follower_id obj.id 'unfollow' %}"><button style="border-radius:4px; padding: 3px; border:none; color: #fff; background:#f11919;">Unfollow</button></a> 
         {% endif %}
     </div>
@@ -46,7 +46,7 @@ Followers
         {{obj}} 
         {% if user == objects.user and user.is_authenticated %}
 
-        {% if obj in objects.following.all %}
+        {% if obj in owner_followers %}
             <i style="font-size: 11px; color: #666; background:#eee;">followed</i>
         {% else %}
             <a class="clickable" href="{% url 'follow-action' follower_id obj.id 'follow' %}"><button style="border-radius:4px; padding: 3px; border:none; color: #fff; background:#f11919;">Follow</button></a> 

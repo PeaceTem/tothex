@@ -32,7 +32,7 @@ class Profile(models.Model):
         ('female', 'female'),
     )
     user = models.OneToOneField(User,null=True, blank=True, on_delete=models.CASCADE, related_name='profile')
-    picture = models.ImageField(upload_to='images/', null=True, blank=True)
+    picture = models.ImageField(upload_to='images/profile/', null=True, blank=True)
     first_name = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("First Name"))
     last_name = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Last Name"))
     middle_name = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Middle Name"))

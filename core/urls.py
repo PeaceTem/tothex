@@ -60,8 +60,9 @@ urlpatterns = [
     name='password_reset_complete'),
 
     # profile
-    path('profile/', views.ProfilePage, name='profile'),
-    path('edit_profile/', views.ProfileCreationPage, name='edit_profile'),
+    path('profile', views.ProfilePage, name='profile'),
+    path('edit-profile', views.ProfileCreationPage, name='edit_profile'),
+    path('edit-profile-picture/<int:profile_id>', views.EditProfilePicture.as_view(), name='edit-profile-picture'),
 
     # link
     path('edit-link/', views.EditLink, name='edit-link'),

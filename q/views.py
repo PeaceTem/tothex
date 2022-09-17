@@ -20,7 +20,12 @@ from django.db.models import Q as Qlookup,F
 from .serializers import QSerializer
 from django.core.paginator import Paginator
 
-
+from django.utils.text import slugify
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
+"""
+Change this page to listview
+"""
 
 class QuestionPage(TemplateView):
     template_name = 'q/question_page.html'
@@ -56,7 +61,9 @@ class QuestionPage(TemplateView):
 
 
 
-
+"""
+Change this page to listview too
+"""
 class MyQPage(LoginRequiredMixin,TemplateView):
     redirect_field_name='next'
     template_name = 'q/question_page.html'
@@ -90,7 +97,9 @@ class MyQPage(LoginRequiredMixin,TemplateView):
 
 
 
-
+"""
+Change this view to list view
+"""
 
 class MyAPage(LoginRequiredMixin,TemplateView):
     redirect_field_name='next'
@@ -111,7 +120,9 @@ class MyAPage(LoginRequiredMixin,TemplateView):
 
 
 
-
+"""
+Add the docs here
+"""
 class AnswerPage(DetailView):
     template_name = 'q/answer_page.html'
     model = Q
@@ -133,6 +144,11 @@ class AnswerPage(DetailView):
 
 
 
+
+"""
+Add the docs here:
+use form valid and form invalid for all create and form view
+"""
 class CreateQuestion(LoginRequiredMixin, CreateView):
     redirect_field_name = 'next'
     model = Q
@@ -174,6 +190,10 @@ class CreateQuestion(LoginRequiredMixin, CreateView):
 
 
 
+
+"""
+Add the docs here
+"""
 class CreateAnswer(LoginRequiredMixin, CreateView):
     redirect_field_name = 'next'
     model = A
@@ -193,6 +213,10 @@ class CreateAnswer(LoginRequiredMixin, CreateView):
             return redirect('qxa:answer-page', slug=question.slug)
         return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
+
+"""
+Add the docs here
+"""
 # Remove loginrequired mixin from every view here
 class CreateReply(LoginRequiredMixin, CreateView):
 	
@@ -209,6 +233,10 @@ class CreateReply(LoginRequiredMixin, CreateView):
 
 
 
+
+"""
+Add the docs here
+"""
 # upvote and downvote section
 class UpvoteQuestion(LoginRequiredMixin, View):
     def get(self, request, q_id):
@@ -236,6 +264,10 @@ class UpvoteQuestion(LoginRequiredMixin, View):
 
 
 
+
+"""
+Add the docs here
+"""
 class DownvoteQuestion(LoginRequiredMixin, View):
     def get(self, request, q_id):
         user = self.request.user
@@ -263,6 +295,10 @@ class DownvoteQuestion(LoginRequiredMixin, View):
 
 
 
+
+"""
+Add the docs here
+"""
 class UpvoteAnswer(LoginRequiredMixin, View):
     def get(self, request, a_id):
         user = self.request.user
@@ -287,6 +323,10 @@ class UpvoteAnswer(LoginRequiredMixin, View):
 
 
 
+
+"""
+Add the docs here
+"""
 class DownvoteAnswer(LoginRequiredMixin, View):
     def get(self, request, q_id):
         user = self.request.user
@@ -321,6 +361,109 @@ class CategoryList(View):
         # print(categories)
 
         return JsonResponse(json.dumps(dict(categories)))
+
+
+
+
+
+
+
+"""
+Add all the documentation here
+"""
+
+class CategoryCreate(LoginRequiredMixin, View):
+    def get(self, request, q_id):
+        user = request.user
+        profile = Profile.objects.prefetch_related("categories").get(user=user)
+        q = Q.objects.prefetch_related("categories").get(id=q_id)
+        #make this part more efficient
+        title = request.GET.get('newCategory') or ''
+        title = slugify(title)
+        if title:
+
+            if q.categories.count() < 3:
+                category = None
+                try:
+                    category = Category.objects.get(title__iexact=title)
+                    if not category in q.categories.all():
+
+                        q.categories.add(category)
+                    else:
+                        messages.warning(request, _(f"{category.title} has already been added to the question!"))
+                except:
+                    pass
+
+                if not category:
+                    newCategory = Category.objects.create(registered_by=user, title=title)
+                    q.categories.add(newCategory)
+                    if profile.categories.count() > 9:
+                        removed = profile.categories.first()
+                        profile.categories.remove(removed)
+                    profile.categories.add(newCategory)
+
+                    messages.success(request, _(f"{newCategory} has been added!"))
+
+
+
+        addedCategory = request.GET.get("addedCategory") or ''
+        if addedCategory:
+            try:
+                category = Category.objects.get(title__iexact=addedCategory) or None
+                if category:
+                    while q.categories.count() > 2:
+                        removed = q.categories.first()
+                        q.categories.remove(removed)
+                    q.categories.add(category)
+
+                    while profile.categories.count() > 9:
+                        removed = profile.categories.first()
+                        profile.categories.remove(removed)
+                    profile.categories.add(category)
+            except:
+                pass
+
+
+
+        quizCategories = q.categories.all()
+        if request.GET.get('request_type') == 'ajax':
+            # just use this place to return the json response
+            # print("Python just comes at you like motherfucker!")
+            return JsonResponse({"categories":[x.title for x in quizCategories],
+                                "category_count": q.categories.count(),})
+
+
+        context= {
+            'page_obj': profile.categories.all(),# use profile categories here
+            'objCategories' : quizCategories,
+            'q': q,
+            'obj_type': 'qxa',
+        }
+
+        return render(request, 'quiz/categoryCreate.html', context)
+
+
+
+
+"""
+Add the docs here
+"""
+class CategoryRemove(LoginRequiredMixin, View):
+    def get(self, request, q_id):
+        q = Q.objects.prefetch_related('categories').get(id=q_id)
+        category = request.GET.get('removedCategory')
+        category = Category.objects.get(title=category)
+        q.categories.remove(category)
+        print('category removed')
+        return JsonResponse({"categories":[x.title for x in q.categories.all()],
+                            "category_count": q.categories.count(),})
+
+
+
+
+
+
+
 
 
 

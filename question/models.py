@@ -32,6 +32,8 @@ class FourChoicesQuestion(models.Model):
         ('answer4', _('Fourth Option')),
     )
 
+    AGE_FROM_DURATION = zip(range(7, 66), range(7, 66))
+    AGE_TO_DURATION = zip(range(7, 66), range(7, 66))
     SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
     DURATION_CHOICES = zip( range(15,301, 5), range(15,301, 5) )
 
@@ -63,8 +65,8 @@ class FourChoicesQuestion(models.Model):
     answer4NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     shuffleAnswers = models.BooleanField(default=False, verbose_name=_('Shuffle The Answers'))
     standalone = models.BooleanField(default=True, verbose_name=_("Create as an OldTownRoad question too"))
-    age_from = models.PositiveSmallIntegerField(default=11, verbose_name=_('Minimum Age Of Quiz Takers'))
-    age_to = models.PositiveSmallIntegerField(default=65, verbose_name=_('Maximum Age Of Quiz Takers'))
+    age_from = models.PositiveSmallIntegerField(default=11, choices=AGE_FROM_DURATION, verbose_name=_('Minimum Age Of Quiz Takers'))
+    age_to = models.PositiveSmallIntegerField(default=65, choices=AGE_TO_DURATION, verbose_name=_('Maximum Age Of Quiz Takers'))
     relevance = models.IntegerField(default=0)
     
     objects = FourChoicesQuestionManager()
@@ -203,7 +205,8 @@ class TrueOrFalseQuestion(models.Model):
         ('False', _('False')),
     )
 
-
+    AGE_FROM_DURATION = zip(range(7, 66), range(7, 66))
+    AGE_TO_DURATION = zip(range(7, 66), range(7, 66))
     DURATION_CHOICES = zip(range(15,301, 5), range(15,301, 5))
     SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trueOrFalseQuestions')
@@ -232,8 +235,8 @@ class TrueOrFalseQuestion(models.Model):
     answer1NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     answer2NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     standalone = models.BooleanField(default=True, verbose_name=_("Create as a standalone question too"))
-    age_from = models.PositiveSmallIntegerField(default=11, verbose_name=_('Minimum Age Of Quiz Takers'))
-    age_to = models.PositiveSmallIntegerField(default=65, verbose_name=_('Maximum Age Of Quiz Takers'))
+    age_from = models.PositiveSmallIntegerField(default=7, choices=AGE_FROM_DURATION, verbose_name=_('Minimum Age Of Quiz Takers'))
+    age_to = models.PositiveSmallIntegerField(default=30, choices=AGE_TO_DURATION, verbose_name=_('Maximum Age Of Quiz Takers'))
     relevance = models.IntegerField(default=0)
     
   

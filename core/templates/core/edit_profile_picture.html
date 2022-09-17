@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <!-- cropper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
+    <script src="{% static 'core/js/main.js' %}" defer></script>
+    {% include 'jquery.html' %}
+{% endblock css %}
+
+{% block title %}
+Edit Profile Picture
+{% endblock title %}
+{% block content %}
+<div id="alert-box"></div>
+<div id="image-box" class="mb-3"></div>
+<form action="" id="image-form", enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    {{form.media}}
+</form>
+<button class="btn btn-primary mt-3 not-visible" id="confirm-btn">confirm</button>
+{% endblock content %}

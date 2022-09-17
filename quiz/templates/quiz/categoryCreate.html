@@ -14,9 +14,19 @@ Categories
 <section>
     {% if obj_type == 'quiz' %}
     <div class="head">Step 2 of 3</div>
-    {% else %}
+    {% elif obj_type == 'question' %}
+    <div class="head">Step 2 of 2</div>
+    {% elif obj_type == 'profile' %}
+    <div class="head">Step 1 of 1</div>
+    {% elif obj_type == 'qxa' %}
     <div class="head">Step 2 of 2</div>
     {% endif %}
+
+
+
+
+
+
 
 <h3>Add Categories</h3>
 <p>Add at least 1 category to get more views</p>
@@ -25,9 +35,17 @@ Categories
         You can add up to 3 categories <br>Categories: <b class="counter">{{objCategories.count}}</b>
     </div>
     <!-- <input type="hidden" name="quiz" id="quiz" value="{{quiz.id}}"> -->
-{% else %}
+{% elif obj_type == 'question' %}
 <div class="top-info">
-    You can add up to 5 categories <br>Categories: <b class="counter">{{objCategories.count}}</b>
+    You can add up to 3 categories <br>Categories: <b class="counter">{{objCategories.count}}</b>
+</div>
+{% elif obj_type == 'profile' %}
+<div class="top-info">
+    You can add up to 10 categories <br>Categories: <b class="counter">{{objCategories.count}}</b>
+</div>
+{% elif obj_type == 'qxa' %}
+<div class="top-info">
+    You can add up to 3 categories <br>Categories: <b class="counter">{{objCategories.count}}</b>
 </div>
 {% endif %}
 
@@ -78,11 +96,19 @@ Categories
 <a href="{% url 'quiz:new-question' quiz.id %}">
     <button>Add more Questions</button>
 </a>
-    {% else %}
+    {% elif obj_type == 'question' %}
     <a href="{% url 'question:new-question' %}">
         <button>Add more Questions</button>
     </a>
-    
+    {% elif obj_type == 'profile' %}
+    <!-- change this part the settings url -->
+    <a href="{% url 'quiz:quizzes' %}">
+        <button>Save</button>
+    </a>
+    {% elif obj_type == 'qxa' %}
+    <a href="{% url 'qxa:question-page' %}">
+        <button>Save</button>
+    </a>
     {% endif %}
 </div>
 </section>
@@ -266,5 +292,107 @@ function collectCategories(searchData){
 
 // }); 
 </script>
+{% elif obj_type == 'profile' %}
+<script>
+    
+    
+        function ajaxifyRemoveCategory(old_category){
+        let bucket = document.getElementById('categoryBucket');
+        let counters = document.getElementsByClassName('counter');
+        $.ajax({
+        type : 'GET',
+        url : "{% url 'settings:remove-profile-category' %}",
+        data : {data:old_category},
+        success : function(response){
+            bucket.innerHTML = '';
+            console.log(response.categories);
+            for(let category of response.categories){
+                addClassCategory(category);
+            };
+            counters[0].innerHTML = response.category_count;
+            },
+        error : function(response){
+            alert('An error occurred!');
+            },
+        });
+    
+        };
+        function ajaxifyAddCategory(new_category){
+        let bucket = document.getElementById('categoryBucket');
+        let counters = document.getElementsByClassName('counter');
+    
+        $.ajax({
+        type : 'GET',
+        url : "{% url 'settings:add-profile-category' %}",
+        data : {data: new_category},
+        success : function(response){
+            bucket.innerHTML = '';
+            console.log(response.categories);
+            for(let category of response.categories){
+                addClassCategory(category);
+            };
+            counters[0].innerHTML = response.category_count;
+    
+            },
+        error : function(response){
+            alert('An error occurred!');
+            },
+        });
+    
+        };
+    
+    </script>
+    {% elif obj_type == 'qxa' %}
+    <script>
+    // $(document).ready(function(){
+    
+    
+        function ajaxifyRemoveCategory(old_category){
+        let bucket = document.getElementById('categoryBucket');
+        let counters = document.getElementsByClassName('counter');
+        $.ajax({
+        type : 'GET',
+        url : "{% url 'qxa:category-remove' q.id %}",
+        data : {removedCategory:old_category},
+        success : function(response){
+            bucket.innerHTML = '';
+            console.log(response.categories);
+            for(let category of response.categories){
+                addClassCategory(category);
+            };
+            counters[0].innerHTML = response.category_count;
+            },
+        error : function(response){
+            alert('An error occurred!');
+            },
+        });
+    
+        };
+        function ajaxifyAddCategory(new_category){
+        let bucket = document.getElementById('categoryBucket');
+        let counters = document.getElementsByClassName('counter');
+    
+        $.ajax({
+        type : 'GET',
+        url : "{% url 'qxa:category-create' q.id %}",
+        data : {request_type: 'ajax', addedCategory: new_category},
+        success : function(response){
+            bucket.innerHTML = '';
+            console.log(response.categories);
+            for(let category of response.categories){
+                addClassCategory(category);
+            };
+            counters[0].innerHTML = response.category_count;
+    
+            },
+        error : function(response){
+            alert('An error occurred!');
+            },
+        });
+    
+        };
+    
+    // }); 
+    </script>
 {% endif %}
 {% endblock content %}

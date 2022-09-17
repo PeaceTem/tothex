@@ -131,7 +131,13 @@ Quiz Detail
     </div>
 
 </div>
-
+<div>
+    <form action="{% url 'quiz:quiz-create' %}" method="get">
+        <button id="like{{quiz.id}}" type="submit">
+            <div  style="color:#fff;" >Create Quiz +</div>
+        </button>
+    </form>
+</div>
 <div>
     <a href="{% url 'quiz:quizzes' %}">Go back to the home page</a>
 </div>
@@ -164,9 +170,10 @@ Quiz Detail
             <span>@{{attempter.user}}</span>
             <span>{{attempter.score}}</span>
             <span>{{attempter.get_percentage}}</span>
-            <div style="font-size: 14px; color: #777; font-style: italic; ">
+            <span style="font-size: 16px; color: #555; font-style: italic; ">
                 {{attempter.get_timetaken}}
-            </div>
+            </span>
+            <span><a style="font-size:30px;" href="{% url 'profile:profile' attempter.user %}">→</a></span>
         </li>
     </div>
     
@@ -185,7 +192,7 @@ Quiz Detail
     <div class="questions">
 
         <div class="quizItem">
-            {{question.question|truncatechars:80|safe}}
+            {{question.question|safe}}
         </div>
         {% if quiz.user == user %}
         <div class="private-links">
@@ -197,7 +204,7 @@ Quiz Detail
     {% elif question.form == 'trueOrFalseQuestion' %}
     <div class="questions">
         <div class="quizItem">
-            {{question.question|truncatechars:80|safe}}
+            {{question.question|safe}}
         </div>
         {% if quiz.user == user %}
         <div class="private-links">
@@ -209,7 +216,6 @@ Quiz Detail
     {% endif %}
         
     {% endfor %}
-
 
     <div class="contentBx inactive-bar">
         <div class="formBx">
@@ -226,7 +232,36 @@ Quiz Detail
     </div>
     <a href="{% url 'question:questions' %}">Go Back</a>
     </div>
-
+</div>
+<div id="suggestions">
+    <div>Suggestions</div>
+    {% for quiz in suggestions  %}
+        <div class="suggest">
+            <div class="title">
+                <a href="{% url 'quiz:take-quiz' quiz.id %}">{{quiz.title}}</a>
+            </div>
+            <div class="description">{{quiz.description|safe}}</div>
+            <div class="combine">
+                <span>{{quiz.date|date}}</span>
+                <span>{{quiz.average_score}}%</span>
+                <span>attempts: {{quiz.attempts}}</span>
+            </div>
+        </div>
+    {% endfor %}
+    {% for quiz in user__quizzes %}
+        <div class="suggest">
+            <div class="title">
+                <a href="{% url 'quiz:take-quiz' quiz.id %}">{{quiz.title}}</a>
+            </div>
+            <div class="description">{{quiz.description|safe}}</div>
+            <div class="combine">
+                <span>{{quiz.date|date}}</span>
+                <span>{{quiz.average_score}}%</span>
+                <span>attempts: {{quiz.attempts}}</span>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
 {% include 'jquery.html' %}
 {% include 'loading.html' %}

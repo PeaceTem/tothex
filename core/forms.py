@@ -4,6 +4,10 @@ from .models import FeedBack, Profile, Link
 
 
 
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('picture',)
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=100)

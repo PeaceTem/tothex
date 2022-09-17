@@ -81,6 +81,12 @@ My Questions
                     </form>
                 </div>
             </div>
+            {% else %}
+            <div class="linkTab">
+                <div class="private-links">
+                    <a href="{% url 'question:edit-trueOrFalseQuestion' question.id %}">Edit</a>
+                </div>
+            </div>    
             {% endif %}
             
 
@@ -126,6 +132,12 @@ My Questions
                     </form>
                 </div>
             </div>
+            {% else %}
+            <div class="linkTab">
+                <div class="private-links">
+                    <a href="{% url 'question:edit-fourChoicesQuestion' question.id %}">Edit</a>
+                </div>
+            </div>    
             {% endif %}
     {% endif %}
 </div>
