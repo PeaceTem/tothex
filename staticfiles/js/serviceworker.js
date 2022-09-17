@@ -35,7 +35,8 @@ self.addEventListener('fetch', function(event) {
 var requestUrl = new URL(event.request.url);
 	if (requestUrl.origin === location.origin) {
 	if ((requestUrl.pathname === '/')) {
-		event.respondWith(caches.match(''));
+		// event.respondWith(caches.match(''));
+		// window.location.href = location.origin + '/quiz/';
 		return;
 	}
 	}
