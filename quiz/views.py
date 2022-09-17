@@ -132,9 +132,10 @@ def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
         if not user.is_authenticated:
             code = str(kwargs.get('ref_code'))
             ReferralService(request, code)
-        
-        category = randomChoice(quiz.categories.all())            
-        suggestions = category.quizzes.filter(relevance__gte=0)[:5]
+        suggestions = None
+        if quiz.categories.count > 0:
+            category = randomChoice(quiz.categories.all())            
+            suggestions = category.quizzes.filter(relevance__gte=0)[:5]
         owner = quiz.user
         user__quizzes = owner.quizzes.all()[:5]
         # get the union of user__quizzes and suggestions
