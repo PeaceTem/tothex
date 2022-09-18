@@ -21,7 +21,11 @@ Profile
 {% include 'messages.html' %}
 <div class="profile-box">
     <div class="imgBx">
+        {% if profile.picture %}
+        <img style="width:200px;border-radius:10px;height:200px;" src="{{profile.picture.url}}">
+        {% else %}
         <img src="{% static 'images/tothex_500.png' %}">
+        {% endif %}
     </div>
 
 <div class="name">

@@ -245,19 +245,21 @@ class EditProfilePicture(LoginRequiredMixin, View):
     def get(self, request, profile_id):
         print('o de be!')
         profile = Profile.objects.get(id=profile_id)
-        # form = ImageForm(request.POST or None, request.FILES or None, instance=profile)
-        form = ImageForm(request.GET or None, request.FILES or None, instance=profile)
-        if form.is_valid():
-            print(request.GET.get('_'))
-            # print(request.GET.get('csrfmiddlewaretoken'))
-            # print(form.instance.csrfmiddlewaretoken)
-            # print('Saved')
-            form.save()
-            return JsonResponse({'message': 'works'})
+        form = ImageForm(request.POST or None, request.FILES or None, instance=profile)
+        # form = ImageForm(request.GET or None, request.FILES or None, instance=profile)
+
         context = {'form': form}
         return render(request, 'core/edit_profile_picture.html', context)
 
-
+    def post(self, request, profile_id):
+        print('Post is reached!')
+        profile = Profile.objects.get(id=profile_id)
+        form = ImageForm(request.POST or None, request.FILES or None, instance=profile)
+        if form.is_valid():
+            print('Saved')
+            form.save()
+            return JsonResponse({'message': 'works'})
+        return HttpResponse('Error')
 
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm

@@ -12,41 +12,41 @@ input.addEventListener('change', ()=>{
     confirmBtn.classList.remove('not-visible');
     const img_data = input.files[0];
     const url = URL.createObjectURL(img_data);
-    const width = window.innerWidth;
+    // const width = window.innerWidth;
     imageBox.innerHTML = `<img src="${url}" id="image" width="270px">`;
     var $image = $('#image');
     console.log($image);
 
-    // $image.cropper({
-    //     aspectRatio: 0 / 9,
-    //     crop: function(event) {
-    //         console.log(event.detail.x);
-    //         console.log(event.detail.y);
-    //         console.log(event.detail.width);
-    //         console.log(event.detail.height);
-    //         console.log(event.detail.rotate);
-    //         console.log(event.detail.scaleX);
-    //         console.log(event.detail.scaleY);
-    //     }
-    // });
+    $image.cropper({
+        aspectRatio: 0 / 9,
+        crop: function(event) {
+            console.log(event.detail.x);
+            console.log(event.detail.y);
+            console.log(event.detail.width);
+            console.log(event.detail.height);
+            console.log(event.detail.rotate);
+            console.log(event.detail.scaleX);
+            console.log(event.detail.scaleY);
+        }
+    });
     
-    // var cropper = $image.data('cropper');
+    var cropper = $image.data('cropper');
     confirmBtn.addEventListener('click', ()=>{
-        // cropper.getCroppedCanvas().toBlob((blob) => {
-            // console.log('confirmed')
-            // const fd = new FormData();
-            // fd.append('csrfmiddlewaretoken', csrf[0].value)
+        cropper.getCroppedCanvas().toBlob((blob) => {
+            console.log('confirmed')
+            const fd = new FormData();
+            fd.append('csrfmiddlewaretoken', csrf[0].value)
             // fd.append('file', blob, 'my-image.png');
-            // fd.append('picture', blob, 'my-image.png');
+            fd.append('picture', blob, 'my-image.png');
             const $imageForm = $('#image-form');
             console.log($imageForm.serialize());
             alert('ajax');
             $.ajax({
-                type:'GET',
+                type:'POST',
                 url:"",
                 enctype: 'multipart/form-data',
-                // data: fd,
-                data: $imageForm.serialize(),
+                data: fd,
+                // data: $imageForm.serialize(),
                 success: function(response){
                     console.log('success', response)
                     alertBox.innerHTML = `<div class="alert alert-success" role="alert">
@@ -65,4 +65,4 @@ input.addEventListener('change', ()=>{
             })
         })
     })
-// })
+})
