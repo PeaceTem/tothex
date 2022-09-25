@@ -12,7 +12,7 @@ Old Town Road Correction
 {% block css %}
 {% include 'mathjax.html' %}
 
-<link rel="stylesheet" href="{% static 'question/css/correction.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'question/css/rcorrection.css' %}?{{static_request}}">
 {% endblock css %}
 {% if not user.is_authenticated %}
 {% include 'core/authenticate.html' %}
@@ -37,6 +37,8 @@ Old Town Road Correction
                     <div>
                         {{question.question|safe}}
                     </div>
+                   {% include 'question/imgBx.html' %}
+
                 </div>
                     <ol class="answers">
                         <ol class="answers">
@@ -168,7 +170,10 @@ Old Town Road Correction
                     </ol>
                         
                         <div class="solution q-box">
+                            <div>
                             Solution: {{question.solution|safe}}
+                           {% include 'question/solutionImgBx.html' %}
+                            </div>
                         </div>
                         {% if not user in question.solution_validators.all %}
 
@@ -184,6 +189,11 @@ Old Town Road Correction
                             </form>
                             </div>
                         {% endif %}  
+                        <br>
+
+                        <form  class="shareButton" data-title="{{question.question|safe|truncatewords:20}}" data-href="{% url 'question:take-four-choices-question' question.id %}"  action="" method="get">
+                            <input type="submit" value="Share">
+                        </form>
                         <div style="text-align:right;">
                             <div style='color:#f11919; text-align:right; margin-right: 3px;'>NeuGott</div>
                         </div>      
@@ -195,6 +205,8 @@ Old Town Road Correction
                     <div class="q-box">
                         {{question.question|safe}}
                     </div>
+                   {% include 'question/imgBx.html' %}
+
                         <ol class="answers">
                             {% if question.correct == 'True' %}
                         <li class="answerGreen">
@@ -260,7 +272,12 @@ Old Town Road Correction
                         
                          
                         <div class="solution q-box">
-                        Solution: {{question.solution|safe}}
+                        <div>
+                            Solution: {{question.solution|safe}}
+                            {% include 'question/solutionImgBx.html' %}
+
+                        </div>
+
                         </div>
                       {% if not user in question.solution_validators.all %}
                         <div>
@@ -276,6 +293,10 @@ Old Town Road Correction
                         </div>
                         {% endif %}
                 </div>
+                <br>
+                <form  class="shareButton" data-title="{{question.question|safe|truncatewords:20}}" data-href="{% url 'question:take-true-or-false-question' question.id %}"  action="" method="get">
+                    <input type="submit" value="Share">
+                </form>
                 <div style="text-align:right;">
                     <div style='color:#f11919; text-align:right; margin-right: 3px;'>NeuGott</div>
                 </div>
@@ -313,6 +334,9 @@ Old Town Road Correction
     <input type="submit" value="Take The Full Quiz">
 </form>
 {% endif %}
+<br>
+<br>
+<br>
 <br>
 
 
@@ -366,5 +390,23 @@ html2canvas(elm).then(function(canvas){
         });
         });
     });
+</script>
+<script>
+    let questionShareButton = document.querySelectorAll('form.shareButton');
+
+Array.from(questionShareButton).forEach(shareBtn => {
+    shareBtn.addEventListener('submit', e =>{
+        // do something
+        e.preventDefault();
+        if(navigator.share){
+            navigator.share({
+                title: shareBtn.dataset.title,
+                url : shareBtn.dataset.href
+            }).catch(console.error);
+        }else{
+            alert('Use a default share button');
+        }
+    });
+});
 </script>
 {% endblock content%}

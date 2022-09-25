@@ -13,7 +13,7 @@ Quiz
 {% block css %}
 {% include 'mathjax.html' %}
 
-<link rel="stylesheet" href="{% static 'quiz/css/takequiz.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'quiz/css/rtakequiz.css' %}?{{static_request}}">
 {% endblock css %}
 
 
@@ -64,6 +64,8 @@ Quiz
                 {{question.question|safe}}
 
             </div>
+            {% include 'question/imgBx.html' %}
+
             {% for ans in question.shuffle_answers %}
             {% if ans == 1 %}
             <div onclick="AutoClick(this)" class="answer">
@@ -99,6 +101,8 @@ Quiz
         {{question.question|safe}}
 
     </div>
+    {% include 'question/imgBx.html' %}
+
             <div onclick="AutoClick(this)" class="answer">
                 <input onclick="validateAnswer(this.className, this.id)" class="option{{index}}" type="checkbox" name="answer" id="id_{{index}}_answer1" value="trueOrFalse-{{question.id}}-answer1">
                 <label for="id_{{index}}_answer1">{{question.answer1}}</label>

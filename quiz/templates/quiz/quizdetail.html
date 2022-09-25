@@ -9,7 +9,7 @@ Quiz Detail
 
 {% block css %}
 {% include 'mathjax.html' %}
-<link rel="stylesheet" href="{% static 'quiz/css/quizdetail.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'quiz/css/rquizdetail.css' %}?{{static_request}}">
 {% include 'chartjs.html' %}
 
 {% endblock css %}
@@ -105,7 +105,7 @@ Quiz Detail
 
         {% if quiz.user == user %}
         <div>
-            <a href="{% url 'quiz:quiz-update' quiz.id %}">Edit Quiz</a>
+            <a href="{% url 'quiz:quiz-update' quiz.id %}"> <i class="fa-solid fa-pen-to-square"></i>Edit Quiz</a>
         </div>
         <div>
             <form id="deleteQuizForm" action="{% url 'quiz:delete-quiz' quiz.id %}" method="post">
@@ -197,9 +197,13 @@ Quiz Detail
         {% if quiz.user == user %}
         <div class="private-links">
             <a class="deleteButton" data-url="{% url 'quiz:delete-question' quiz.id 'fourChoices' question.id %}"  href="{% url 'quiz:delete-question' quiz.id 'fourChoices' question.id %}">Delete</a>
-            <a class="" data-url="{% url 'quiz:edit-fourChoicesQuestion' quiz.id question.id %}" href="{% url 'quiz:edit-fourChoicesQuestion' quiz.id question.id %}">Edit</a>
+            <a class="" data-url="{% url 'quiz:edit-fourChoicesQuestion' quiz.id question.id %}" href="{% url 'quiz:edit-fourChoicesQuestion' quiz.id question.id %}"> <i class="fa-solid fa-pen-to-square"></i>Edit</a>
         </div>
         {% endif %}
+        <form  class="shareButton" data-title="{{question.question|safe|truncatewords:20}}" data-href="{% url 'question:take-four-choices-question' question.id %}"  action="" method="get">
+            <input type="submit" value="Share">
+        </form>
+
     </div>
     {% elif question.form == 'trueOrFalseQuestion' %}
     <div class="questions">
@@ -209,9 +213,12 @@ Quiz Detail
         {% if quiz.user == user %}
         <div class="private-links">
             <a class="deleteButton" data-url="{% url 'quiz:delete-question' quiz.id 'trueOrFalse' question.id %}" href="{% url 'quiz:delete-question' quiz.id 'trueOrFalse' question.id %}">Delete</a>
-            <a class="" data-url="{% url 'quiz:edit-trueOrFalseQuestion' quiz.id question.id %}" href="{% url 'quiz:edit-trueOrFalseQuestion' quiz.id question.id %}">Edit</a>
+            <a class="" data-url="{% url 'quiz:edit-trueOrFalseQuestion' quiz.id question.id %}" href="{% url 'quiz:edit-trueOrFalseQuestion' quiz.id question.id %}"> <i class="fa-solid fa-pen-to-square"></i>Edit</a>
         </div>
         {% endif %}
+        <form  class="shareButton" data-title="{{question.question|safe|truncatewords:20}}" data-href="{% url 'question:take-true-or-false-question' question.id %}"  action="" method="get">
+            <input type="submit" value="Share">
+        </form>
     </div>
     {% endif %}
         
@@ -457,5 +464,22 @@ shareButton.addEventListener('click', (e) => {
 });
 
 </script>
+<script>
+    let questionShareButton = document.querySelectorAll('form.shareButton');
 
+Array.from(questionShareButton).forEach(shareBtn => {
+    shareBtn.addEventListener('submit', e =>{
+        // do something
+        e.preventDefault();
+        if(navigator.share){
+            navigator.share({
+                title: shareBtn.dataset.title,
+                url : shareBtn.dataset.href
+            }).catch(console.error);
+        }else{
+            alert('Use a default share button');
+        }
+    });
+});
+</script>
 {% endblock content %}

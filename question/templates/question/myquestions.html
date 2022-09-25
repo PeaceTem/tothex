@@ -10,7 +10,7 @@ My Questions
 
 {% block css %}
 {% include 'mathjax.html' %}
-<link rel="stylesheet" href="{% static 'question/css/myquestions.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'question/css/rmyquestions.css' %}?{{static_request}}">
 {% endblock css %}
 
 <div style="display: block;border-bottom: 1px solid #ccc;height: 50px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
@@ -45,6 +45,8 @@ My Questions
             <div class="quizItem">
                 {{question.question|safe|truncatewords:80}}
             </div>
+
+            {% include 'question/imgBx.html' %}
             <div class="inline">
     
                 <div class="attempt">
@@ -69,8 +71,8 @@ My Questions
                 </div>
                 
             </div>
-            {% if question.index is 0 and user == question.user %}
             <div class="linkTab">
+            {% if question.index is 0 and user == question.user %}
                 <div class="private-links">
                     <a href="{% url 'question:edit-trueOrFalseQuestion' question.id %}">Edit</a>
                 </div>
@@ -80,21 +82,25 @@ My Questions
                         <input type="submit" value="Delete">
                     </form>
                 </div>
-            </div>
-            {% else %}
-            <div class="linkTab">
+            {% elif user == question.user %}
                 <div class="private-links">
                     <a href="{% url 'question:edit-trueOrFalseQuestion' question.id %}">Edit</a>
                 </div>
-            </div>    
             {% endif %}
-            
+                <div class="private-links">
+                    <a href="{% url 'question:take-true-or-false-question' question.id %}">Take >></a>
+                </div>
+                <div class="private-links">
+                    <a class="shareButton" data-title="{{question.question|safe|truncatewords:20}}"  href="#" data-href="{% url 'question:take-true-or-false-question' question.id %}">Share</a>
+                </div>
+            </div>                
 
     {% elif question.form == 'fourChoicesQuestion' %}
     
             <div class="quizItem">
                 {{question.question|safe|truncatewords:80}}
             </div>
+            {% include 'question/imgBx.html' %}
             <div class="inline">
     
                 <div class="attempt">
@@ -120,8 +126,8 @@ My Questions
                 </div>
                 
             </div>
-            {% if question.index is 0 and user == question.user %}
             <div class="linkTab">
+            {% if question.index is 0 and user == question.user %}
                 <div class="private-links">
                     <a href="{% url 'question:edit-fourChoicesQuestion' question.id %}">Edit</a>
                 </div>
@@ -131,14 +137,15 @@ My Questions
                         <input type="submit" value="Delete">
                     </form>
                 </div>
-            </div>
-            {% else %}
-            <div class="linkTab">
+            {% elif user == question.user %}
                 <div class="private-links">
                     <a href="{% url 'question:edit-fourChoicesQuestion' question.id %}">Edit</a>
                 </div>
-            </div>    
             {% endif %}
+                <div class="private-links">
+                    <a href="{% url 'question:take-four-choices-question' question.id %}">Take >></a>
+                </div>
+            </div>    
     {% endif %}
 </div>
 
@@ -193,11 +200,9 @@ My Questions
             reload_js("{% static 'question/js/myquestions.js' %}?{{static_request}}");
 
         }
-        
     
     });
 });
 
 </script>
-
 {% endblock content %}

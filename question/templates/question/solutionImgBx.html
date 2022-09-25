@@ -1,0 +1,16 @@
+{% load static %}
+<!-- 
+Learn how to use with ___ as ____ 
+So that you will be able to use One image code for all the images in Questions, Solutions, Quizzes, Categories, QXAs.
+You can use it for The questions and the answers on every page also. 
+So All the questions will be indentical in all aspect(html, css and js)
+-->
+{% if question.solution_image %}
+
+<link rel="stylesheet" href="{% static 'question/css/imgBx.css' %}">
+<div class="img-container">
+    <div class="img-box">
+        <img src="{{question.solution_image.url}}" alt="" class="img">
+    </div>
+</div>
+{% endif %}

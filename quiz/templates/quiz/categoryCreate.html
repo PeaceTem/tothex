@@ -29,10 +29,14 @@ Categories
 
 
 <h3>Add Categories</h3>
-<p>Add at least 1 category to get more views</p>
+
+<p>
+    You must add a category before proceeding! <br>
+    Add at least 1 category to get more views
+</p>
 {% if obj_type == 'quiz' %}
     <div class="top-info">
-        You can add up to 3 categories <br>Categories: <b class="counter">{{objCategories.count}}</b>
+        You can add up to 3 categories <br>Categories: <b  class="counter">{{objCategories.count}}</b>
     </div>
     <!-- <input type="hidden" name="quiz" id="quiz" value="{{quiz.id}}"> -->
 {% elif obj_type == 'question' %}
@@ -57,6 +61,7 @@ Categories
         <input type="submit" value="search">
     </form>
 </div>
+
 
 
 <!-- <form action="" id="added-category-form" method="get"> -->
@@ -94,20 +99,20 @@ Categories
 <div>
     {% if obj_type == 'quiz' %}
 <a href="{% url 'quiz:new-question' quiz.id %}">
-    <button>Add more Questions</button>
+    <button id="category-confirm-btn" >Add more Questions</button>
 </a>
     {% elif obj_type == 'question' %}
     <a href="{% url 'question:new-question' %}">
-        <button>Add more Questions</button>
+        <button id="category-confirm-btn" >Add more Questions</button>
     </a>
     {% elif obj_type == 'profile' %}
     <!-- change this part the settings url -->
     <a href="{% url 'quiz:quizzes' %}">
-        <button>Save</button>
+        <button id="category-confirm-btn" >Save</button>
     </a>
     {% elif obj_type == 'qxa' %}
-    <a href="{% url 'qxa:question-page' %}">
-        <button>Save</button>
+    <a href="{% url 'qxa:my-q' %}">
+        <button id="category-confirm-btn" >Save</button>
     </a>
     {% endif %}
 </div>
@@ -117,18 +122,37 @@ Categories
 {% include 'jquery.html' %}
 {% include 'loading.html' %}
 
-
+http://localhost:8000/question/category-create/trueOrFalse-16/
 
 <script>
     // $(document).ready(function(){
 
 // var bucket = document.getElementById('categoryBucket');
+var categoryBucketList;
+var categoryConfirmBtn;
+
+function canProceed(){
+    categoryBucketList = document.getElementById('categoryBucket');
+    categoryConfirmBtn = document.getElementById('category-confirm-btn');
+    console.log(categoryBucketList.childElementCount)
+    if(categoryBucketList.childElementCount < 1){
+    // disable the save button
+    categoryConfirmBtn.disabled = true;
+    }else{
+    categoryConfirmBtn.disabled = false;
+    }
+
+}
+
+canProceed();
+
 
 
 function removeCategory(index){
     // let elem = document.getElementById(index);
     // elem.parentNode.removeChild(elem);
     ajaxifyRemoveCategory(index)
+
 
 }
 function updateCart(obj_name_char){
@@ -140,6 +164,8 @@ function addClassCategory(obj_name){
 bucket.innerHTML += `
 <input type="text" id=${obj_name} onclick="removeCategory(this.id)" class = "addedCategories" name="addedCategories" value=${obj_name} readonly>
                         `;
+    canProceed();
+
 };
 var search = document.querySelector('#Search').value;
 function checkSearchAndReload(){
@@ -202,11 +228,12 @@ function collectCategories(searchData){
 	data : {removedCategory:old_category},
 	success : function(response){
         bucket.innerHTML = '';
-        console.log(response.categories);
         for(let category of response.categories){
             addClassCategory(category);
         };
         counters[0].innerHTML = response.category_count;
+        canProceed();
+
 		},
 	error : function(response){
 		alert('An error occurred!');
@@ -224,7 +251,6 @@ function collectCategories(searchData){
 	data : {request_type: 'ajax', addedCategory: new_category},
 	success : function(response){
         bucket.innerHTML = '';
-        console.log(response.categories);
         for(let category of response.categories){
             addClassCategory(category);
         };
@@ -258,6 +284,8 @@ function collectCategories(searchData){
         for(let category of response.categories){
             addClassCategory(category);
         };
+        canProceed();
+
         counters[0].innerHTML = response.category_count;
 		},
 	error : function(response){
@@ -310,6 +338,8 @@ function collectCategories(searchData){
                 addClassCategory(category);
             };
             counters[0].innerHTML = response.category_count;
+            canProceed();
+
             },
         error : function(response){
             alert('An error occurred!');
@@ -361,6 +391,8 @@ function collectCategories(searchData){
                 addClassCategory(category);
             };
             counters[0].innerHTML = response.category_count;
+            canProceed();
+
             },
         error : function(response){
             alert('An error occurred!');

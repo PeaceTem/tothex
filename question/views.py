@@ -31,7 +31,9 @@ from django.core.paginator import Paginator
 from django.utils.translation import gettext_lazy as _
 # django messages
 from django.contrib import messages
-
+from django.views.generic.detail import DetailView
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 
 
 from django.core import serializers
@@ -92,8 +94,8 @@ def Question(request):
 def MyQuestionList(request):
     user = request.user
     preQuestions = []
-    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=user, is_active=True, standalone=True)
-    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=user, is_active=True, standalone=True)
+    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=user, is_active=True)
+    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=user, is_active=True)
     questions = []
     # total_question_attempts = 0
     for question in preQuestions:
@@ -138,8 +140,10 @@ def MyQuestionList(request):
 def VisitorView(request, owner_id):
     owner = User.objects.get(id=owner_id)
     preQuestions = []
-    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=owner, is_active=True, standalone=True)
-    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=owner, is_active=True, standalone=True)
+    preQuestions += FourChoicesQuestion.objects.select_related("user").filter(user=owner, is_active=True)
+    # preQuestions += owner.fourChoicesQuestions.select_related('user').filter(user=owner, is_active=True)
+    # preQuestions += owner.trueOrFalseQuestions.select_related('user').filter(user=owner, is_active=True)
+    preQuestions += TrueOrFalseQuestion.objects.select_related("user").filter(user=owner, is_active=True)
     questions = []
     for question in preQuestions:
         questions.append(tuple((question.date_created, question)))
@@ -163,6 +167,7 @@ def VisitorView(request, owner_id):
         average_views = round(total_views/questions_length, 2)
     except ZeroDivisionError:
         pass
+
 
     context={
         'owner': owner,
@@ -449,6 +454,53 @@ def CorrectionView(request, question_form, question_id, qtype, answer):
     return render(request, 'question/correction.html', context)
 
 
+
+class TakeTrueOrFalseQuestion(DetailView):
+    model = TrueOrFalseQuestion
+    template_name = 'question/takequestion.html'
+    context_object_name = 'question'
+    
+    def get_model(self):
+        return self.model.objects.select_related('user').prefetch_related('categories').get(id=self.kwargs['pk'])
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['score'] = round((2 - context['question'].avgScore/100) * 2, 2)
+        context['question'].views += 1
+        context['question'].save()
+        context['questionType'] = 'OldTownRoad'
+    
+
+        return context
+
+
+
+class TakeFourChoicesQuestion(DetailView):
+    model = FourChoicesQuestion
+    template_name = 'question/takequestion.html'
+    context_object_name = 'question'
+    
+    def get_model(self):
+        return self.model.objects.select_related('user').prefetch_related('categories').get(id=self.kwargs['pk'])
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['score'] = round((2 - context['question'].avgScore/100) * 2, 2)
+        context['question'].views += 1
+        context['question'].save()
+        context['questionType'] = 'OldTownRoad'
+        print(context['question'])
+        # if context['question'].form == "fourChoicesQuestion":
+            # check if you are to shuffle this question's answers
+        ans = [1,2,3,4]
+        shuffle(ans)
+        context["ans"] = ans
+        return context
+
+
+
 """
 Add all the documentation here
 """
@@ -465,8 +517,9 @@ def FourChoicesQuestionCreate(request):
     user = request.user
     form = NewFourChoicesQuestionForm()
     if request.method == 'POST':
-        form = NewFourChoicesQuestionForm(request.POST or None)
+        form = NewFourChoicesQuestionForm(request.POST or None, request.FILES or None)
         if form.is_valid():
+            # You can use form.save() instead
             question= form.cleaned_data.get('question')
             answer1= form.cleaned_data.get('answer1')
             answer2 = form.cleaned_data.get('answer2')
@@ -478,10 +531,13 @@ def FourChoicesQuestionCreate(request):
             shuffleAnswers = form.cleaned_data.get('shuffleAnswers')
             age_from = form.cleaned_data.get('age_from')
             age_to = form.cleaned_data.get('age_to')
+            question_image = form.cleaned_data.get('question_image')
+            solution_image = form.cleaned_data.get('solution_image')
             question = FourChoicesQuestion.objects.create(user=user, question=question,
             answer1=answer1, answer2=answer2, answer3=answer3, answer4=answer4,
             correct=correct, duration_in_seconds=duration, solution=solution, shuffleAnswers=shuffleAnswers,
-            age_from=age_from, age_to=age_to, standalone=True)
+            age_from=age_from, age_to=age_to, standalone=True,
+            question_image=question_image, solution_image=solution_image)
 
 
             return redirect('question:category-create', question_id=f'fourChoices-{question.id}')
@@ -504,7 +560,7 @@ def TrueOrFalseQuestionCreate(request):
     user = request.user
     form = NewTrueOrFalseQuestionForm()
     if request.method == 'POST':
-        form = NewTrueOrFalseQuestionForm(request.POST or None)
+        form = NewTrueOrFalseQuestionForm(request.POST or None, request.FILES or None)
         if form.is_valid(): 
             question= form.cleaned_data.get('question')
             correct=form.cleaned_data.get('correct')
@@ -512,8 +568,11 @@ def TrueOrFalseQuestionCreate(request):
             solution= form.cleaned_data.get('solution')
             age_from = form.cleaned_data.get('age_from')
             age_to = form.cleaned_data.get('age_to')
+            question_image = form.cleaned_data.get('question_image')
+            solution_image = form.cleaned_data.get('solution_image')
             question = TrueOrFalseQuestion.objects.create(user=user, question=question,
-            correct=correct, solution=solution, duration_in_seconds=duration, age_from=age_from, age_to=age_to, standalone=True)
+            correct=correct, solution=solution, duration_in_seconds=duration, age_from=age_from, age_to=age_to, standalone=True,
+            question_image=question_image, solution_image=solution_image)
 
             return redirect('question:category-create', question_id=f'trueOrFalse-{question.id}')
 
@@ -670,7 +729,7 @@ def FourChoicesQuestionUpdate(request, question_id):
         return HttpResponseForbidden()
     fourChoicesForm = NewFourChoicesQuestionForm(instance=question)
     if request.method == 'POST':
-        form = NewFourChoicesQuestionForm(request.POST or None, instance=question)
+        form = NewFourChoicesQuestionForm(request.POST or None, request.FILES or None, instance=question)
         if form.is_valid():
             form.save()
 
@@ -692,7 +751,7 @@ def TrueOrFalseQuestionUpdate(request, question_id):
         return HttpResponseForbidden()
     trueOrFalseForm = NewTrueOrFalseQuestionForm(instance=question)
     if request.method == 'POST':
-        form = NewTrueOrFalseQuestionForm(request.POST or None, instance=question)
+        form = NewTrueOrFalseQuestionForm(request.POST or None, request.FILES or None, instance=question)
         if form.is_valid():
             form.save()
         
@@ -1451,3 +1510,10 @@ def TCorrectionView(request, question_form, question_id, answer):
     return render(request, 'question/correction.html', context)
 
  
+
+
+
+
+
+
+

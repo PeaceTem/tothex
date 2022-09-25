@@ -37,7 +37,14 @@
         </div>
         <div id="stat">
 	        <div>
-                ↑ {{q.upvoters.count}}  ↓ {{q.downvoters.count}}
+                <form action="" method="get">
+                    <input type="submit" value="↑ {{q.upvoters.count}}">
+                </form>
+    
+                <form action="" method="get">
+                    <input type="submit" value="↓ {{q.downvoters.count}}">
+                </form>
+                  
             </div>
 
             <div>
@@ -58,7 +65,14 @@
             {{answer}}
         </div>
 	    <div>
-            ↑ {{answer.upvoters.count}}  ↓ {{answer.downvoters.count}}
+            <form action="" method="get">
+                <input type="submit" value="↑ {{answer.upvoters.count}}">
+            </form>
+
+            <form action="" method="get">
+                <input type="submit" value="↓ {{answer.downvoters.count}}">
+            </form>
+              
         </div>
 
         <div id="reply-box">
@@ -73,6 +87,9 @@
                 <input type="submit" value="Submit" >
             </form>
         </div>
+        <br>
+        <br>
+
         {% endfor %}
     </div>
     <form id="answerForm"  data-action="{% url 'qxa:answer-question' q.id %}" method="post">

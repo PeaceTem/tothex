@@ -111,45 +111,44 @@ class GeneratePDF(LoginRequiredMixin, View):
 # the details of a quiz
 
 def QuizDetail(request, quiz_id, quiz_slug, *args, **kwargs):
-    try:
-        user = request.user
-        quiz = Quiz.objects.select_related("quizlink", "user").prefetch_related("attempters", "likes", "categories", "fourChoicesQuestions", "trueOrFalseQuestions").get(id=quiz_id)
-        quiz.views += 1
-        quiz.save()
-        preQuestions = []
-        preQuestions += quiz.fourChoicesQuestions.filter(is_active=True)
-        preQuestions += quiz.trueOrFalseQuestions.filter(is_active=True)
-        questions = []
-        for question in preQuestions:
-            questions.append(tuple((question.index, question)))
+    # try:
+    user = request.user
+    quiz = Quiz.objects.select_related("quizlink", "user").prefetch_related("attempters", "likes", "categories", "fourChoicesQuestions", "trueOrFalseQuestions").get(id=quiz_id)
+    quiz.views += 1
+    quiz.save()
+    preQuestions = []
+    preQuestions += quiz.fourChoicesQuestions.filter(is_active=True)
+    preQuestions += quiz.trueOrFalseQuestions.filter(is_active=True)
+    questions = []
+    for question in preQuestions:
+        questions.append(tuple((question.index, question)))
 
 
-        questions.sort(key=sortKey)
-        profile = None
-        number_of_registered_users = Profile.objects.all().count()
-        if user.is_authenticated:
-            profile = Profile.objects.get(user=user)
-        if not user.is_authenticated:
-            code = str(kwargs.get('ref_code'))
-            ReferralService(request, code)
-        suggestions = None
-        if quiz.categories.count > 0:
-            category = randomChoice(quiz.categories.all())            
-            suggestions = category.quizzes.filter(relevance__gte=0)[:5]
-        owner = quiz.user
-        user__quizzes = owner.quizzes.all()[:5]
+    questions.sort(key=sortKey)
+    profile = None
+    if user.is_authenticated:
+        profile = Profile.objects.get(user=user)
+    if not user.is_authenticated:
+        code = str(kwargs.get('ref_code'))
+        ReferralService(request, code)
+
+    suggestions = None
+    if quiz.categories.count() > 0:
+        category = randomChoice(quiz.categories.all())            
+        suggestions = category.quizzes.filter(relevance__gte=0)[:5]
+    
+    owner = quiz.user
+    user__quizzes = owner.quizzes.all()[:5]
         # get the union of user__quizzes and suggestions
 
-
-    except:
-        return redirect('quiz:my-quizzes')    
+    # except:
+        # return redirect('quiz:my-quizzes')    
     context = {
         'quiz': quiz,
         'user': user,
         'postAd': getAd('detail'),
         'page' : 'detail',
         'profile': profile or 'None',
-        'number_of_registered_users': number_of_registered_users,
         'questions': questions,
         'suggestions': suggestions,
         'user__quizzes': user__quizzes,
@@ -231,7 +230,7 @@ def QuizList(request):
 
 
         else:
-            lookup = Q(is_active=True) & Q(relevance__gte=0) & Q(questionLength__gt=3)
+            lookup = Q(is_active=True) #& Q(relevance__gte=0) & Q(questionLength__gt=3)
             quizzes = Quiz.objects.filter(lookup).order_by('?')[:100]
 
     p = Paginator(quizzes, page_count)
@@ -750,7 +749,7 @@ def FourChoicesQuestionCreate(request, quiz_id):
     quiz = Quiz.objects.prefetch_related('categories', 'fourChoicesQuestions').get(id=quiz_id)
     form = NewFourChoicesQuestionForm()
     if request.method == 'POST':
-        form = NewFourChoicesQuestionForm(request.POST)
+        form = NewFourChoicesQuestionForm(request.POST, request.FILES or None)
         if form.is_valid():
             question= form.cleaned_data.get('question')
             answer1= form.cleaned_data.get('answer1')
@@ -762,10 +761,12 @@ def FourChoicesQuestionCreate(request, quiz_id):
             duration_in_seconds=form.cleaned_data.get('duration_in_seconds')
             solution= form.cleaned_data.get('solution')
             shuffleAnswers = form.cleaned_data.get('shuffleAnswers')
-
+            question_image = form.cleaned_data.get('question_image')
+            solution_image = form.cleaned_data.get('solution_image')
             question = FourChoicesQuestion.objects.create(user=user, question=question,
             answer1=answer1, answer2=answer2, answer3=answer3, answer4=answer4,
-            correct=correct, points=points, duration_in_seconds=duration_in_seconds, solution=solution, shuffleAnswers=shuffleAnswers)
+            correct=correct, points=points, duration_in_seconds=duration_in_seconds, solution=solution, shuffleAnswers=shuffleAnswers,
+            question_image=question_image, solution_image=solution_image)
 
             quiz.fourChoicesQuestions.add(question)
             quiz.lastQuestionIndex += 1
@@ -783,6 +784,7 @@ def FourChoicesQuestionCreate(request, quiz_id):
             return redirect('quiz:new-question', quiz_id=quiz.id)
     
     context= {
+        'quiz_question' : 1,
         'fourChoicesForm': form,
     }
 
@@ -802,17 +804,19 @@ def TrueOrFalseQuestionCreate(request, quiz_id):
     quiz = Quiz.objects.prefetch_related('categories', 'trueOrFalseQuestions').get(id=quiz_id)
     form = NewTrueOrFalseQuestionForm()
     if request.method == 'POST':
-        form = NewTrueOrFalseQuestionForm(request.POST)
+        form = NewTrueOrFalseQuestionForm(request.POST, request.FILES or None)
         if form.is_valid():
             question= form.cleaned_data.get('question')
             correct=form.cleaned_data.get('correct')
             points=form.cleaned_data.get('points')
             duration_in_seconds=form.cleaned_data.get('duration_in_seconds')
             solution= form.cleaned_data.get('solution')
-
+            question_image = form.cleaned_data.get('question_image')
+            solution_image = form.cleaned_data.get('solution_image')
 
             question = TrueOrFalseQuestion.objects.create(user=user, question=question,correct=correct, points=points, solution=solution,
-            duration_in_seconds=duration_in_seconds)
+            duration_in_seconds=duration_in_seconds,
+            question_image=question_image, solution_image=solution_image)
 
             quiz.trueOrFalseQuestions.add(question)
             quiz.lastQuestionIndex += 1
@@ -829,6 +833,8 @@ def TrueOrFalseQuestionCreate(request, quiz_id):
             return redirect('quiz:new-question', quiz_id=quiz.id)
     
     context= {
+        'quiz_question' : 1,
+
         'trueOrFalseForm': form,
     }
  
@@ -849,7 +855,7 @@ def FourChoicesQuestionUpdate(request, quiz_id, question_id):
     fourChoicesForm = NewFourChoicesQuestionForm(instance=question)
     if request.method == 'POST':
 
-        form = NewFourChoicesQuestionForm(request.POST, instance=question)
+        form = NewFourChoicesQuestionForm(request.POST,  request.FILES or None, instance=question)
         if form.is_valid():
             quiz.totalScore -= question.points
             quiz.duration -= question.duration_in_seconds
@@ -867,6 +873,7 @@ def FourChoicesQuestionUpdate(request, quiz_id, question_id):
             return redirect('quiz:quiz-detail', quiz_id=quiz.id, quiz_slug=quiz.slug, ref_code=user.profile.code)
     
     context= {
+        'quiz_question' : 1,
         'fourChoicesForm': fourChoicesForm,
     }
 
@@ -880,7 +887,7 @@ def TrueOrFalseQuestionUpdate(request, quiz_id, question_id):
     question = TrueOrFalseQuestion.objects.prefetch_related('categories').get(id=question_id)
     trueOrFalseForm = NewTrueOrFalseQuestionForm(instance=question)
     if request.method == 'POST':
-        form = NewTrueOrFalseQuestionForm(request.POST, instance=question)
+        form = NewTrueOrFalseQuestionForm(request.POST,  request.FILES or None, instance=question)
         if form.is_valid():
             quiz.totalScore -= question.points
             quiz.duration -= question.duration_in_seconds
@@ -901,6 +908,7 @@ def TrueOrFalseQuestionUpdate(request, quiz_id, question_id):
             return redirect('quiz:quiz-detail', quiz_id=quiz.id, quiz_slug=quiz.slug, ref_code=user.profile.code)
     
     context= {
+        'quiz_question' : 1,
         'trueOrFalseForm': trueOrFalseForm,
     }
 
@@ -1320,8 +1328,10 @@ def SubmitQuiz(request, quiz_id, *args, **kwargs):
         avgScore = round(quiz.average_score, 2)
         
         attempt_report = _(f"You answered {len(answers)} out of {quiz.questionLength} questions")
-        category = randomChoice(quiz.categories.all())            
-        suggestions = category.quizzes.filter(relevance__gte=0)[:5]
+        suggestions = None
+        if quiz.categories.count() > 0:
+            category = randomChoice(quiz.categories.all())            
+            suggestions = category.quizzes.filter(relevance__gte=0)[:5]
         owner = quiz.user
         user__quizzes = owner.quizzes.all()[:5]
     

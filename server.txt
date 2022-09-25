@@ -34,3 +34,24 @@ Restart=always
 ExecStart=/home/ubuntu/env/tothexvenv/bin/uwsgi --emperor /home/ubuntu/env/tothexvenv/vassals --uid www-data --gid www-data
 [Install]
 WantedBy=multi-user.target
+
+
+
+
+
+
+
+
+
+
+
+
+
+Access key ID
+AKIAQ62CDFF6KEKPWHM2
+
+Secret access key
+Store your secret access key and ID in a secure location before continuing
+
+
+E9gU4bJQYIuvbRSXkX/ahcSczH6nIw2g9ro0VpKl

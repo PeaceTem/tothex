@@ -231,18 +231,19 @@ div#openForm{
     bottom: 10px;
     right: 10px;
     z-index: 1;
-    border-radius: 50%;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    /* width: 50px; */
     height: 50px;
     background:rgba(189, 41, 41, 0.7);
     cursor: pointer;
+    padding: 10px;
 }
 a#open{
     color: #fff;
-    font-size: 40px;
+    font-size: 20px;
     background:rgba(112, 77, 77, 0.1);
 }
 

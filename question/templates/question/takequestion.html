@@ -14,7 +14,7 @@
 
 {% block css %}
 {% include 'mathjax.html' %}
-<link rel="stylesheet" href="{% static 'question/css/takequestion.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'question/css/rtakequestion.css' %}?{{static_request}}">
 {% endblock css %}
 <div style="display: block;border-bottom: 1px solid #ccc;height: 50px;box-shadow: 0 1px 4px #ccc;position: sticky;top: 0;left: 0;background: #fff;z-index: 1000;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;">
     <div style="padding-right: 6px;">
@@ -26,8 +26,6 @@
         <span style="color: #a83425;font-weight:600; font-size:30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
             NeuGott
         </span>
-        <img style="border-radius:4px;display:none;" src="/static/core/images/tothex_160.png" alt="NeuGott">
-  
     </div>
 </div>
 
@@ -42,7 +40,6 @@
             {% elif questionType == 'Following' %}
             Bohemian Grove
             {% endif %}
-        <img style="width:20px; height:20px;border-radius:4px;" id="neugott" src="/static/question/images/tothex_160.png" alt="NeuGott">
         </p>
     </div>
         <div class="inline">
@@ -78,6 +75,7 @@
 
                         <div>
                             {{question.question|safe}}
+                            {% include 'question/imgBx.html' %}
 
                         </div>
 
@@ -135,13 +133,10 @@
 
                 <div>
                     {{question.question|safe}}
+                    
+                    {% include 'question/imgBx.html' %}
 
                 </div>
-
-
-
-
-
 
                 <div onclick="AutoClick(this)" class="answer">
                     <label for="id_{{question.index}}_answer1"> 

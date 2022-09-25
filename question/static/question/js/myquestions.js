@@ -1,12 +1,24 @@
+        
+var shareButton = document.querySelectorAll('a.shareButton');
+console.log(shareButton);
+function ShareItLite(shareButton){
 
-
-
-console.log('This js file is working!')
-
-
-
-
-
+Array.from(shareButton).forEach(shareBtn => {
+    shareBtn.addEventListener('click', e =>{
+        // do something
+        e.preventDefault();
+        if(navigator.share){
+            navigator.share({
+                title: shareBtn.dataset.title,
+                url : shareBtn.dataset.href
+            }).catch(console.error);
+        }else{
+            alert('Use a default share button');
+        }
+    });
+});
+}
+ShareItLite(shareButton);
 $('.DeleteForm').submit(function(e){
     e.preventDefault();
     

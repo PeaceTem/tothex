@@ -5,7 +5,7 @@ uwsgi_params/
 *.ini
 *uwsgi_params
 *ttx
-
+media
 
 .DS_Store
 

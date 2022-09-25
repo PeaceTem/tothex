@@ -13,7 +13,7 @@ Quiz Submit
 {% block css %}
 {% include 'mathjax.html' %}
 
-<link rel="stylesheet" href="{% static 'quiz/css/submitQuiz.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'quiz/css/rsubmitQuiz.css' %}?{{static_request}}">
 {% endblock css %}
 {% if not user.is_authenticated %}
 {% include 'core/authenticate.html' %}
@@ -98,6 +98,8 @@ Quiz Submit
                 <div class="q-box">
                     {{question.question|safe}}
                 </div>
+                {% include 'question/imgBx.html' %}
+
                     <div class="points">
                         {% if question.points < 2 %}
                         {{question.points}} point
@@ -240,9 +242,12 @@ Quiz Submit
                         <!-- <div class="q-box"> -->
                             {{question.solution|safe}}
                         <!-- </div> -->
+                        {% include 'question/solutionImgBx.html' %}
 
                     </div>
-               
+                    <form  class="shareButton" data-title="{{question.question|safe|truncatewords:20}}" data-href="{% url 'question:take-four-choices-question' question.id %}"  action="" method="get">
+                        <input type="submit" value="Share">
+                    </form>
             </div>
         </li>
             {% elif question.form == 'trueOrFalseQuestion' %}
@@ -254,6 +259,7 @@ Quiz Submit
                     <div class="q-box">
                         {{question.question|safe}}
                     </div>
+                    {% include 'question/imgBx.html' %}
 
                         <div class="points">
                             {% if question.points < 2 %}
@@ -329,8 +335,12 @@ Quiz Submit
                             <!-- <div class="q-box"> -->
                                 {{question.solution|safe}}
                             <!-- </div> -->
+                           {% include 'question/solutionImgBx.html' %}
+
                         </div>
-                   
+                        <form  class="shareButton" data-title="{{question.question|safe|truncatewords:20}}" data-href="{% url 'question:take-true-or-false-question' question.id %}"  action="" method="get">
+                            <input type="submit" value="Share">
+                        </form>
                 </div>
             </li>
 
@@ -652,6 +662,24 @@ shareButton.addEventListener('click', (e) => {
     }else{
         alert('Use a default share button');
     }
+});
+</script>
+<script>
+    let questionShareButton = document.querySelectorAll('form.shareButton');
+
+Array.from(questionShareButton).forEach(shareBtn => {
+    shareBtn.addEventListener('submit', e =>{
+        // do something
+        e.preventDefault();
+        if(navigator.share){
+            navigator.share({
+                title: shareBtn.dataset.title,
+                url : shareBtn.dataset.href
+            }).catch(console.error);
+        }else{
+            alert('Use a default share button');
+        }
+    });
 });
 </script>
 {% endblock content %}

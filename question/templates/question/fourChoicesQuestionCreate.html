@@ -1,5 +1,7 @@
 
 {% extends 'question/form.html' %}
+{% load static %}
+
 {% block title %}
 Create Four Choices Question
 {% endblock title %}
@@ -7,14 +9,56 @@ Create Four Choices Question
 {% block form_block %}
 <div class="head">Step 1 of 2</div>
 <p>Write better solution to rank higher.</p>
-
-    <form action="" method="post" enctype="multipart/form-data">
+    <div id="alert-box"></div>
+    <div id="image-overlay" class="inactive-overlay overlay-background">
+        <div>
+            <div id="image-edit-box"></div>
+            <div id="image-edit-menu">
+                <div id="cancel-edit">Cancel</div>
+                <div id="save-edit">Save</div>
+            </div>
+        </div>
+    
+    </div>
+    <form id="question-form", action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{fourChoicesForm.media}}
-        {{fourChoicesForm|crispy}}
-        <input type="submit" value="save">
+        <!-- {{fourChoicesForm|crispy}} -->
+        {{fourChoicesForm.question|as_crispy_field}}
+        <div id="question-image-container">
+            <!-- This is the image preview box -->
+            <div id="image-box"></div> 
+            <div id="absolute"> <i class="fa-solid fa-pen-to-square"></i>Edit</div>
+        </div>
+
+        {{fourChoicesForm.question_image|as_crispy_field}}
+        {{fourChoicesForm.answer1|as_crispy_field}}
+        {{fourChoicesForm.answer2|as_crispy_field}}
+        {{fourChoicesForm.answer3|as_crispy_field}}
+        {{fourChoicesForm.answer4|as_crispy_field}}
+
+        {{fourChoicesForm.correct|as_crispy_field}}
+        {{fourChoicesForm.points|as_crispy_field}}
+        {{fourChoicesForm.solution|as_crispy_field}}
+        <div id="solution-image-container">
+            <!-- This is the image preview box -->
+            <div id="solution-image-box"></div>
+            <div id="solution-absolute"> <i class="fa-solid fa-pen-to-square"></i>Edit</div>
+        </div>
+
+        {{fourChoicesForm.solution_image|as_crispy_field}}
+        {{fourChoicesForm.duration_in_seconds|as_crispy_field}}
+        {{fourChoicesForm.shuffleAnswers|as_crispy_field}}
+
+        {% if quiz_question %}
+        {{fourChoicesForm.standalone|as_crispy_field}}
+        {% else %}
+        {{fourChoicesForm.age_from|as_crispy_field}}
+        {{fourChoicesForm.age_to|as_crispy_field}}
+        {% endif %}
+        <input id="confirm-btn" type="submit" value="save" style="margin: 5px 0 5px 4px;background: #f11919; color: #fff;  width: 200px; max-width: 90vw; padding: 4px 4px;border-radius: 4px; border: none;">
     </form>
-    
+    <script src="{% static 'question/js/main.js' %}"></script>
 {% endblock form_block %}
 
 

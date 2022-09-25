@@ -7,7 +7,7 @@
 
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'q/css/question_page.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'q/css/question.css' %}?{{static_request}}">
 {% endblock css %}
 
 
@@ -25,7 +25,7 @@
 	<!-- <div id="shade"></div> -->
 	<div id="openForm">
         <div id="open">
-            +
+            Ask Question
         </div>
     </div>
 	{% for obj in page_obj %}
@@ -112,6 +112,7 @@ $('#questionForm').submit(function(e){
 		alert('Submitted successfully');
 		container.appendChild(
 			"just take this as the next one\n Thanks for submitting this question to the forums "
+			//direct the user to the category creation  page of the question
 		);
 		},
 	error : function(response){

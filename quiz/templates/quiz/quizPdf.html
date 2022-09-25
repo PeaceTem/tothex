@@ -153,6 +153,8 @@ input[type="submit"]{
                 <div class="questionBx">
                     <div>
                         Q. {{question.question|safe}}
+                        {% include 'question/imgBx.html' %}
+
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -200,6 +202,8 @@ input[type="submit"]{
                 <div class="questionBx">
                     <div>
                         Q. {{question.question|safe}}
+                        {% include 'question/imgBx.html' %}
+
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point

@@ -7,7 +7,7 @@ Questions
 {% block css %}
 
 
-<link rel="stylesheet" href="{% static 'question/css/requestions.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'question/css/rquestions.css' %}?{{static_request}}">
 {% endblock css %}
 {% block content %}
 
@@ -137,8 +137,15 @@ Questions
 
 
 <div id="openForm">
-    <a id="open" class="link" href="{% url 'question:new-question' %}">+</a>
+    <a id="open" class="link" href="{% url 'question:new-question' %}">Create Question</a>
 </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 {% include 'mathjax.html' %}
 {% include 'loading.html' %}
 <!-- <script type="text/javascript" async

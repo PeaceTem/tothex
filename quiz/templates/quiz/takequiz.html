@@ -12,7 +12,7 @@ Take Quiz {{quiz.slug}}
 {% block css %}
 {% include 'mathjax.html' %}
 
-<link rel="stylesheet" href="{% static 'quiz/css/takequiz.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'quiz/css/rtakequiz.css' %}?{{static_request}}">
 {% endblock css %}
 
 
@@ -26,7 +26,6 @@ Take Quiz {{quiz.slug}}
         <span id="countdownbox1" style="color: #a83425;font-weight:600; font-size:30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
             NeuGott
         </span>
-        <!-- <img style="border-radius:4px;display:none;" src="/static/core/images/tothex_160.png" alt="NeuGott"> -->
   
     </div>
 </div>
@@ -81,6 +80,7 @@ Take Quiz {{quiz.slug}}
                             {{index|add:1}}) {{question.question|safe}}
                             </p>
                         </div>
+                        {% include 'question/imgBx.html' %}
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
@@ -128,6 +128,8 @@ Take Quiz {{quiz.slug}}
                             {{index|add:1}}) {{question.question|safe}}
                             </p>
                         </div>
+                        {% include 'question/imgBx.html' %}
+
                         <div class="points">
                             {% if question.points < 2 %}
                             {{question.points}} point
