@@ -3,7 +3,7 @@ const alertBox = document.getElementById('alert-box');
 const imageBox = document.getElementById('image-box');
 const imageForm = document.getElementById('image-form');
 const confirmBtn = document.getElementById('confirm-btn');
-const input = document.getElementById('id_picture');
+const input = document.getElementById('id_picture'); // change this part to id_solution_picture
 
 const csrf = document.getElementsByName('csrfmiddlewaretoken');
 
@@ -39,30 +39,14 @@ input.addEventListener('change', ()=>{
             // fd.append('file', blob, 'my-image.png');
             fd.append('picture', blob, 'my-image.png');
             const $imageForm = $('#image-form');
-            console.log($imageForm.serialize());
-            alert('ajax');
-            $.ajax({
-                type:'POST',
-                url:"",
-                enctype: 'multipart/form-data',
-                data: fd,
-                // data: $imageForm.serialize(),
-                success: function(response){
-                    console.log('success', response)
-                    alertBox.innerHTML = `<div class="alert alert-success" role="alert">
-                                            Successfully saved and cropped the selected image
-                                        </div>`
-                },
-                error: function(error){
-                    console.log('error', error)
-                    alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
-                                            Ups...something went wrong
-                                        </div>`
-                },
-                cache: false,
-                contentType: false,
-                processData: false,
-            })
         })
     })
 })
+/*
+Get the cropped data and assign it to the value of picture form data using js
+Add an alert box to show that it has been saved to the picture form data.
+Insert the alert box above the picture form box and solution form box
+
+get the size of the cropped data and compress it for storage purpose
+
+*/
