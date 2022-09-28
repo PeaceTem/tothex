@@ -5,7 +5,7 @@ from .models import Q,A, Reply
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Q
-        fields = ('question', 'description')
+        fields = ('question', 'question_image', 'description')
 
     # def cleaned_data(self, *args, **kwargs):
     #     return 
@@ -15,7 +15,7 @@ class QuestionForm(forms.ModelForm):
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = A
-        fields = ('answer',)
+        fields = ('answer', 'solution_image')
 
 
 class ReplyForm(forms.ModelForm):

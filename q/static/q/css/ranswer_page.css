@@ -126,3 +126,78 @@ div#question-container div#openForm{
     font-size: 20px;
 }
 
+.imageBox{
+    width: 400px;
+    max-width: 80vw;
+}
+
+.imageBox img{
+    width: inherit;
+    border: 3px solid #f11919;
+    border-radius: 10px;
+}
+
+
+
+/* The image editing part */
+div#question-image-container, div#solution-image-container{
+    position:relative;
+}
+div#absolute, div#solution-absolute{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(26, 24, 24, 0.875);
+    background: #333;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.overlay-background{
+    position: fixed;
+    top : 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    margin: auto;
+    z-index: 100000;
+    background: rgba(26, 24, 24, .5);
+    transition: all 1s ease-in-out;
+}
+
+.inactive-overlay{
+    display: none;
+}
+
+#image-edit-box img{
+
+    position: relative;
+
+    max-width: 80vw;
+    max-height: 90vh;
+}
+
+#image-overlay div #image-edit-box{
+    position: relative;
+    width: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#image-overlay div #image-edit-menu{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: inherit;
+
+}
+#image-edit-menu #cancel-edit, #image-edit-menu #save-edit{
+    color: #fff;
+    cursor: pointer;
+
+}

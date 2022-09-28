@@ -19,4 +19,12 @@ urlpatterns = [
     path('category-create/<str:q_id>/', views.CategoryCreate.as_view(), name='category-create'),
     path('category-remove/<str:q_id>/', views.CategoryRemove.as_view(), name='category-remove'),
 
+    #upvote and downvote question and answer
+    path('upvote-question/<int:q_id>', views.UpvoteQuestion.as_view(), name="upvote-question"),
+    path('downvote-question/<int:q_id>', views.DownvoteQuestion.as_view(), name="downvote-question"),
+
+
+    path('upvote-answer/<int:a_id>', views.UpvoteAnswer.as_view(), name="upvote-answer"),
+    path('downvote-answer/<int:a_id>', views.DownvoteAnswer.as_view(), name="downvote-answer"),
+
 ]

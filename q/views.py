@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from core.models import Profile
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
 from django.forms.models import model_to_dict
 from .models import Q,A, Reply
 from django.views.generic.base import TemplateView
@@ -157,27 +157,34 @@ class CreateQuestion(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('qxa:question-page')
     # add slug field to this view later.
 
-    def post(self, request):
-        form = QuestionForm(self.request.POST)
+    def post(self, request, *args, **kwargs):
+        form = QuestionForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             user = self.request.user
             profile = Profile.objects.get(user=user)
-            question = self.request.POST.get('question')
-            description = self.request.POST.get('description')
+            # question = self.request.POST.get('question')
+            question = form.cleaned_data.get('question')
+            # description = self.request.POST.get('description')
+            description = form.cleaned_data.get('description')
+            question_image = form.cleaned_data.get('question_image')
 
-            q = Q.objects.create(question=question, description=description, profile=profile)
-            data = QSerializer(q).data
+            q = Q.objects.create(question=question, description=description, profile=profile, question_image=question_image)
+            print('created')
+            # data = QSerializer(q).data
             # Add categories
-            categories = self.request.POST.get('categories')
-            if categories:
-                for c in categories:
-                    q.categories.add(c)
-                    q.save()
 
-            print(model_to_dict(q))
-            print('The next one\n')
-            print(data)
-            return JsonResponse(data)
+            # categories = self.request.POST.get('categories')
+            # if categories:
+            #     for c in categories:
+            #         q.categories.add(c)
+            #         q.save()
+
+            # print(model_to_dict(q))
+            # print('The next one\n')
+            # print(data)
+            # return JsonResponse(data)
+            return redirect('qxa:category-create', q.id)
+        messages.error(self.request, _("An Error Occurred!"))
         return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
     def get(self, request, *args, **kwargs):
@@ -202,15 +209,17 @@ class CreateAnswer(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('qxa:question-page')
 
     def post(self, request, q_id):
-        form = AnswerForm(self.request.POST)
+        form = AnswerForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             user = self.request.user
             profile = user.profile
-            answer = self.request.POST.get('answer')
+            answer = form.cleaned_data.get('answer')
+            solution_image = form.cleaned_data.get('solution_image')
             question = Q.objects.get(id=q_id)
-            A.objects.create(answer=answer, profile=profile, question=question)
-            return HttpResponse('Answered!')
-            return redirect('qxa:answer-page', slug=question.slug)
+            A.objects.create(answer=answer, solution_image=solution_image, profile=profile, question=question)
+            messages.success(self.request, _("Answer submitted!"))
+            # return HttpResponse('Answered!')
+            # return redirect('qxa:answer-page', slug=question.slug)
         return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
 
@@ -242,23 +251,32 @@ class UpvoteQuestion(LoginRequiredMixin, View):
     def get(self, request, q_id):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        question = Q.objects.select_related('profile').prefetch_related('upvoters').get(id=q_id)
+        question = Q.objects.select_related('profile').prefetch_related('upvoters', 'downvoters').get(id=q_id)
         upvoted_profile = question.profile
+        # check if the upvoter is not the creator of the question
+
+        # if profile == question.profile:
+        #     return HttpResponseForbidden()
+
         if not profile in question.upvoters.all():
             question.upvoters.add(profile)
+            if profile in question.downvoters.all():
+                question.downvoters.remove(profile)
             upvoted_profile.coins += 1
             upvoted_profile.total_coins += 1
             upvoted_profile.save()
-            return HttpResponse('upvoted!')
+            return JsonResponse({"upvote_count": question.upvoters.count(),"downvote_count":question.downvoters.count(), "action":"upvote"})
+            # return HttpResponse('upvoted!')
         else:
             question.upvoters.remove(profile)
             upvoted_profile.coins -= 1
             upvoted_profile.total_coins -= 1
             upvoted_profile.save()
+            return JsonResponse({"upvote_count": question.upvoters.count(), "downvote_count":question.downvoters.count(), "action":"remove upvote"})
             
-            return HttpResponse('Not upvoted!')
+            # return HttpResponse('Not upvoted!')
         
-        return HttpResponse('An error occurred!')
+        # return HttpResponse('An error occurred!')
 
 
 
@@ -272,25 +290,35 @@ class DownvoteQuestion(LoginRequiredMixin, View):
     def get(self, request, q_id):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        question = Q.objects.select_related('profile').prefetch_related('downvoters').get(id=q_id)
+        question = Q.objects.select_related('profile').prefetch_related('upvoters', 'downvoters').get(id=q_id)
         downvoted_profile = question.profile
-        
-        
+
+        # if profile == question.profile:
+        #     return HttpResponseForbidden()
+
         if not profile in question.downvoters.all():
             question.downvoters.add(profile)
+            if profile in question.upvoters.all():
+                question.upvoters.remove(profile)
+            #remove the user from the upvoted
+            #and do so for the upvote too. Remove user from the downvote
             downvoted_profile.total_coins -= 1
             downvoted_profile.coins -= 1
             downvoted_profile.save()
-            return HttpResponse('downvoted!')
+            return JsonResponse({"downvote_count": question.downvoters.count(),"upvote_count": question.upvoters.count(), "action":"downvote"})
+            # return HttpResponse('downvoted!')
         else:
             question.downvoters.remove(profile)
             downvoted_profile.total_coins += 1
             downvoted_profile.coins += 1
             downvoted_profile.save()
+            return JsonResponse({"downvote_count": question.downvoters.count(),"upvote_count": question.upvoters.count(), "action":"downvote"})
 
-            return HttpResponse('Not downvoted!')
+            # return JsonResponse({"count": question.downvoters.count(), "action":"downvote"})
 
-        return HttpResponse('An error occurred!')
+            # return HttpResponse('Not downvoted!')
+
+        # return HttpResponse('An error occurred!')
 
 
 
@@ -303,21 +331,35 @@ class UpvoteAnswer(LoginRequiredMixin, View):
     def get(self, request, a_id):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        answer = A.objects.select_related('profile').prefetch_related('upvoters').get(id=a_id)
+        answer = A.objects.select_related('profile').prefetch_related('upvoters', 'downvoters').get(id=a_id)
         upvoted_profile = answer.profile
+
+        # if profile == answer.profile:
+        #     return HttpResponseForbidden()
+            
         if not profile in answer.upvoters.all():
             answer.upvoters.add(profile)
+            if profile in answer.downvoters.all():
+                answer.downvoters.remove(profile)
             upvoted_profile.coins += 1
             upvoted_profile.total_coins += 1
             upvoted_profile.save()
-            return HttpResponse('upvoted!')
+            # return JsonResponse({"upvote_count": answer.upvoters.count(),"downvote_count":answer.downvoters.count(), "action":"upvote"})
+
+            # return JsonResponse({"count": answer.upvoters.count(), "action":"upvote"})
+
+            # return HttpResponse('upvoted!')
         else:
             answer.upvoters.remove(profile)
             upvoted_profile.coins -= 1
             upvoted_profile.total_coins -= 1
             upvoted_profile.save()
-            return HttpResponse('Not upvoted!')
-        return HttpResponse('An error occurred!')
+        return JsonResponse({"upvote_count": answer.upvoters.count(),"downvote_count":answer.downvoters.count(), "action":"upvote"})
+
+            # return JsonResponse({"count": answer.upvoters.count(), "action":"downvote"})
+
+            # return HttpResponse('Not upvoted!')
+        # return HttpResponse('An error occurred!')
 
 
 
@@ -327,25 +369,42 @@ class UpvoteAnswer(LoginRequiredMixin, View):
 """
 Add the docs here
 """
+
+
+
 class DownvoteAnswer(LoginRequiredMixin, View):
-    def get(self, request, q_id):
+    def get(self, request, a_id):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        answer= A.objects.select_related('profile').prefetch_related('downvoters').get(id=q_id)
+        answer= A.objects.select_related('profile').prefetch_related('upvoters', 'downvoters').get(id=a_id)
         downvoted_profile = answer.profile
+
+        # if profile == answer.profile:
+        #     return HttpResponseForbidden()
+            
         if not profile in answer.downvoters.all():
             answer.downvoters.add(profile)
+            if profile in answer.upvoters.all():
+                answer.upvoters.remove(profile)
             downvoted_profile.total_coins -= 1
             downvoted_profile.coins -= 1
             downvoted_profile.save()
-            return HttpResponse('downvoted!')
+            # return JsonResponse({"upvote_count": answer.upvoters.count(),"downvote_count":answer.downvoters.count(), "action":"upvote"})
+
+            # return JsonResponse({"count": answer.downvoters.count(), "action":"downvote"})
+
+            # return HttpResponse('downvoted!')
         else:
             answer.downvoters.remove(profile)
             downvoted_profile.total_coins += 1
             downvoted_profile.coins += 1
             downvoted_profile.save()
-            return HttpResponse('Not downvoted!')
-        return HttpResponse('An error occurred!')
+        return JsonResponse({"upvote_count": answer.upvoters.count(),"downvote_count":answer.downvoters.count(), "action":"upvote"})
+
+            # return JsonResponse({"count": answer.downvoters.count(), "action":"downvote"})
+
+            # return HttpResponse('Not downvoted!')
+        # return HttpResponse('An error occurred!')
 
 
 

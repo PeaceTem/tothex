@@ -8,8 +8,7 @@ const input = document.getElementById('id_question_image');
 const solution_input = document.getElementById('id_solution_image');
 
 
-
-const csrf = document.getElementsByName('csrfmiddlewaretoken');
+// const csrf = document.getElementsByName('csrfmiddlewaretoken');
 
 const imageOverlay = document.querySelector("#image-overlay");
 const cancelButton = document.querySelector('#cancel-edit');
@@ -30,6 +29,7 @@ if (initial_input){
 if(solution_initial_input){
     solutionImageBox.innerHTML = `<img src="${solution_initial_input.href}" id="image" class="image solutionImage" width="270px">`;
 }
+
 function reload_js(src) {
     $('<script>').attr('src', src).appendTo('head');
 }
@@ -80,6 +80,7 @@ var $image;
 
 
 
+if (questionImageEdit){
 
 questionImageEdit.addEventListener('click', ()=>{
     imageEditingBox.innerHTML = imageBox.innerHTML;
@@ -92,8 +93,10 @@ questionImageEdit.addEventListener('click', ()=>{
     cropperJsView($image);
 
 });
+}
 
 
+if(solutionImageEdit){
 
 solutionImageEdit.addEventListener('click', ()=>{
     imageEditingBox.innerHTML = solutionImageBox.innerHTML;
@@ -107,16 +110,20 @@ solutionImageEdit.addEventListener('click', ()=>{
 
 });
 
+}
 
 
 
+if(cancelButton){
 
 cancelButton.addEventListener('click', ()=>{
     imageOverlay.classList.toggle('inactive-overlay');
 })
+}
 
 
 
+if(input){
 
 input.addEventListener('change', ()=>{
     // alertBox.innerHTML = "";
@@ -136,8 +143,10 @@ input.addEventListener('change', ()=>{
 
 })
 
+}
 
 
+if(solution_input){
 solution_input.addEventListener('change', ()=>{
     // alertBox.innerHTML = "";
     // confirmBtn.classList.remove('not-visible');
@@ -155,11 +164,15 @@ solution_input.addEventListener('change', ()=>{
     })
 
 })
+}
 
 var questionTestImage;
 var solutionTestImage;
 var Imgurl;
 var img_url_data;
+
+
+if(saveButton){
 
 saveButton.addEventListener('click', ()=>{
     cropper.getCroppedCanvas().toBlob((blob) => {
@@ -199,6 +212,7 @@ saveButton.addEventListener('click', ()=>{
     imageOverlay.classList.toggle('inactive-overlay');
 
 })
+}
 
 
 

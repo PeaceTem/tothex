@@ -9,7 +9,13 @@
 
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'q/css/answer_page.css' %}?{{static_request}}">
+
+
+
+
+
+
+<link rel="stylesheet" href="{% static 'q/css/ranswer_page.css' %}?{{static_request}}">
 {% endblock css %}
 
 
@@ -22,6 +28,11 @@
     <div id="question-card">
         <div>
             <div>
+                {% for c in q.categories.all %}
+                    <span>{{c.title}}</span>
+                {% endfor %}
+            </div>
+            <div>
                 <h4>
                     {{q.question}}
                 </h4>
@@ -31,20 +42,27 @@
                     {{q.description}}
                 </p>
             </div>
+
+
+            <div class="imageBox" >
+                <img src="{{q.question_image.url}}" alt="{{q.question}}">
+            </div>
             <div id="share">
                 <a id="shareButton" href="#">Share</a>
             </div>
         </div>
         <div id="stat">
 	        <div>
-                <form action="" method="get">
-                    <input type="submit" value="↑ {{q.upvoters.count}}">
-                </form>
-    
-                <form action="" method="get">
-                    <input type="submit" value="↓ {{q.downvoters.count}}">
-                </form>
-                  
+                <span>
+                    <form data-opposite-id="input-question-downvote-{{q.id}}" data-input-id="input-question-upvote-{{q.id}}" id="upvoteQuestionForm" action="{% url 'qxa:upvote-question' q.id %}" method="get">
+                        <input id="input-question-upvote-{{q.id}}"  type="submit" value="↑ {{q.upvoters.count}}">
+                    </form>                        
+                </span>
+                <span>
+                    <form data-opposite-id="input-question-upvote-{{q.id}}" data-input-id="input-question-downvote-{{q.id}}" id="downvoteQuestionForm" action="{% url 'qxa:downvote-question' q.id %}" method="get">
+                        <input id="input-question-downvote-{{q.id}}" type="submit" value="↓ {{q.downvoters.count}}">
+                    </form>
+                </span>
             </div>
 
             <div>
@@ -64,15 +82,22 @@
         <div>
             {{answer}}
         </div>
+        {% if answer.solution_image %}
+        <div class="imageBox">
+            <img src="{{answer.solution_image.url}}" alt="{{answer}}">
+        </div>
+        {% endif %}
 	    <div>
-            <form action="" method="get">
-                <input type="submit" value="↑ {{answer.upvoters.count}}">
-            </form>
-
-            <form action="" method="get">
-                <input type="submit" value="↓ {{answer.downvoters.count}}">
-            </form>
-              
+            <span>
+                <form data-opposite-id="input-answer-downvote-{{answer.id}}" data-input-id="input-answer-upvote-{{answer.id}}" action="{% url 'qxa:upvote-answer' answer.id %}" class="upvoteAnswerForm" method="get">
+                    <input id="input-answer-upvote-{{answer.id}}" type="submit" value="↑ {{answer.upvoters.count}}">
+                </form>
+            </span>
+            <span>
+                <form data-opposite-id="input-answer-upvote-{{answer.id}}" data-input-id="input-answer-downvote-{{answer.id}}" action="{% url 'qxa:downvote-answer' answer.id %}" class="downvoteAnswerForm" method="get">
+                    <input id="input-answer-downvote-{{answer.id}}" type="submit" value="↓ {{answer.downvoters.count}}">
+                </form>
+            </span>
         </div>
 
         <div id="reply-box">
@@ -92,9 +117,25 @@
 
         {% endfor %}
     </div>
-    <form id="answerForm"  data-action="{% url 'qxa:answer-question' q.id %}" method="post">
+    <div id="image-overlay" class="inactive-overlay overlay-background">
+        <div>
+            <div id="image-edit-box"></div>
+            <div id="image-edit-menu">
+                <div id="cancel-edit">Cancel</div>
+                <div id="save-edit">Save</div>
+            </div>
+        </div>
+    </div>
+    <form id="answerForm" data-action="{% url 'qxa:answer-question' q.id %}" action="{% url 'qxa:answer-question' q.id %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {{form.media}}
         {{form|crispy}}
+        <div id="solution-image-container">
+            <!-- This is the image preview box -->
+            <div id="solution-image-box"></div>
+            <div id="solution-absolute"> <i class="fa-solid fa-pen-to-square"></i>Edit</div>
+        </div>
+
         <input type="submit" value="Submit" >
     </form>
     </div>
@@ -104,7 +145,9 @@
 
 
     {% include 'jquery.html' %}
-    <script>
+    {% include 'loading.html' %}
+    <script src="{% static 'question/js/rmain.js' %}"></script>
+<script>
     $(document).ready(function(){
 
     $('#replyForm').submit(function(e){
@@ -125,12 +168,19 @@
     });
 });
 </script>    
+
+
+
+<!-- 
 <script>
     $(document).ready(function(){
-
+        // add csrf[-1] for the last csrf
+    const csrf = document.getElementsByName('csrfmiddlewaretoken')[-1];
     $('#answerForm').submit(function(e){
         e.preventDefault();
-        let formName = $(this);	
+        let formName = $(this);	//let form = new FormData(this);
+        let fd = new FormData();
+        fd.append('csrfmiddlewaretoken', csrf[-1].value)
         let serializedData = formName.serialize();
         $.ajax({
         type : 'POST',
@@ -146,7 +196,7 @@
     });
 })
 
-</script>
+</script> -->
 <script>
 const shareButton = document.querySelector('a#shareButton');
 const title = window.document.title;
@@ -157,9 +207,9 @@ shareButton.addEventListener('click', (e) => {
         navigator.share({
             title: `${title}`,
             url : `${url}`
-        // })
-        // .then(()=>{
-        //     // alert('Thanks for sharing!');
+        })
+        .then(()=>{
+            // alert('Thanks for sharing!');
         }).catch(console.error);
     }else{
         alert('Use a default share button');
@@ -167,6 +217,169 @@ shareButton.addEventListener('click', (e) => {
 });
 
 </script>
+<script>
+// const upvoteQuestionForm = $('#upvoteQuestionForm');
+var questionf;
+var formInputId;
+var formInput;
+var objectBx;
+var questionForm;
+var oppositeId;
+$('#upvoteQuestionForm').submit((e)=>{
+    // e.currentTarget
+    // e.isTrusted   --> to catch bots;
+    // e.target
+    // e.submitter --> The input:submit button
+    
+    e.preventDefault();
+    // console.log(e.target.childNodes.values);
+    questionf = $('#upvoteQuestionForm');
+    formInputId = questionf.data('input-id');
+    formInput = $(`#${formInputId}`);
+    oppositeId = questionf.data('opposite-id');
+    oppositeFormInput = $(`#${oppositeId}`)
+    // alert(formInput);
+    // console.log(formInput);
+    questionForm = $('#upvoteQuestionForm').serialize();
+    // alert($('#upvoteQuestionForm').attr('action'));
+    $.ajax({
+        type : 'GET',
+        url : $('#upvoteQuestionForm').attr('action'),
+        data : questionForm,
+        success : function(response){
+            console.log(response);
+            formInput.val(`↑ ${response.upvote_count}`);
+            oppositeFormInput.val(`↓ ${response.downvote_count}`);
 
+            // console.log(questionf.);
+
+        },
+        error : function(response){
+            console.log(response);
+        }
+    })
+})
+
+
+
+
+
+$('#downvoteQuestionForm').submit((e)=>{
+    // e.currentTarget
+    // e.isTrusted   --> to catch bots;
+    // e.target
+    // e.submitter --> The input:submit button
+    
+    e.preventDefault();
+    // console.log(e.target.childNodes.values);
+    questionf = $('#downvoteQuestionForm');
+    formInputId = questionf.data('input-id');
+    formInput = $(`#${formInputId}`);
+    oppositeId = questionf.data('opposite-id');
+    oppositeFormInput = $(`#${oppositeId}`)
+    // alert(formInput);
+    // console.log(formInput);
+    questionForm = $('#downvoteQuestionForm').serialize();
+    // alert($('#downvoteQuestionForm').attr('action'));
+    $.ajax({
+        type : 'GET',
+        url : $('#downvoteQuestionForm').attr('action'),
+        data : questionForm,
+        success : function(response){
+            console.log(response);
+            formInput.val(`↓ ${response.downvote_count}`);
+            oppositeFormInput.val(`↑ ${response.upvote_count}`);
+            // console.log(questionf.);
+
+        },
+        error : function(response){
+            console.log(response);
+        }
+    })
+})
+
+
+
+// upvote and down vote answers
+
+$('.upvoteAnswerForm').submit(function(e){
+    // e.currentTarget
+    // e.isTrusted   --> to catch bots;
+    // e.target
+    // e.submitter --> The input:submit button
+    
+    e.preventDefault();
+    // console.log(e.target.childNodes.values);
+    questionf = $(this).attr('action');
+    objectBx = $(this);
+    // console.log(questionf);
+    // alert(questionf);
+    // alert($(this).attr('action'));
+    formInputId = objectBx.data('input-id');
+    formInput = $(`#${formInputId}`);
+    oppositeId = objectBx.data('opposite-id');
+    oppositeFormInput = $(`#${oppositeId}`);
+    questionForm = $(this).serialize();
+    $.ajax({
+        type : 'GET',
+        url : questionf,
+        data : questionForm,
+        success : function(response){
+            console.log(response);
+            formInput.val(`↑ ${response.upvote_count}`);
+            oppositeFormInput.val(`↓ ${response.downvote_count}`)
+            // console.log(questionf.);
+
+        },
+        error : function(response){
+            console.log(response);
+        }
+    })
+})
+
+
+
+
+
+$('.downvoteAnswerForm').submit((e)=>{
+    // e.currentTarget
+    // e.isTrusted   --> to catch bots;
+    // e.target
+    // e.submitter --> The input:submit button
+    
+    e.preventDefault();
+    questionf = e.currentTarget.getAttribute('action');
+    formInputId = e.currentTarget.getAttribute('data-input-id');
+    formInput = $(`#${formInputId}`);
+    oppositeId = e.currentTarget.getAttribute('data-opposite-id');
+    oppositeFormInput = $(`#${oppositeId}`);
+    questionForm = $(this).serialize();
+    $.ajax({
+        type : 'GET',
+        url : questionf,
+        data : questionForm,
+        success : function(response){
+            console.log(response);
+            formInput.val(`↓ ${response.downvote_count}`);
+            oppositeFormInput.val(`↑ ${response.upvote_count}`)
+            // console.log(questionf.);
+
+        },
+        error : function(response){
+            console.log(response);
+        }
+    })
+})
+
+// Array.from($('.upvoteAnswerForm')).forEach(ans =>{
+//     // alert(ans);
+//     // console.log(ans);
+//     ans.submit(function(e){
+//         e.preventDefault();
+//         alert("An upvote!");
+//         console.log(ans);
+//     })
+// })
+</script>
 {% endblock content %}
 

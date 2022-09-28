@@ -19,13 +19,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 def zoho(request):
     return render(request, 'core/verifyforzoho.html')
 
 
 def HomePage(request):
-    return render(request, 'core/home.html')
+    return redirect('quiz:quizzes')
+    # return render(request, 'core/home.html')
 
 
 urlpatterns = [

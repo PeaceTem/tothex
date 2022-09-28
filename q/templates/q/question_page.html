@@ -84,9 +84,12 @@
     const formContainer = document.querySelector('#form-container');
     const openForm = document.querySelector('#openForm');
     const close = document.querySelector('#close');
+	// let location = window.location.hostname;
+	// location += ''
     openForm.addEventListener('click', function(e){
         e.preventDefault()
-        formContainer.classList.toggle('inactive-bar');
+        // formContainer.classList.toggle('inactive-bar');
+		window.open(`{% url 'qxa:create-question' %}`)
     });
 
     close.addEventListener('click', function(){
