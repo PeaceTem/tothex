@@ -43,10 +43,11 @@
                 </p>
             </div>
 
-
+            {% if q.question_image %}
             <div class="imageBox" >
                 <img src="{{q.question_image.url}}" alt="{{q.question}}">
             </div>
+            {% endif %}
             <div id="share">
                 <a id="shareButton" href="#">Share</a>
             </div>
