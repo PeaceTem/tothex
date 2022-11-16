@@ -70,7 +70,9 @@ Categories
         <legend>Bucket</legend>
         <div id="categoryBucket">
             {% for category in objCategories %}
-                <input type='text' id="{{category.title}}"  class="addedCategories" onclick="removeCategory(this.id)" name="addedCategories" value={{category.title}} readonly>
+                <!-- <input type='text' id="{{category.title}}"  class="addedCategories" onclick="removeCategory(this.id)" name="addedCategories" value={{category.title}} readonly> -->
+                <input type='text' id="{{category}}"  class="addedCategories" onclick="removeCategory(this.id)" name="addedCategories" value={{category}} readonly>
+
             {% endfor %}
         </div>
     </fieldset>
@@ -90,7 +92,9 @@ Categories
 
 {% for category in page_obj %}
 <span class="infinite-item">
-    <input type="button" onclick="updateCart(this.value)" value="{{category.title}}">
+    <!-- <input type="button" onclick="updateCart(this.value)" value="{{category.title}}"> -->
+    <input type="button" onclick="updateCart(this.value)" value="{{category}}">
+
 </span>
 {% endfor %}
 </div>

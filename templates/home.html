@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Home
+{% endblock title %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock css %}
+
+
+
+{% block content %}
+
+
+
+<section>
+    <div class="page-head">
+        <div class="page-head-content">
+            <div class="head-block"></div>
+    
+            <div class="head-title">
+                Home
+            </div>
+        </div>
+    </div>
+    <div class="secret-block"></div>
+     
+    <a href="#">
+        <div data-link="{% url 'quiz:quizzes' %}" class="block-container">
+            <div>Quiz</div>
+        </div>
+    </a>
+    <a href="#">
+        <div data-link="{% url 'question:questions' %}" class="block-container">
+            <div>Question</div>
+        </div>
+    </a>
+    <a href="#">
+        <div data-link="{% url 'qxa:question-page' %}" class="block-container">
+            <div>Q&A</div>
+        </div>
+    </a>
+    <a href="#">
+        <div data-link="{% url 'leaderboard:leaderboard' %}" class="block-container">
+            <div>Leaderboard <span>(coming soon)</span></div>
+        </div>
+    </a>
+    <a href="#">
+        <div class="block-container">
+            <div>Study Room <span>(coming soon)</span></div>
+        </div>
+    </a>
+    <a href="#">
+        <div class="block-container">
+            <div>Black Box <span>(coming soon)</span></div>
+        </div>
+    </a>
+    <a href="#">
+        <div class="block-container">
+            <div>Library <span>(coming soon)</span></div>
+        </div>
+    </a>
+    <a href="#">
+        <div data-link="{% url 'profile' %}" class="block-container">
+            <div>Profile</div>
+        </div>
+    </a>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</section>
+
+<div id="iframe-container" class="iframe-container iframe-inactive">
+    <div id="BackBtn"> < Back</div>
+    <div id="iframe-Box" class="iframe-Box">
+    </div>
+</div>
+
+<!-- There are 400 characters in the windows 10 search bar in the bottom left corner of the screen -->
+<script>
+    const iframeBox = document.getElementById('iframe-Box');
+    const iframeContainer = document.getElementById('iframe-container');
+    const entries  = document.querySelectorAll('.block-container');
+    const BackBtn = document.getElementById('BackBtn');
+    Array.from(entries).forEach(entry=>{
+        entry.addEventListener('click', (e)=>{
+            e.preventDefault();
+            
+            if (entry.getAttribute('data-link'))
+            {
+                iframeBox.innerHTML = `
+                <iframe src=${entry.getAttribute('data-link')} id="iframeBuffer" frameborder="0"></iframe>                
+                `;
+                iframeContainer.classList.remove('iframe-inactive');
+                iframeContainer.classList.add('iframe-active');
+            } else
+            {
+                alert('coming soon!');
+            }
+
+        })
+    })
+    BackBtn.addEventListener('click', ()=>{
+        iframeBox.innerHTML = '';
+        iframeContainer.classList.add('iframe-inactive');
+        iframeContainer.classList.remove('iframe-active');
+
+    })
+</script>
+{% endblock content %}

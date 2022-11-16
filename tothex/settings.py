@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'settings.apps.SettingsConfig',
     'analysis.apps.AnalysisConfig',
     'storages',
+    'room.apps.RoomConfig',
 ]
 
 

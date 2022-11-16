@@ -15,10 +15,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 
 from core.models import Profile
-from category.models import Category
+from category.models import Category, MyCategory
 # Create your views here.
 
 class Settings(LoginRequiredMixin, TemplateView):
@@ -83,11 +83,14 @@ class EditProfileCategory(LoginRequiredMixin, View):
     # use detail view with profile here
     def get(self, request):
         user = self.request.user
-        profile = Profile.objects.prefetch_related('categories').get(user=user)
+        # profile = Profile.objects.prefetch_related('categories').get(user=user)
         categories = Category.objects.all().order_by('-quiz_number_of_times_taken')[:20]
+        objCategories = user.myCategories.all()
+        # print(objCategories)
         context={
             'user': user,
-            'objCategories': profile.categories.all(),
+            # 'objCategories': profile.categories.all(),
+            'objCategories': objCategories,
             'obj_type': 'profile',
             'page_obj': categories,
         }
@@ -103,34 +106,56 @@ class AddProfileCategory(LoginRequiredMixin, View):
     def get(self, request):
         user = self.request.user
         data = self.request.GET.get('data')
-
         profile = Profile.objects.prefetch_related('categories').get(user=user)
         category_to_be_added = Category.objects.get(title=data)
         """
         I didn't use while loop because the newly added category might be the result of first()
 
         """
-        if profile.categories.count() > 9:
-            removed = profile.categories.first()
-            profile.categories.remove(removed)
+        if user.myCategories.count() > 9:
+            user.myCategories.first().delete()
+
+        MyCategory.objects.create(user=user, category=category_to_be_added)
         profile.categories.add(category_to_be_added)
 
         return JsonResponse({"categories":[x.title for x in profile.categories.all()],
                              "category_count": profile.categories.count(),})
 
+
+        # return JsonResponse({"categories":[str(x) for x in user.myCategories.all()],
+        #                      "category_count": user.myCategories.count(),})
+     
+
+
+
 class RemoveProfileCategory(LoginRequiredMixin, View):
     def get(self, request):
         user = self.request.user
-        data = self.request.GET.get('data')
         profile = Profile.objects.prefetch_related('categories').get(user=user)
+        data = self.request.GET.get('data')
         category_to_be_removed = Category.objects.get(title=data)
         """
         I didn't use while loop because the newly added category might be the result of first()
 
         """
-        if profile.categories.count() < 1:
-            return
-        profile.categories.remove(category_to_be_removed)
+        # if profile.categories.count() < 1:
+        #     return
+        # profile.categories.remove(category_to_be_removed)
 
+
+        if user.myCategories.count() <= 1:
+            print(user.myCategories.all())
+            return HttpResponse('What The Fuck!')
+        # user.myCategories.remove(category_to_be_removed)
+        # user.myCategories.get(category=category_to_be_removed).delete()
+        user.myCategories.filter(category=category_to_be_removed).delete()
+        profile.categories.remove(category_to_be_removed)
         return JsonResponse({"categories":[x.title for x in profile.categories.all()],
                              "category_count": profile.categories.count(),})
+
+        # return JsonResponse({"categories":[str(x) for x in user.myCategories.all()],
+        #                      "category_count": user.myCategories.count(),})
+     
+
+
+

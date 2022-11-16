@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/base10.css' %}">
+
+{% block pagecss %}
+
+{% endblock pagecss %}
+
+{% endblock css %}
+
+
+{% block content %}
+
+
+
+<div class="page-head">
+    <div class="page-head-content">
+        <div class="head-block"></div>
+
+        <div class="backBtn">Back</div>
+        <div class="head-title">
+          {% block headname %}{% endblock headname %}
+        </div>
+    </div>
+</div>
+<div class="secret-block"></div>
+ 
+
+
+
+
+{% block page %}
+
+{% endblock page %}
+ 
+
+{% endblock content %}
+

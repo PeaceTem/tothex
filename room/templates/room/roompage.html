@@ -1,0 +1,151 @@
+{% extends 'base10.html' %}
+{% load static %}
+
+
+{% block pagecss %}
+
+<link rel="stylesheet" href="{% static 'quiz/css/quizzes.css' %}">
+<link rel="stylesheet" href="{% static 'q/css/question.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'question/css/imgBx.css' %}">
+<link rel="stylesheet" href="{% static 'question/css/rmyquestions.css' %}">
+{% endblock pagecss %}
+
+
+{% block title %}
+{{room.name}} | Study Room
+{% endblock title %}
+
+
+
+{% block page %}
+
+
+{% block headname %}
+{{room.name}}
+
+{% endblock headname %}
+
+Add an red-circle indicator that a new object has been added to the room
+use ::before and content '' for the red circle
+
+
+make the create quiz button a standalone template
+<div id="body-output" style="min-height:200px;"></div>
+<div class="quizNextButton">Next button for quizzes</div>
+<!-- <iframe src="/quiz/" frameborder="0"></iframe> -->
+{% include 'room/roomfooter.html' %}
+<script>
+   const room_id = "{{room.id}}"
+   var outputBox = ``;
+   const saver = document.getElementById('body-output');
+   const user = "{{user}}";
+   const profile = "{{profile}}";
+   var quizPage = 0;
+   var fourChoicesPage = 0;
+   var trueOrFalsePage = 0;
+   var QandAPage = 0;
+   var currentPage;
+   // add all the urls and everything here
+   // and the boolean value for authentication
+</script>
+
+
+<script src="{% static 'room/js/roomquiz.js' %}"></script>
+<script src="{% static 'room/js/roomqanda.js' %}"></script>
+<script src="{% static 'room/js/roomquestion.js' %}"></script>
+<script src="{% static 'room/js/roomtfquestion.js' %}"></script>
+<script>
+   const quizLink = document.querySelector('.item#quizLink');
+   const qandaLink = document.querySelector('.item#qandaLink');
+   const fourChoicesLink = document.querySelector('.item#fourChoices');
+   const trueOrFalseLink = document.querySelector('.item#trueOrFalse');
+   const quizNextButton = document.querySelector('.quizNextButton');
+
+   // quizNextButton.addEventListener('click', ()=>{
+   //    displayQuizPage();
+   // })
+   
+   quizLink.addEventListener('click', ()=>{
+      displayQuizPage();
+   })
+
+
+   qandaLink.addEventListener('click', ()=>{
+      displayQandAPage();
+   })
+
+
+   fourChoicesLink.addEventListener('click', ()=>{
+      displayFourChoicesQuestion();
+   })
+
+   trueOrFalseLink.addEventListener('click', ()=>{
+      displayTrueOrFalseQuestion();
+   })
+
+
+   const roomObjectObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry =>{
+         console.log('The main');
+
+         if (entry.isIntersecting){
+            if(currentPage == 'quizPage'){
+               displayQuizPage();
+            } else if(currentPage == 'trueOrFalsePage'){
+               displayTrueOrFalseQuestion();
+            } else if(currentPage == 'fourChoicesPage'){
+               displayFourChoicesQuestion();
+            } else if(currentPage == 'QandAPage'){
+               displayQandAPage();
+            }
+
+            // observer.disconnect();
+            roomObjectObserver.unobserve(entry.target);
+         }
+      })
+   })
+
+   // roomObjectObserver.observe(quizNextButton);
+
+   // const observer = new IntersectionObserver(
+   //    entries=>{
+   //       entries.forEach(entry =>{
+   //          displayQuizPage();
+   //       })
+   //    },
+   //    {
+   //       rootMargin: "10px",
+   //    }
+   // )
+
+   
+   // observer.observe(quizNextButton);
+
+
+
+</script>
+<script>
+   localStorage.setItem("room", "{{room.name}}");
+
+</script>
+
+{% endblock page %}
+
+
+//  // const formData = new FormData(this);
+//  const searchParams = new URLSearchParams();
+
+//   fetch("{% url 'category:category-list' %}?text=T", {
+//      method: 'get',
+//      // body : {'text':'T'}
+//   }).then(function(response){
+//      return response.json();
+//   }).then(function(response){
+//    //   console.log(response);
+//       saver.innerHTML=`{% include 'quiz/quizBx.html' %}`;
+//   }).catch(function(error){
+//      console.error(error);
+//   })
+
+
+Add the logic for 

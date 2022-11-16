@@ -1,18 +1,9 @@
-:root{
-    --card-background-color: #fff;
-    --background-color: #dfdfdf;
-    --theme-color:  #f11/* rgb(219, 104, 104) #333edb*/;
-    --white-theme: #fff;
-    --dark-theme: #666;
-}
-
-
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: sans-serif;
-    color: var(--dark-theme);
+    color: var(--black-theme);
     transition: all 0.3s ease-in-out;
 }
 
@@ -25,12 +16,12 @@ header{
     left: 0;
     z-index: 1;
     background-color: #fff;
-    box-shadow: 0 1px 3px var(--dark-theme);
+    box-shadow: 0 1px 3px var(--black-theme);
 }
 
 
 header .top-navigation{
-    background: #fff;
+    background: var(--white-color);
     padding: .01rem;
     width:100vw;
     height: 30px;
@@ -52,7 +43,7 @@ header .top-navigation a{
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    color: #f11;
+    color: var(--theme-color);
     width: 100px;
     text-align: center;
     border: none;
@@ -60,16 +51,16 @@ header .top-navigation a{
 
 
 header .top-navigation a.active{
-    color: #f11;
+    color: var(--theme-color);
     font-weight: bold;
     height: 100%;
     position: relative;
-    border-bottom: 3px solid #f11;
+    border-bottom: 3px solid var(--theme-color);
 }
 
 header .top-navigation a:hover{
-    color: #f11;
-    border-bottom: 3px solid #f11;
+    color: var(--theme-color);
+    border-bottom: 3px solid var(--theme-color);
 }
 
 
@@ -85,8 +76,8 @@ span img.svg{
 }
 
 a.link{
-    background: #fff;
-    color: #f11;
+    background: var(--white-color);
+    color: var(--theme-color);
     text-decoration: none;
     text-align: center;
 }

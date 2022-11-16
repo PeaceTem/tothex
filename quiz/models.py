@@ -72,8 +72,8 @@ class Quiz(models.Model):
     likes = models.ManyToManyField(User, default=None, blank=True, related_name='likes')
     likeCount = models.PositiveIntegerField(default=0)
     solution_validators = models.ManyToManyField(User,  blank=True, related_name='quiz_solution_validators')
-    age_from = models.PositiveSmallIntegerField(default=11, choices=AGE_FROM_DURATION, verbose_name=_('Minimum Age Of Quiz Takers'))
-    age_to = models.PositiveSmallIntegerField(default=30, choices=AGE_TO_DURATION, verbose_name=_('Maximum Age Of Quiz Takers'))
+    age_from = models.PositiveSmallIntegerField(default=11, choices=AGE_FROM_DURATION, verbose_name=_('Minimum Age Of Quiz Takers (Important)'))
+    age_to = models.PositiveSmallIntegerField(default=30, choices=AGE_TO_DURATION, verbose_name=_('Maximum Age Of Quiz Takers (Important)'))
     relevance = models.IntegerField(default=0)
 
     objects = QuizManager()
@@ -238,3 +238,18 @@ class Attempter(models.Model):
         return f"{self.user}"
 
     # check if the attempter has not been created before creating another instance of attempter
+
+
+class FavoriteQuiz(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite_quizzes')
+    # add deleted for deleted quizzes here
+    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-date',)
+
+    def __str__(self):
+        return f"{self.quiz}"
+
+    

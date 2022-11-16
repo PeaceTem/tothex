@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/iframeBx.css' %}">
+
+{% endblock css %}
+
+
+{% block content %}
+
+
+
+<div class="iframe-container"> The background will be the theme color
+    <div class="backBtn">Back</div>
+
+    <div class="frame-content">The margin top will be about 40px
+        <iframe src="" frameborder="0" width="this.innerWidth" height="this.innerHeight"></iframe>
+    </div>
+</div>
+<div class="secret-block"></div>
+ 
+
+
+
+
+{% block page %}
+
+{% endblock page %}
+ 
+
+{% endblock content %}
+

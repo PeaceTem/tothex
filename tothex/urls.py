@@ -19,19 +19,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+
+
 def zoho(request):
     return render(request, 'core/verifyforzoho.html')
 
 
-def HomePage(request):
-    return redirect('quiz:quizzes')
-    # return render(request, 'core/home.html')
-
-
 urlpatterns = [
     path('', include('routers.urls')),
-    path('', HomePage),
     path('', include('pwa.urls')),
     # path('debug/', include('debug_toolbar.urls')),
     path('admin/', admin.site.urls),

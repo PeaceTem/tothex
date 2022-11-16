@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
+from category.services import removeFirstUserCategory
 from core.models import Profile
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
 from django.forms.models import model_to_dict
-from .models import Q,A, Reply
+from .models import Q,A, Reply, SavedQuestion
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
@@ -14,7 +15,7 @@ from .forms import QuestionForm, AnswerForm, ReplyForm
 
 from django.urls import reverse_lazy
 
-from category.models import Category
+from category.models import Category, MyCategory
 
 from django.db.models import Q as Qlookup,F
 from .serializers import QSerializer
@@ -168,8 +169,12 @@ class CreateQuestion(LoginRequiredMixin, CreateView):
             description = form.cleaned_data.get('description')
             question_image = form.cleaned_data.get('question_image')
 
-            q = Q.objects.create(question=question, description=description, profile=profile, question_image=question_image)
-            print('created')
+            q = Q.objects.create(
+                question=question,
+                description=description,
+                profile=profile,
+                question_image=question_image
+                )
             # data = QSerializer(q).data
             # Add categories
 
@@ -216,7 +221,12 @@ class CreateAnswer(LoginRequiredMixin, CreateView):
             answer = form.cleaned_data.get('answer')
             solution_image = form.cleaned_data.get('solution_image')
             question = Q.objects.get(id=q_id)
-            A.objects.create(answer=answer, solution_image=solution_image, profile=profile, question=question)
+            A.objects.create(
+                answer=answer,
+                solution_image=solution_image,
+                profile=profile,
+                question=question
+                )
             messages.success(self.request, _("Answer submitted!"))
             # return HttpResponse('Answered!')
             # return redirect('qxa:answer-page', slug=question.slug)
@@ -234,7 +244,11 @@ class CreateReply(LoginRequiredMixin, CreateView):
 		profile = user.profile
 		answer = A.objects.get(id=a_id)
 		reply = self.request.POST.get('reply')
-		Reply.objects.create(profile=profile, answer=answer, reply=reply)
+		Reply.objects.create(
+            profile=profile,
+            answer=answer,
+            reply=reply
+            )
 		return HttpResponse('Replied!')
         # return redirect('qxa:answer-page', slug=answer.question.slug)
 
@@ -454,11 +468,18 @@ class CategoryCreate(LoginRequiredMixin, View):
                     pass
 
                 if not category:
-                    newCategory = Category.objects.create(registered_by=user, title=title)
+                    newCategory = Category.objects.create(
+                        registered_by=user,
+                        title=title
+                        )
                     q.categories.add(newCategory)
-                    if profile.categories.count() > 9:
-                        removed = profile.categories.first()
-                        profile.categories.remove(removed)
+                    removeFirstUserCategory(user, profile)
+                    # if user.myCategories.count() > 9:
+                        # user.myCategories.first.delete()
+                    MyCategory.objects.create(user=user, category=newCategory)
+                    # if profile.categories.count() > 9:
+                    #     removed = profile.categories.first()
+                    #     profile.categories.remove(removed)
                     profile.categories.add(newCategory)
 
                     messages.success(request, _(f"{newCategory} has been added!"))
@@ -475,9 +496,14 @@ class CategoryCreate(LoginRequiredMixin, View):
                         q.categories.remove(removed)
                     q.categories.add(category)
 
-                    while profile.categories.count() > 9:
-                        removed = profile.categories.first()
-                        profile.categories.remove(removed)
+                    removeFirstUserCategory(user, profile)
+                    # if user.myCategories.count() > 9:
+                        # user.myCategories.first.delete()
+                    MyCategory.objects.create(user=user, category=newCategory)
+
+                    # while profile.categories.count() > 9:
+                    #     removed = profile.categories.first()
+                    #     profile.categories.remove(removed)
                     profile.categories.add(category)
             except:
                 pass
@@ -493,6 +519,7 @@ class CategoryCreate(LoginRequiredMixin, View):
 
 
         context= {
+            # 'page_obj': user.myCategories.all(),
             'page_obj': profile.categories.all(),# use profile categories here
             'objCategories' : quizCategories,
             'q': q,
@@ -524,5 +551,29 @@ class CategoryRemove(LoginRequiredMixin, View):
 
 
 
+
+
+class SaveQuestion(LoginRequiredMixin, View):
+    def get(self, request, q_id):
+        q = Q.objects.get(id=q_id)
+        user = self.request.user
+        SavedQuestion.objects.create(
+            user=user,
+            question=q
+        )
+
+        return HttpResponse
+
+
+
+
+class RemoveSavedQuestion(LoginRequiredMixin, View):
+    def get(self, request, save_question_id):
+        saved_question = SavedQuestion.objects.select_related('user').get(id=save_question_id)
+        user = self.request.user
+        if user == saved_question.user:
+            saved_question.delete()
+
+        return HttpResponse
 
 

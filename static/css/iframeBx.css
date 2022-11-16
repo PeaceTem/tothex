@@ -1,0 +1,12 @@
+.iframe-container{
+    position: fixed;
+    z-index:10;
+    background: var(--theme-color);
+
+}
+.frame-content{
+    padding-top:10px;
+    background: var(--white-color);
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+}

@@ -3,6 +3,7 @@ from core.models import Profile
 from category.models import Category
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -33,6 +34,15 @@ class Q(models.Model):
         return super().save(*args, **kwargs)
 
 
+
+# leave deleted if the question is inactive or deleted
+class SavedQuestion(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Q, on_delete=models.SET_NULL, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+         return f"{self.question}"
 
 
 class A(models.Model):

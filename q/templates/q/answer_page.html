@@ -15,7 +15,7 @@
 
 
 
-<link rel="stylesheet" href="{% static 'q/css/ranswer_page.css' %}?{{static_request}}">
+<link rel="stylesheet" href="{% static 'q/css/reanswer_page.css' %}?{{static_request}}">
 {% endblock css %}
 
 
@@ -147,6 +147,8 @@
 
     {% include 'jquery.html' %}
     {% include 'loading.html' %}
+<script src="{% static 'js/fullscreenImage.js' %}"></script>
+
     <script src="{% static 'question/js/rmain.js' %}"></script>
 <script>
     $(document).ready(function(){
@@ -382,5 +384,20 @@ $('.downvoteAnswerForm').submit((e)=>{
 //     })
 // })
 </script>
+
+<script src="{% static 'js/fullscreenImage.js' %}"></script>
+
+
 {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
 

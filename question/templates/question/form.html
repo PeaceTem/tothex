@@ -24,7 +24,7 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css"> -->
     <link rel="stylesheet" href="{% static 'css/cropper.css' %}">
 
-
+    <link rel="stylesheet" href="{% static 'question/css/fileInput.css' %}">
 
 
 <link rel="stylesheet" href="{% static 'question/css/rfourChoices.css' %}?{{static_request}}">
@@ -106,7 +106,7 @@ e.g
     {% endblock form_block %}
 </div>
 {% include 'loading.html' %}
-
+<script src="{% static 'question/js/fileInput.js' %}"></script>
 <script>
     function copyFunction(base){
         console.log(base)

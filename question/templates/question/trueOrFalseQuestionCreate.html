@@ -34,6 +34,7 @@ Create A True Or False Question
         </div>
 
         {{trueOrFalseForm.question_image|as_crispy_field}}
+        <div class="camera-icon">Camera</div>
         {{trueOrFalseForm.correct|as_crispy_field}}
         {{trueOrFalseForm.points|as_crispy_field}}
         {{trueOrFalseForm.solution|as_crispy_field}}
@@ -44,6 +45,7 @@ Create A True Or False Question
         </div>
 
         {{trueOrFalseForm.solution_image|as_crispy_field}}
+        <div class="camera-icon">Camera</div>
         {{trueOrFalseForm.duration_in_seconds|as_crispy_field}}
         {% if quiz_question %}
         {{trueOrFalseForm.standalone|as_crispy_field}}

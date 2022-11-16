@@ -10,7 +10,9 @@ So All the questions will be indentical in all aspect(html, css and js)
 <link rel="stylesheet" href="{% static 'question/css/imgBx.css' %}">
 <div class="img-container">
     <div class="img-box">
-        <img src="{{question.question_image.url}}" alt="" class="img">
+        <img id="fullscreen" src="{{question.question_image.url}}" alt="" class="img">
     </div>
 </div>
+
+
 {% endif %}

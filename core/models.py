@@ -1,6 +1,4 @@
 
-
-
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -53,6 +51,7 @@ class Profile(models.Model):
     code = models.CharField(max_length=32, null=True, blank=True)
     refercount = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
+    # This will be taken out from this place
     categories = models.ManyToManyField(Category, blank=True, related_name='profileCategories')
     quizTaken = models.ManyToManyField(Quiz, blank=True, related_name='profileQuizTaken')
     quizWareHouse = models.ManyToManyField(Quiz, blank=True, related_name='profileQuizWareHouse')

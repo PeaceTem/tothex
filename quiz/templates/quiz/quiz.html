@@ -11,15 +11,7 @@
 
 <input type="hidden" name="nav" id="navActive" value="{{nav}}">
 
-<div class="head-link">
-    <a href="{% url 'quiz:quizzes' %}" id="all">All</a>
-    <a href="{% url 'quiz:following-quizzes' %}" id="following">Followings</a>
-    <a href="{% url 'quiz:my-quizzes' %}" id="my">My quizzes</a> 
-    <a href="{% url 'quiz:quizTaken' %}" id="quizTaken">Taken</a>   
-    <a href="{% url 'quiz:favorites' %}" id="favorites">Favorites</a> 
-</div>
-
-
+{% include 'quiz/navigation.html' %}
 
 <div style='text-align: center;padding: 4px; border-radius:4px;' id="random"> <a href="{% url 'quiz:random-quiz-picker' %}"><span class="random">Take A Random Quiz →</span></a> </div>
 
@@ -28,85 +20,11 @@
 
 <div class="card-container infinite-container">
     {% for quiz in page_obj %}
-        <div class='card infinite-item'>
-            <div class="contentBx">
-                <a href="{% url 'profile:profile' quiz.user %}" class="username">
-                    <img src="https://picsum.photos/20" alt="">
-                    @{{quiz.user}}
-                </a>
-                <div class="categories">
-                    {% for category in quiz.categories.all %}
-                        <div class="category">
-                            <a href="{% url 'quiz:category-quiz' category.title %}">
-                                {{category.title}}
-                            </a>
-                        </div>
-                    {% endfor %}
-                </div>
-                <div id="outputDate" class="outputDate">{{quiz.date|date}}</div>
-                <!-- use aspect-ratio for the background of the title. -->
-                <div class="title-block">
-                    {% if profile %}
-                    <a class="link" href="{% url 'quiz:quiz-detail' quiz.id quiz.slug profile.code %}">
-                    {% else %}
-                    <a class="link" href="{% url 'quiz:quiz-detail' quiz.id quiz.slug None %}">
-                    {% endif %}
-                        <img src="https://picsum.photos/600/360" alt="">
-                        <div class="title">
-                            {{quiz.title|capfirst}}
-                        </div>
-                    </a>
-                    
-                
-                </div>
-                <div class="desc">
-                    {{quiz.description|safe|truncatewords:50}}
-                </div>
-                <!-- <div class="creator"> -->
-                <!-- <div class="create" style="display:none;">{{quiz.user|capfirst}}</div> -->
-                <!-- <div class="date"  style="display:none;">{{quiz.date|date:"Y-M-d"}} {{quiz.date|time:"H:i"}}</div>  -->
-                <!-- </div> -->
-                <div class="inline inlineOne">
-                    
-                    <div style="color:#999;" class="questionLength">
-                        questions: {{quiz.questionLength}} 
-                    </div>
-                   
-                    <div style="color:#999;" class="duration">
-                        {{quiz.get_duration}}
-                    </div>
-
-                </div>
-                <div style="color:#999;" class="inline inlineTwo">
-                    <div style="color:#999;" class="attempt">
-                        attempts: {{quiz.attempts}}
-                    </div>
-                    <div style="color:#999;" class="average">
-                        {{quiz.average_score}}%
-                    </div>
-                    <div style="color:#999;">
-                        {{quiz.age_from}} to {{quiz.age_to}} years
-                    </div>
-                </div>
-                       <div class="linkBx">
-                        <div id="likes">
-                    <span>likes: {{quiz.likeCount}}</span>
-                         
-                        </div>
-                        <div id="take-quiz">
-                            <a class="link" href="{% url 'quiz:take-quiz' quiz.id %}"><div>Take Quiz →</div></a>
-                        </div>
-                       </div>
-                       
-            </div>
-        </div>
+        {% include 'quiz/quizBx.html' %}
     {% endfor %}
-
 </div>
 
-<div id="openForm">
-        <a id="open" class="link" href="{% url 'quiz:quiz-create' %}">Create Quiz</a>
-</div>
+{% include 'quiz/openForm.html' %}
 <div class="d-flex d-none position-fixed" style="color:white;bottom:2vh;left:46vw">
     <button style="display:none;" class="btn btn-danger loading">
         <span style="color:white; display:none" class="spinner-border spinner-border-sm"></span>

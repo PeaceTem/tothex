@@ -3,12 +3,17 @@ var staticCacheName = 'neugott-lite';
 const CACHE_NAME = 'offline-html';
 const FALLBACK_HTML_URL = '/core/offline/'
 
-
+// let this code get the cache whenever its offline
 self.addEventListener('install', function(event) {
 event.waitUntil(
 	caches.open(staticCacheName).then(function(cache) {
 	return cache.addAll([
-		''
+		'/', 
+		'/quiz/',
+		'/question/',
+		'/qxa/',
+		'/leaderboard/',
+		'/core/profile/',
 	]);
 	})
 )
@@ -35,7 +40,7 @@ self.addEventListener('fetch', function(event) {
 var requestUrl = new URL(event.request.url);
 	if (requestUrl.origin === location.origin) {
 	if ((requestUrl.pathname === '/')) {
-		// event.respondWith(caches.match(''));
+		event.respondWith(caches.match('/'));
 		// window.location.href = location.origin + '/quiz/';
 		return;
 	}

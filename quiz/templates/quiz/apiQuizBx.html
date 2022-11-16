@@ -1,0 +1,99 @@
+
+
+<div class='card infinite-item'>
+    <div class="contentBx">
+        <a href="{% url 'profile:profile' ${res.quiz.user} %}" class="username">
+            <img src="https://picsum.photos/300" alt="">
+            @${res.quiz.user}
+        </a>
+        <div class="categories">
+            {% for category in quiz.categories.all %}
+                <div class="category">
+                    <a href="{% url 'quiz:category-quiz' category.title %}">
+                        {{category.title}}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="outputDate" class="outputDate">{{quiz.date|date}}</div>
+        <!-- use aspect-ratio for the background of the title. -->
+        <div class="title-block">
+            {% if profile %}
+            <a class="link" href="{% url 'quiz:quiz-detail' quiz.id quiz.slug profile.code %}">
+            {% else %}
+            <a class="link" href="{% url 'quiz:quiz-detail' quiz.id quiz.slug None %}">
+            {% endif %}
+                <img src="https://picsum.photos/600/360" alt="">
+                <div class="title">
+                    {{quiz.title|capfirst}}
+                </div>
+            </a>
+            
+        
+        </div>
+        <div class="desc">
+            {{quiz.description|safe|truncatewords:50}}
+        </div>
+        <div class="inline inlineOne">
+            
+            <div style="color:#999;" class="questionLength">
+                questions: {{quiz.questionLength}} 
+            </div>
+            
+            <div style="color:#999;" class="duration">
+                {{quiz.get_duration}}
+            </div>
+
+        </div>
+        <div style="color:#999;" class="inline inlineTwo">
+            <div style="color:#999;" class="attempt">
+                attempts: {{quiz.attempts}}
+            </div>
+            <div style="color:#999;" class="average">
+                {{quiz.average_score}}%
+            </div>
+            <div style="color:#999;">
+                {{quiz.age_from}} to {{quiz.age_to}} years
+            </div>
+        </div>
+                <div class="linkBx">
+                <div id="likes">
+            <span>likes: {{quiz.likeCount}}</span>
+                    
+                </div>
+                <div id="take-quiz">
+                    <a class="link" href="{% url 'quiz:take-quiz' quiz.id %}"><div>Take Quiz →</div></a>
+                </div>
+                </div>
+                
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

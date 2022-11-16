@@ -34,7 +34,7 @@ class FourChoicesQuestion(models.Model):
 
     AGE_FROM_DURATION = zip(range(7, 66), range(7, 66))
     AGE_TO_DURATION = zip(range(7, 66), range(7, 66))
-    SCORE_CHOICES = zip( range(5,0, -1), range(5,0, -1) )
+    SCORE_CHOICES = zip(range(5,0, -1), range(5,0, -1) )
     DURATION_CHOICES = zip( range(15,301, 5), range(15,301, 5) )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fourChoicesQuestions')
@@ -239,8 +239,8 @@ class TrueOrFalseQuestion(models.Model):
     answer1NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     answer2NumberOfTimesTaken = models.PositiveIntegerField(default=0)
     standalone = models.BooleanField(default=True, verbose_name=_("Make this question public"))
-    age_from = models.PositiveSmallIntegerField(default=7, choices=AGE_FROM_DURATION, verbose_name=_('Minimum Age Of Quiz Takers'))
-    age_to = models.PositiveSmallIntegerField(default=30, choices=AGE_TO_DURATION, verbose_name=_('Maximum Age Of Quiz Takers'))
+    age_from = models.PositiveSmallIntegerField(default=7, choices=AGE_FROM_DURATION, verbose_name=_('Minimum Age Of Quiz Takers (Important)'))
+    age_to = models.PositiveSmallIntegerField(default=30, choices=AGE_TO_DURATION, verbose_name=_('Maximum Age Of Quiz Takers (Important)'))
     relevance = models.IntegerField(default=0)
     
   

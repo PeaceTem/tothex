@@ -4,16 +4,38 @@ from ckeditor.fields import RichTextField
 # Create your models here.
 
 class PostAd(models.Model):
-    name = models.CharField(max_length=50, null=True, blank=True)
-    picture = models.ImageField(upload_to='images/ads/',  blank=True, null=True)
-    description = RichTextField(max_length=1000, blank=True, null=True)
-    link = models.URLField(blank=True, null=True)
+    name = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True
+        )
+    picture = models.ImageField(
+        upload_to='images/ads/',
+        blank=True,
+        null=True
+        )
+    description = RichTextField(
+        max_length=1000,
+        blank=True,
+        null=True
+        )
+    link = models.URLField(
+        blank=True,
+        null=True
+        )
 
-    dashboard_link = models.URLField(blank=True, null=True)
+    dashboard_link = models.URLField(
+        blank=True,
+        null=True
+        )
     clicks = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
     relevance = models.FloatField(default=0)
-    clickers = models.ManyToManyField(User, blank=True, related_name='clicked_ads')
+    clickers = models.ManyToManyField(
+        User,
+        blank=True,
+        related_name='clicked_ads'
+        )
 
     detailpageviews = models.PositiveIntegerField(default=0)
     detailpageclicks = models.PositiveIntegerField(default=0)

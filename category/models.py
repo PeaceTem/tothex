@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
@@ -26,3 +27,26 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.title}"
 
+
+class MyCategory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='myCategories')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='users_categories')
+    def __str__(self):
+        return f"{self.category}"
+
+
+    class Meta:
+        verbose_name_plural = 'MyCategories'
+
+
+    def save(self, **kwargs):
+        # print(kwargs)
+        user = self.user
+        # print(user)
+        myCategories = user.myCategories.all()
+        # print(myCategories)
+        if str(self.category) in [str(c) for c in myCategories]:
+            # print('This category all exist for this user!')
+            return None
+        # print('The category is successfully created')
+        super().save(**kwargs)
