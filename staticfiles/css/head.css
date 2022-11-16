@@ -7,7 +7,7 @@ div#head-box{
 }
 
 .name h3{
-    color: #8b0e0e;
+    color: var(--theme-color);
     font-weight: 600;
     font-size: 20px;
     display: absolute;
@@ -48,7 +48,7 @@ div#head-box{
 #menu-detail section > div.icon div{
     display: block;
     margin: 4px;
-    background: rgb(243, 243, 243);
+    background: var(--white-color);
     border-radius : 3px;
     padding: 8px;
 }

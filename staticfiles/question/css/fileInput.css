@@ -1,0 +1,7 @@
+input[type="file"]{
+    display:none;
+}
+.camera-icon{
+    display: inline-block;
+
+}

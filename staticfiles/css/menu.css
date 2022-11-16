@@ -20,7 +20,7 @@ section{
 
 section div{
     margin: 6px 4px 4px 4px;
-    background: #fff;
+    background: var(--white-color);
     display: block;
     width: 100vw;
     line-height: 30px;

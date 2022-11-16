@@ -1,0 +1,203 @@
+*{
+    font-family: sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+section{
+    display: block;
+    margin-top: 4px;
+    margin: 0 auto;
+    width: 900px;
+    max-width: 100vw;
+}
+
+
+
+
+ section div#question-card{
+    display: block;
+    border-left: 1px solid #ccc;
+    width: 900px;
+    max-width: 98vw;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 10px;
+    
+}
+a{
+    text-decoration: none;
+}
+
+div#share{
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+a#shareButton{
+    color:#fff;
+    background:rgba(189, 41, 41, 0.7);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+div#stat{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+div#answer-box{
+    border-left: 1px solid #ccc;
+    width: 850px;
+    max-width: 80vw;
+    margin-right: 0 auto;
+    margin-top: 10px;
+    padding: 4px 0 4px 10px;
+}
+
+div#reply-box{
+    border-left: 1px solid #ccc;
+    width: 800px;
+    position: relative;
+    right: 0;
+    max-width: 70vw;
+    margin-left: 0 auto;
+    margin-top: 10px;
+    padding: 4px 0 4px 10px;
+}
+
+
+
+
+
+#form-container{
+    position: fixed;
+    top : 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    margin: auto;
+    z-index: 1000;
+    background: rgba(26, 24, 24, .5);
+    /* transition: all 1s ease-in-out; */
+    transition: ease-in-out 2s;
+}
+
+
+#form-container form#questionForm{
+    background: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px 4px;
+    margin:0 auto;
+    width: 100vw;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+
+.inactive-bar{
+    display: none;
+}
+
+div#question-container div#openForm{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background:rgba(189, 41, 41, 0.7);
+    cursor: pointer;
+}
+#open{
+    color: #fff;
+    font-size: 20px;
+}
+
+.imageBox{
+    width: 400px;
+    max-width: 50vw;
+}
+
+.imageBox img{
+    width: inherit;
+    border: 3px solid #f11919;
+    border-radius: 10px;
+}
+
+
+
+/* The image editing part */
+div#question-image-container, div#solution-image-container{
+    position:relative;
+}
+div#absolute, div#solution-absolute{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(26, 24, 24, 0.875);
+    background: #333;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.overlay-background{
+    position: fixed;
+    top : 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    margin: auto;
+    z-index: 100000;
+    background: rgba(26, 24, 24, .5);
+    transition: all 1s ease-in-out;
+}
+
+.inactive-overlay{
+    display: none;
+}
+
+#image-edit-box img{
+
+    position: relative;
+
+    max-width: 80vw;
+    max-height: 90vh;
+}
+
+#image-overlay div #image-edit-box{
+    position: relative;
+    width: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#image-overlay div #image-edit-menu{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: inherit;
+
+}
+#image-edit-menu #cancel-edit, #image-edit-menu #save-edit{
+    color: #fff;
+    cursor: pointer;
+
+}
